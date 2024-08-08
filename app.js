@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 // const path = require("path");
 const Mobile = require("./mobile");
 
-const productRouter = require("./routes/productRoutes");
+const productRouter = require("./server/routes/productRoutes");
 // const userRouter = require("./routes/userRoutes");
 
 const app = express();

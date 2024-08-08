@@ -1,3 +1,5 @@
+const Mobile = require("../models/mobile");
+
 const checkID = (req, res, next, val) => {
    console.log(`Product id is: ${val}`);
 
@@ -20,42 +22,49 @@ const checkBody = (req, res, next) => {
    next();
 };
 
-const getAllProducts = (req, res) => {
-   res.status(200).json({
-      status: "success",
-      requestedAt: req.requestTime,
-      count: products.length,
-      data: products,
-   });
-};
-
-const getProduct = (req, res) => {
-   console.log(req.params);
-   // const id = req.params.id * 1;
-   const id = req.params.id;
-   const product = products.find((el) => el._id === id);
-
-   if (!product) {
-      return res.status(404).json({
-         status: "fail",
-         message: "Invalid ID",
-      });
+const getAllProducts = async (req, res) => {
+   try {
+      const mobiles = await Mobile.findAll();
+      res.json(mobiles);
+   } catch (error) {
+      console.error("Error fetching mobiles:", error);
+      res.status(500).send("Error fetching mobiles");
    }
-
-   res.status(200).json({
-      status: "success",
-      data: { product },
-   });
 };
 
-const createProduct = (req, res) => {
-   console.log(req.body);
-   res.status(201).json({
-      status: "success",
-      data: {
-         product: "<New product here...>",
-      },
-   });
+const getProduct = async (req, res) => {
+   const { IMEI } = req.params;
+
+   try {
+      const mobile = await Mobile.findOne({ where: { IMEI } });
+      if (mobile) {
+         res.json(mobile);
+      } else {
+         res.status(404).send("Mobile not found");
+      }
+   } catch (error) {
+      console.error("Error fetching mobile:", error);
+      res.status(500).send("Error fetching mobile");
+   }
+};
+
+const createProduct = async (req, res) => {
+   const { IMEI, Model, Color, Storage, Grade, SerialNumber } = req.body;
+
+   try {
+      await Mobile.create({
+         IMEI,
+         Model,
+         Color,
+         Storage,
+         Grade,
+         SerialNumber,
+      });
+      res.send("Mobile model added successfully!");
+   } catch (error) {
+      console.error("Error adding mobile model:", error);
+      res.status(500).send("Error adding mobile model");
+   }
 };
 
 const updateProduct = (req, res) => {
@@ -82,53 +91,22 @@ app.get("/add-mobile", (req, res) => {
    res.sendFile(path.join(__dirname, "add-mobile.html"));
 });
 
-// Create a new mobile
-app.post("/add-mobile", async (req, res) => {
-   const { IMEI, Model, Color, Storage, Grade, SerialNumber } = req.body;
-
-   try {
-      await Mobile.create({
-         IMEI,
-         Model,
-         Color,
-         Storage,
-         Grade,
-         SerialNumber,
-      });
-      res.send("Mobile model added successfully!");
-   } catch (error) {
-      console.error("Error adding mobile model:", error);
-      res.status(500).send("Error adding mobile model");
-   }
-});
-
-// Read all mobiles
-app.get("/mobiles", async (req, res) => {
-   try {
-      const mobiles = await Mobile.findAll();
-      res.json(mobiles);
-   } catch (error) {
-      console.error("Error fetching mobiles:", error);
-      res.status(500).send("Error fetching mobiles");
-   }
-});
-
 // Read a specific mobile by IMEI
-app.get("/mobiles/:IMEI", async (req, res) => {
-   const { IMEI } = req.params;
+// app.get("/mobiles/:IMEI", async (req, res) => {
+//    const { IMEI } = req.params;
 
-   try {
-      const mobile = await Mobile.findOne({ where: { IMEI } });
-      if (mobile) {
-         res.json(mobile);
-      } else {
-         res.status(404).send("Mobile not found");
-      }
-   } catch (error) {
-      console.error("Error fetching mobile:", error);
-      res.status(500).send("Error fetching mobile");
-   }
-});
+//    try {
+//       const mobile = await Mobile.findOne({ where: { IMEI } });
+//       if (mobile) {
+//          res.json(mobile);
+//       } else {
+//          res.status(404).send("Mobile not found");
+//       }
+//    } catch (error) {
+//       console.error("Error fetching mobile:", error);
+//       res.status(500).send("Error fetching mobile");
+//    }
+// });
 
 // Update a mobile by IMEI
 app.put("/mobiles/:IMEI", async (req, res) => {
