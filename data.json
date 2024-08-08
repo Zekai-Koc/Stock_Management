@@ -1,0 +1,42 @@
+[
+   {
+      "IMEI": "123456789012345",
+      "Model": "Samsung Galaxy S10",
+      "Color": "Black",
+      "Storage": "128 GB",
+      "Grade": "A",
+      "SerialNumber": "s242"
+   },
+   {
+      "IMEI": "123456789012346",
+      "Model": "Samsung Galaxy S10+",
+      "Color": "White",
+      "Storage": "128 GB",
+      "Grade": "B",
+      "SerialNumber": "s243"
+   },
+   {
+      "IMEI": "123456789012347",
+      "Model": "Samsung Galaxy S10e",
+      "Color": "Green",
+      "Storage": "128 GB",
+      "Grade": "C",
+      "SerialNumber": "s244"
+   },
+   {
+      "IMEI": "123456789012348",
+      "Model": "iPhone XS",
+      "Color": "Gold",
+      "Storage": "64 GB",
+      "Grade": "A",
+      "SerialNumber": "s245"
+   },
+   {
+      "IMEI": "123456789012349",
+      "Model": "iPhone XS Max",
+      "Color": "Silver",
+      "Storage": "64 GB",
+      "Grade": "B",
+      "SerialNumber": "s246"
+   }
+]
