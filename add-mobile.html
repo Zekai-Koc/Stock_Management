@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Mobile Management</title>
+      <script>
+         async function fetchMobile() {
+            const imei = document.getElementById("readIMEI").value;
+            const response = await fetch(`/mobiles/${imei}`);
+            const data = await response.json();
+            document.getElementById("readModel").value = data.Model || "";
+            document.getElementById("readColor").value = data.Color || "";
+            document.getElementById("readStorage").value = data.Storage || "";
+            document.getElementById("readGrade").value = data.Grade || "";
+            document.getElementById("readSerialNumber").value =
+               data.SerialNumber || "";
+         }
+
+         async function updateMobile() {
+            const imei = document.getElementById("updateIMEI").value;
+            const response = await fetch(`/mobiles/${imei}`, {
+               method: "PUT",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify({
+                  Model: document.getElementById("updateModel").value,
+                  Color: document.getElementById("updateColor").value,
+                  Storage: document.getElementById("updateStorage").value,
+                  Grade: document.getElementById("updateGrade").value,
+                  SerialNumber:
+                     document.getElementById("updateSerialNumber").value,
+               }),
+            });
+            const result = await response.text();
+            alert(result);
+            fetchAllMobiles(); // Refresh the list after update
+         }
+
+         async function deleteMobile() {
+            const imei = document.getElementById("deleteIMEI").value;
+            const response = await fetch(`/mobiles/${imei}`, {
+               method: "DELETE",
+            });
+            const result = await response.text();
+            alert(result);
+            fetchAllMobiles(); // Refresh the list after deletion
+         }
+
+         async function fetchAllMobiles() {
+            const response = await fetch("/mobiles");
+            const mobiles = await response.json();
+            const tableBody = document.getElementById("mobilesTableBody");
+            tableBody.innerHTML = ""; // Clear existing content
+
+            mobiles.forEach((mobile) => {
+               const row = document.createElement("tr");
+               row.innerHTML = `
+               <td>${mobile.IMEI}</td>
+               <td>${mobile.Model}</td>
+               <td>${mobile.Color}</td>
+               <td>${mobile.Storage}</td>
+               <td>${mobile.Grade}</td>
+               <td>${mobile.SerialNumber}</td>
+            `;
+               tableBody.appendChild(row);
+            });
+         }
+
+         // Fetch all mobiles when the page loads
+         window.onload = fetchAllMobiles;
+      </script>
+   </head>
+   <body>
+      <h1>Mobile Management</h1>
+
+      <!-- Create Mobile -->
+      <h2>Add New Mobile Model</h2>
+      <form action="/add-mobile" method="POST">
+         <label for="IMEI">IMEI:</label>
+         <input
+            type="text"
+            id="IMEI"
+            name="IMEI"
+            value="123456789012348"
+            required
+         /><br /><br />
+
+         <label for="Model">Model:</label>
+         <input
+            type="text"
+            id="Model"
+            name="Model"
+            value="iPhone XS"
+            required
+         /><br /><br />
+
+         <label for="Color">Color:</label>
+         <input
+            type="text"
+            id="Color"
+            name="Color"
+            value="Gold"
+            required
+         /><br /><br />
+
+         <label for="Storage">Storage:</label>
+         <input
+            type="text"
+            id="Storage"
+            name="Storage"
+            value="64 GB"
+            required
+         /><br /><br />
+
+         <label for="Grade">Grade:</label>
+         <input
+            type="text"
+            id="Grade"
+            name="Grade"
+            value="A"
+            required
+         /><br /><br />
+
+         <label for="SerialNumber">Serial Number:</label>
+         <input
+            type="text"
+            id="SerialNumber"
+            name="SerialNumber"
+            value="s245"
+            required
+         /><br /><br />
+
+         <button type="submit">Add Mobile</button>
+      </form>
+
+      <!-- Read Mobile -->
+      <h2>Read Mobile Model</h2>
+      <label for="readIMEI">IMEI:</label>
+      <input type="text" id="readIMEI" /><br /><br />
+      <button onclick="fetchMobile()">Fetch Details</button>
+      <br /><br />
+      <label for="readModel">Model:</label>
+      <input type="text" id="readModel" disabled /><br /><br />
+
+      <label for="readColor">Color:</label>
+      <input type="text" id="readColor" disabled /><br /><br />
+
+      <label for="readStorage">Storage:</label>
+      <input type="text" id="readStorage" disabled /><br /><br />
+
+      <label for="readGrade">Grade:</label>
+      <input type="text" id="readGrade" disabled /><br /><br />
+
+      <label for="readSerialNumber">Serial Number:</label>
+      <input type="text" id="readSerialNumber" disabled /><br /><br />
+
+      <!-- Update Mobile -->
+      <h2>Update Mobile Model</h2>
+      <label for="updateIMEI">IMEI:</label>
+      <input type="text" id="updateIMEI" required /><br /><br />
+
+      <label for="updateModel">Model:</label>
+      <input type="text" id="updateModel" required /><br /><br />
+
+      <label for="updateColor">Color:</label>
+      <input type="text" id="updateColor" required /><br /><br />
+
+      <label for="updateStorage">Storage:</label>
+      <input type="text" id="updateStorage" required /><br /><br />
+
+      <label for="updateGrade">Grade:</label>
+      <input type="text" id="updateGrade" required /><br /><br />
+
+      <label for="updateSerialNumber">Serial Number:</label>
+      <input type="text" id="updateSerialNumber" required /><br /><br />
+
+      <button onclick="updateMobile()">Update Mobile</button>
+      <br /><br />
+
+      <!-- Delete Mobile -->
+      <h2>Delete Mobile Model</h2>
+      <label for="deleteIMEI">IMEI:</label>
+      <input type="text" id="deleteIMEI" required /><br /><br />
+      <button onclick="deleteMobile()">Delete Mobile</button>
+
+      <!-- Display All Mobiles -->
+      <h2>All Mobiles</h2>
+      <table border="1">
+         <thead>
+            <tr>
+               <th>IMEI</th>
+               <th>Model</th>
+               <th>Color</th>
+               <th>Storage</th>
+               <th>Grade</th>
+               <th>Serial Number</th>
+            </tr>
+         </thead>
+         <tbody id="mobilesTableBody">
+            <!-- Data will be inserted here by JavaScript -->
+         </tbody>
+      </table>
+   </body>
+</html>
