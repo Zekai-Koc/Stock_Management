@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Multiple Devices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+
+        section {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        form label {
+            margin-top: 10px;
+            display: block;
+        }
+
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        form button {
+            grid-column: span 4;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .melding-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <h2>Add New Device</h2>
+        <form id="deviceForm">
+            <label for="brand">Brand:</label>
+            <select id="brand" name="brand" required>
+                <option value="Apple" selected>Apple</option>
+                <option value="Samsung">Samsung</option>
+                <option value="Google">Google</option>
+                <option value="OnePlus">OnePlus</option>
+            </select>
+            
+            <label for="model">Model:</label>
+            <select id="model" name="model" required>
+                <option value="iPhone 14" selected>iPhone 14</option>
+                <option value="Galaxy S21">Galaxy S21</option>
+                <option value="Pixel 6">Pixel 6</option>
+                <option value="OnePlus 9">OnePlus 9</option>
+            </select>
+            
+            <label for="ram">RAM:</label>
+            <select id="ram" name="ram" required>
+                <option value="4GB">4GB</option>
+                <option value="6GB">6GB</option>
+                <option value="8GB" selected>8GB</option>
+                <option value="12GB">12GB</option>
+            </select>
+            
+            <label for="storage">Storage Capacity:</label>
+            <select id="storage" name="storage" required>
+                <option value="64GB">64GB</option>
+                <option value="128GB">128GB</option>
+                <option value="256GB" selected>256GB</option>
+                <option value="512GB">512GB</option>
+            </select>
+            
+            <label for="color">Color:</label>
+            <select id="color" name="color" required>
+                <option value="Black" selected>Black</option>
+                <option value="White">White</option>
+                <option value="Blue">Blue</option>
+                <option value="Red">Red</option>
+            </select>
+            
+            <label for="grade">Grade:</label>
+            <select id="grade" name="grade" required>
+                <option value="A" selected>A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+            
+            <label for="purchaseDate">Purchase Date:</label>
+            <input type="date" id="purchaseDate" name="purchaseDate" required>
+            
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="In Stock" selected>In Stock</option>
+                <option value="Sold">Sold</option>
+                <option value="Pending">Pending</option>
+            </select>
+            
+            <label for="imei">IMEI:</label>
+            <input type="text" id="imei" name="imei" required>
+            
+            <div class="melding-container">
+                <input type="checkbox" id="melding" name="melding">
+                <label for="melding">Melding</label>
+            </div>
+            
+            <button type="submit">Add Device(s)</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Devices List</h2>
+        <table id="devicesTable">
+            <thead>
+                <tr>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>RAM</th>
+                    <th>Storage</th>
+                    <th>Color</th>
+                    <th>Grade</th>
+                    <th>Purchase Date</th>
+                    <th>Status</th>
+                    <th>IMEI</th>
+                    <th>Melding</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic rows will be added here -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+// Set the purchase date to today's date by default
+document.getElementById('purchaseDate').value = new Date().toISOString().slice(0, 10);
+
+// Function to refocus on the IMEI input
+function refocusIMEI() {
+    document.getElementById('imei').focus();
+}
+
+// Add event listeners to all form elements to refocus IMEI input after change
+const formElements = document.querySelectorAll('#deviceForm select, #deviceForm input[type="date"], #deviceForm input[type="checkbox"]');
+formElements.forEach(element => {
+    element.addEventListener('change', refocusIMEI);
+    element.addEventListener('blur', refocusIMEI);
+});
+
+// Refocus IMEI input on page load
+refocusIMEI();
+
+// Add device to the table when IMEI is fully entered
+document.getElementById('imei').addEventListener('input', function(event) {
+    const imeiLength = 15; // IMEI numbers are 15 digits long
+
+    // Check if the IMEI length matches the required length
+    if (event.target.value.length === imeiLength) {
+        event.preventDefault(); // Prevent default action
+
+        // Get values from the form
+        const brand = document.getElementById('brand').value;
+        const model = document.getElementById('model').value;
+        const ram = document.getElementById('ram').value;
+        const storage = document.getElementById('storage').value;
+        const color = document.getElementById('color').value;
+        const grade = document.getElementById('grade').value;
+        const imei = document.getElementById('imei').value;
+        const purchaseDate = document.getElementById('purchaseDate').value;
+        const status = document.getElementById('status').value;
+        const melding = document.getElementById('melding').checked ? 'Yes' : 'No';
+
+        // Create a new row for the table
+        const table = document.getElementById('devicesTable').querySelector('tbody');
+        const newRow = document.createElement('tr');
+
+        // Add data to the new row
+        newRow.innerHTML = `
+            <td>${brand}</td>
+            <td>${model}</td>
+            <td>${ram}</td>
+            <td>${storage}</td>
+            <td>${color}</td>
+            <td>${grade}</td>
+            <td>${purchaseDate}</td>
+            <td>${status}</td>
+            <td>${imei}</td>
+            <td>${melding}</td>
+        `;
+
+        // Append the new row to the table
+        table.appendChild(newRow);
+
+        // Clear the IMEI field and reset the melding checkbox for the next scan/input
+        document.getElementById('imei').value = '';
+        document.getElementById('melding').checked = false;
+
+        // Refocus on the IMEI input field
+        refocusIMEI();
+    }
+});
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scanner Input Example</title>
+</head>
+<body>
+    <input type="text" id="barcodeInput" placeholder="Scan barcode here" autofocus>
+
+    <script>
+        // Adding event listener to ensure the input field is focused when the page loads
+        window.onload = function() {
+            document.getElementById('barcodeInput').focus();
+        };
+
+        document.getElementById('barcodeInput').addEventListener('keydown', function(event) {
+            console.log('Key Pressed:', event.key); // Debugging to see what key is being detected
+
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                // The scanner has sent the data and pressed enter
+                let scannedData = event.target.value;
+                console.log('Scanned Data:', scannedData);
+                
+                // Clear the input field for the next scan
+                event.target.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
