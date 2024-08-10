@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database"); // Adjust the path to your Sequelize instance
 
-const RAMOption = sequelize.define(
-   "RAMOption",
+const RAM = sequelize.define(
+   "RAM",
    {
       id: {
          type: DataTypes.INTEGER,
@@ -17,8 +17,8 @@ const RAMOption = sequelize.define(
    },
    {
       timestamps: false, // Disable automatic timestamps if not needed
-      tableName: "RAMOptions", // Explicit table name specification
+      tableName: "RAM", // Explicit table name specification
    }
 );
 
-module.exports = RAMOption;
+module.exports = RAM;

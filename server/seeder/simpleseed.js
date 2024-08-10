@@ -1,5 +1,5 @@
 const sequelize = require("../database/database");
-const Brand = require("../models/brands");
+const Brand = require("../models/brand");
 
 async function seed() {
    try {

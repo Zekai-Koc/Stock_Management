@@ -1,5 +1,12 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database");
+const Brand = require("./Brand");
+const Model = require("./Model");
+const Status = require("./Status");
+const RAM = require("./RAM");
+const Storage = require("./Storage");
+const Color = require("./Color");
+const Grade = require("./Grade");
 
 const Device = sequelize.define(
    "Device",
@@ -39,7 +46,7 @@ const Device = sequelize.define(
          type: DataTypes.INTEGER,
          allowNull: false,
          references: {
-            model: "RAMOptions",
+            model: "RAM",
             key: "id",
          },
       },
@@ -47,7 +54,7 @@ const Device = sequelize.define(
          type: DataTypes.INTEGER,
          allowNull: false,
          references: {
-            model: "StorageCapacities",
+            model: "Storage",
             key: "id",
          },
       },
@@ -120,5 +127,13 @@ const validateIMEI = (imei) => {
 
    return isValidLength && isValidChecksum(imei);
 };
+
+Device.belongsTo(Brand, { foreignKey: "brandId" });
+Device.belongsTo(Model, { foreignKey: "modelId" });
+Device.belongsTo(Status, { foreignKey: "statusId" });
+Device.belongsTo(RAM, { foreignKey: "ramId" });
+Device.belongsTo(Storage, { foreignKey: "storageId" });
+Device.belongsTo(Color, { foreignKey: "colorId" });
+Device.belongsTo(Grade, { foreignKey: "gradeId" });
 
 module.exports = Device;

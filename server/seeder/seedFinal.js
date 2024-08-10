@@ -2,8 +2,8 @@ const sequelize = require("../database/database"); // Ensure correct path
 const Brand = require("../models/Brand");
 const Model = require("../models/Model");
 const Color = require("../models/Color");
-const RAMOption = require("../models/RAMOption");
-const StorageCapacity = require("../models/StorageCapacity");
+const RAM = require("../models/RAM");
+const Storage = require("../models/Storage");
 const Grade = require("../models/Grade");
 const Status = require("../models/Status");
 const Catalog = require("../models/Catalog");
@@ -62,7 +62,7 @@ const seed = async () => {
       const blue = await Color.findOne({ where: { name: "Blue" } });
       const red = await Color.findOne({ where: { name: "Red" } });
 
-      await RAMOption.bulkCreate([
+      await RAM.bulkCreate([
          { size: "4" },
          { size: "6" },
          { size: "8" },
@@ -70,13 +70,13 @@ const seed = async () => {
          { size: "12" },
       ]);
 
-      const ram4 = await RAMOption.findOne({ where: { size: "4" } });
-      const ram6 = await RAMOption.findOne({ where: { size: "6" } });
-      const ram8 = await RAMOption.findOne({ where: { size: "8" } });
-      const ram10 = await RAMOption.findOne({ where: { size: "10" } });
-      const ram12 = await RAMOption.findOne({ where: { size: "12" } });
+      const ram4 = await RAM.findOne({ where: { size: "4" } });
+      const ram6 = await RAM.findOne({ where: { size: "6" } });
+      const ram8 = await RAM.findOne({ where: { size: "8" } });
+      const ram10 = await RAM.findOne({ where: { size: "10" } });
+      const ram12 = await RAM.findOne({ where: { size: "12" } });
 
-      await StorageCapacity.bulkCreate([
+      await Storage.bulkCreate([
          { capacity: "32" },
          { capacity: "64" },
          { capacity: "128" },
@@ -85,19 +85,19 @@ const seed = async () => {
          { capacity: "1024" },
       ]);
 
-      const storage64 = await StorageCapacity.findOne({
+      const storage64 = await Storage.findOne({
          where: { capacity: "64" },
       });
-      const storage256 = await StorageCapacity.findOne({
+      const storage256 = await Storage.findOne({
          where: { capacity: "256" },
       });
-      const storage128 = await StorageCapacity.findOne({
+      const storage128 = await Storage.findOne({
          where: { capacity: "128" },
       });
-      const storage512 = await StorageCapacity.findOne({
+      const storage512 = await Storage.findOne({
          where: { capacity: "512" },
       });
-      const storage1024 = await StorageCapacity.findOne({
+      const storage1024 = await Storage.findOne({
          where: { capacity: "1024" },
       });
 

@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database"); // Adjust the path to your Sequelize instance
 // const Model = require("./Model"); // Adjust the path to your Model model
+// const Device = require("./device");
 
 const Brand = sequelize.define(
    "Brand",
@@ -21,10 +22,5 @@ const Brand = sequelize.define(
       tableName: "Brands", // Explicit table name specification
    }
 );
-
-// Brand.hasMany(Model, {
-//    foreignKey: "brandId",
-//    as: "models",
-// });
 
 module.exports = Brand;

@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database"); // Adjust the path to your Sequelize instance
 
-const StorageCapacity = sequelize.define(
-   "StorageCapacity",
+const Storage = sequelize.define(
+   "Storage",
    {
       id: {
          type: DataTypes.INTEGER,
@@ -17,8 +17,8 @@ const StorageCapacity = sequelize.define(
    },
    {
       timestamps: false, // Disable automatic timestamps if not needed
-      tableName: "StorageCapacities", // Explicit table name specification
+      tableName: "Storage", // Explicit table name specification
    }
 );
 
-module.exports = StorageCapacity;
+module.exports = Storage;
