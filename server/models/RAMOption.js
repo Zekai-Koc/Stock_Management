@@ -1,24 +1,24 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../database/database");
+const sequelize = require("../database/database"); // Adjust the path to your Sequelize instance
 
-const Status = sequelize.define(
-   "Status",
+const RAMOption = sequelize.define(
+   "RAMOption",
    {
       id: {
          type: DataTypes.INTEGER,
          autoIncrement: true,
          primaryKey: true,
       },
-      name: {
-         type: DataTypes.STRING,
+      size: {
+         type: DataTypes.INTEGER,
          allowNull: false,
          unique: true,
       },
    },
    {
       timestamps: false, // Disable automatic timestamps if not needed
-      tableName: "Statuses", // Explicit table name specification
+      tableName: "RAMOptions", // Explicit table name specification
    }
 );
 
-module.exports = Status;
+module.exports = RAMOption;

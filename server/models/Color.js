@@ -1,17 +1,24 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database");
 
-const Color = sequelize.define("Color", {
-   id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+const Color = sequelize.define(
+   "Color",
+   {
+      id: {
+         type: DataTypes.INTEGER,
+         autoIncrement: true,
+         primaryKey: true,
+      },
+      name: {
+         type: DataTypes.STRING,
+         allowNull: false,
+         unique: true,
+      },
    },
-   name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-   },
-});
+   {
+      timestamps: false, // Disable automatic timestamps if not needed
+      tableName: "Colors", // Explicit table name specification
+   }
+);
 
 module.exports = Color;

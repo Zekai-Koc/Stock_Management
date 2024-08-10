@@ -1,91 +1,124 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database");
-const Model = require("./Model");
-const Color = require("./Color");
-const Grade = require("./Grade");
-const Ram = require("./Ram");
-const Storage = require("./Storage");
-const Status = require("./Status");
-const Brand = require("./Brand");
 
-const Device = sequelize.define("Device", {
-   imei: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      allowNull: false,
-      unique: true,
-   },
-   serial_number: {
-      type: DataTypes.STRING,
-      allowNull: false,
-   },
-   ram_id: {
-      type: DataTypes.INTEGER,
-      references: {
-         model: Ram,
-         key: "id",
+const Device = sequelize.define(
+   "Device",
+   {
+      imei: {
+         type: DataTypes.STRING,
+         allowNull: false,
+         unique: true,
+         primaryKey: true,
+         // validate: {
+         //    customValidator(value) {
+         //       if (!validateIMEI(value)) {
+         //          throw new Error(
+         //             "IMEI must be a valid 15-digit number with a valid checksum"
+         //          );
+         //       }
+         //    },
+         // },
+      },
+      brandId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "Brands",
+            key: "id",
+         },
+      },
+      modelId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "Models",
+            key: "id",
+         },
+      },
+      ramId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "RAMOptions",
+            key: "id",
+         },
+      },
+      storageId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "StorageCapacities",
+            key: "id",
+         },
+      },
+      colorId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "Colors",
+            key: "id",
+         },
+      },
+      gradeId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "Grades",
+            key: "id",
+         },
+      },
+      statusId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "Statuses",
+            key: "id",
+         },
+      },
+      melding: {
+         type: DataTypes.BOOLEAN,
+         allowNull: false,
+      },
+      catalogId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+            model: "Catalogs",
+            key: "id",
+         },
+      },
+      purchaseDate: {
+         type: DataTypes.DATE,
+         allowNull: false,
       },
    },
-   storage_capacity_id: {
-      type: DataTypes.INTEGER,
-      references: {
-         model: Storage,
-         key: "id",
-      },
-   },
-   purchase_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-   },
-   status_id: {
-      type: DataTypes.INTEGER,
-      references: {
-         model: Status,
-         key: "id",
-      },
-   },
-   model_id: {
-      type: DataTypes.INTEGER,
-      references: {
-         model: Model,
-         key: "id",
-      },
-   },
-   color_id: {
-      type: DataTypes.INTEGER,
-      references: {
-         model: Color,
-         key: "id",
-      },
-   },
-   grade_id: {
-      type: DataTypes.INTEGER,
-      references: {
-         model: Grade,
-         key: "id",
-      },
-   },
-   brand_id: {
-      type: DataTypes.INTEGER,
-      references: {
-         model: Brand,
-         key: "id",
-      },
-   },
-   notes: {
-      type: DataTypes.TEXT,
-   },
-});
+   {
+      timestamps: false, // Disable automatic timestamps if not needed
+      tableName: "Devices", // Explicit table name specification
+   }
+);
 
-Device.belongsTo(Model, { foreignKey: "model_id", onDelete: "CASCADE" });
-Device.belongsTo(Color, { foreignKey: "color_id", onDelete: "CASCADE" });
-Device.belongsTo(Grade, { foreignKey: "grade_id", onDelete: "CASCADE" });
-Device.belongsTo(Ram, { foreignKey: "ram_id", onDelete: "CASCADE" });
-Device.belongsTo(Storage, {
-   foreignKey: "storage_id",
-   onDelete: "CASCADE",
-});
-Device.belongsTo(Status, { foreignKey: "status_id", onDelete: "CASCADE" });
-Device.belongsTo(Brand, { foreignKey: "brand_id", onDelete: "CASCADE" });
+const validateIMEI = (imei) => {
+   // Regular expression for exactly 15 digits
+   const isValidLength = /^\d{15}$/.test(imei);
+
+   // Luhn algorithm for IMEI checksum validation
+   const isValidChecksum = (number) => {
+      let sum = 0;
+      let shouldDouble = false;
+      for (let i = number.length - 1; i >= 0; i--) {
+         let digit = parseInt(number.charAt(i), 10);
+         if (shouldDouble) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+         }
+         sum += digit;
+         shouldDouble = !shouldDouble;
+      }
+      return sum % 10 === 0;
+   };
+
+   return isValidLength && isValidChecksum(imei);
+};
 
 module.exports = Device;

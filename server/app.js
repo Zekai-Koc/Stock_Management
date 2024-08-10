@@ -1,9 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
 
-const Mobile = require("./models/mobile");
+const Device = require("./models/device");
 
-const mobileRouter = require("./routes/mobileRoutes");
+const deviceRouter = require("./routes/deviceRoutes");
 
 const app = express();
 
@@ -13,6 +13,6 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json());
 
-app.use("/api/v1/mobiles", mobileRouter);
+app.use("/api/v1/devices", deviceRouter);
 
 module.exports = app;
