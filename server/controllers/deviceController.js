@@ -12,13 +12,144 @@ const {
 } = require("../models");
 
 // Read all mobiles
+// const getAllDevices = async (req, res) => {
+//    console.log("getAllDevices");
+//    try {
+//       const devices = await Device.findAll();
+//       res.json({
+//          count: devices.length,
+//          devices,
+//       });
+//    } catch (error) {
+//       console.error("Error fetching Devices:", error);
+//       res.status(500).send("Error fetching Devices");
+//    }
+// };
+// const getAllDevices = async (req, res) => {
+//    console.log("getAllDevices");
+//    try {
+//       const devices = await Device.findAll({
+//          include: [
+//             {
+//                model: Brand,
+//                attributes: ["name"], // Only include the brand's name
+//             },
+//             {
+//                model: Model,
+//                attributes: ["name"], // Only include the model's name
+//             },
+//             {
+//                model: RAM,
+//                attributes: ["size"], // Only include the RAM's name
+//             },
+//             {
+//                model: Storage,
+//                attributes: ["capacity"], // Only include the storage's name
+//             },
+//             {
+//                model: Color,
+//                attributes: ["name"], // Only include the color's name
+//             },
+//             {
+//                model: Grade,
+//                attributes: ["name"], // Only include the grade's name
+//             },
+//             {
+//                model: Status,
+//                attributes: ["name"], // Only include the status's name
+//             },
+//          ],
+//       });
+
+//       // Map the results to replace IDs with names
+//       const result = devices.map((device) => ({
+//          imei: device.imei,
+//          brand: device.Brand.name,
+//          model: device.Model.name,
+//          ram: device.RAM.size,
+//          storage: device.Storage.capacity,
+//          color: device.Color.name,
+//          grade: device.Grade.name,
+//          status: device.Status.name,
+//          melding: device.melding,
+//          catalog: device.catalog_number,
+//          purchaseDate: device.purchaseDate,
+//       }));
+
+//       res.json({
+//          count: result.length,
+//          devices: result,
+//       });
+//    } catch (error) {
+//       console.error("Error fetching Devices:", error);
+//       res.status(500).send("Error fetching Devices");
+//    }
+// };
+
+// Read all devices and group by brand
 const getAllDevices = async (req, res) => {
    console.log("getAllDevices");
    try {
-      const devices = await Device.findAll();
+      const devices = await Device.findAll({
+         include: [
+            {
+               model: Brand,
+               attributes: ["name"], // Only include the brand's name
+            },
+            {
+               model: Model,
+               attributes: ["name"], // Only include the model's name
+            },
+            {
+               model: RAM,
+               attributes: ["size"], // Only include the RAM's size
+            },
+            {
+               model: Storage,
+               attributes: ["capacity"], // Only include the storage's capacity
+            },
+            {
+               model: Color,
+               attributes: ["name"], // Only include the color's name
+            },
+            {
+               model: Grade,
+               attributes: ["name"], // Only include the grade's name
+            },
+            {
+               model: Status,
+               attributes: ["name"], // Only include the status's name
+            },
+         ],
+      });
+
+      // Map the results to replace IDs with names
+      const mappedDevices = devices.map((device) => ({
+         imei: device.imei,
+         brand: device.Brand.name,
+         model: device.Model.name,
+         ram: device.RAM.size,
+         storage: device.Storage.capacity,
+         color: device.Color.name,
+         grade: device.Grade.name,
+         status: device.Status.name,
+         melding: device.melding,
+         catalog: device.catalog_number,
+         purchaseDate: device.purchaseDate,
+      }));
+
+      // Group devices by brand
+      const groupedByBrand = mappedDevices.reduce((acc, device) => {
+         if (!acc[device.brand]) {
+            acc[device.brand] = [];
+         }
+         acc[device.brand].push(device);
+         return acc;
+      }, {});
+
       res.json({
-         count: devices.length,
-         devices,
+         count: mappedDevices.length,
+         devicesByBrand: groupedByBrand,
       });
    } catch (error) {
       console.error("Error fetching Devices:", error);
