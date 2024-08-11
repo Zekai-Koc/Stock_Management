@@ -1,6 +1,6 @@
 // models/index.js
 
-const sequelize = require("../database/database"); // Import your Sequelize instance
+const sequelize = require("../database/database");
 const Brand = require("./Brand");
 const Device = require("./Device");
 const Model = require("./Model");
@@ -9,6 +9,7 @@ const RAM = require("./RAM");
 const Storage = require("./Storage");
 const Color = require("./Color");
 const Grade = require("./Grade");
+const Catalog = require("./Catalog");
 
 // Define associations
 Brand.hasMany(Device, { foreignKey: "brandId" });
@@ -28,6 +29,8 @@ Color.hasMany(Device, { foreignKey: "colorId" });
 
 Grade.hasMany(Device, { foreignKey: "gradeId" });
 
+Catalog.hasMany(Device, { foreignKey: "catalogId" });
+
 // Export all models and sequelize instance
 module.exports = {
    // sequelize,
@@ -39,4 +42,5 @@ module.exports = {
    Storage,
    Color,
    Grade,
+   Catalog,
 };
