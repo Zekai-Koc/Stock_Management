@@ -4,7 +4,10 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>MMT Stock Manager</title>
-      <link rel="stylesheet" href="./styles/common_styles.css" />
+      <!-- Include Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+      <link rel="stylesheet" href="../styles/common_styles.css" />
    </head>
    <body>
       <div id="container">
@@ -47,5 +50,22 @@
             </nav>
          </aside>
       </div>
+
+      <main id="app">
+         <section>
+            <h2>Dashboard</h2>
+            <div class="summary">
+               <div>Total Devices: <span id="totalDevices">0</span></div>
+               <div>In Stock: <span id="inStock">0</span></div>
+               <div>Sold: <span id="sold">0</span></div>
+               <div>Pending: <span id="pending">0</span></div>
+            </div>
+            <div>
+               <canvas id="brandChart"></canvas>
+            </div>
+         </section>
+      </main>
+
+      <script src="../scripts/index.js"></script>
    </body>
 </html>
