@@ -3,8 +3,9 @@
 
 const app = require("./app");
 
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const HOST = '0.0.0.0'; // This will bind the server to all network interfaces
 
-const server = app.listen(port, () => {
-   console.log(`Server is running on http://localhost:${port}`);
+const server = app.listen(PORT, HOST, () => {
+   console.log(`Server running at http://${HOST}:${PORT}/`);
 });
