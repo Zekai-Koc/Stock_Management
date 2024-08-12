@@ -78,7 +78,7 @@ th {
 }
 
 .delete-btn {
-   background-color: #f44336; /* Red color */
+   background-color: #f44336;
    color: white;
    border: none;
    padding: 5px 10px;
@@ -86,5 +86,5 @@ th {
 }
 
 .delete-btn:hover {
-   background-color: #d32f2f; /* Darker red on hover */
+   background-color: #d32f2f;
 }

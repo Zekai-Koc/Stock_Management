@@ -5,7 +5,7 @@ const sequelize = new Sequelize("postgres", "postgres", "3570", {
    host: "localhost",
    dialect: "postgres",
    port: 5433,
-   logging: false, // Disable logging
+   logging: true, // Disable logging
 });
 
 // Test the connection

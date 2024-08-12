@@ -9,6 +9,7 @@ const {
    Storage,
    Color,
    Grade,
+   Catalog,
 } = require("../models");
 
 // Read all mobiles
@@ -120,6 +121,10 @@ const getAllDevices = async (req, res) => {
                model: Status,
                attributes: ["name"], // Only include the status's name
             },
+            {
+               model: Catalog,
+               attributes: ["catalog_number"],
+            },
          ],
       });
 
@@ -134,7 +139,7 @@ const getAllDevices = async (req, res) => {
          grade: device.Grade.name,
          status: device.Status.name,
          melding: device.melding,
-         catalog: device.catalog_number,
+         catalog: device.Catalog.catalog_number,
          purchaseDate: device.purchaseDate,
       }));
 
@@ -181,129 +186,66 @@ const getDevice = async (req, res) => {
 };
 
 // Create a new Device
-// const createDevice = async (req, res) => {
-//    console.log("createDevice");
-//    console.log("createDevice", req.body);
-
-//    const {
-//       imei,
-//       brandId,
-//       modelId,
-//       ramId,
-//       storageId,
-//       colorId,
-//       gradeId,
-//       statusId,
-//       melding,
-//       catalogId,
-//       purchaseDate,
-//    } = req.body;
-
-//    try {
-//       // Validate request body
-//       if (
-//          !imei ||
-//          !brandId ||
-//          !modelId ||
-//          !ramId ||
-//          !storageId ||
-//          !colorId ||
-//          !gradeId ||
-//          !statusId ||
-//          !melding ||
-//          !catalogId ||
-//          !purchaseDate
-//       ) {
-//          return res.status(400).send("Missing required fields");
-//       }
-
-//       // Create the new device
-//       const newDevice = await Device.create({
-//          imei,
-//          brandId,
-//          modelId,
-//          ramId,
-//          storageId,
-//          colorId,
-//          gradeId,
-//          statusId,
-//          melding,
-//          catalogId,
-//          purchaseDate,
-//       });
-
-//       res.status(201).json({
-//          status: "success",
-//          data: {
-//             device: newDevice,
-//          },
-//       });
-//    } catch (error) {
-//       console.error("Error adding Device:", error);
-//       res.status(500).send("Error adding Device");
-//    }
-// };
-
 const createDevice = async (req, res) => {
+   console.log("createDevice");
+   console.log("createDevice", req.body);
+
+   const {
+      imei,
+      brandId,
+      modelId,
+      ramId,
+      storageId,
+      colorId,
+      gradeId,
+      statusId,
+      melding,
+      catalogId,
+      purchaseDate,
+   } = req.body;
+
    try {
-      const {
-         brand,
-         model,
-         ram,
-         storage,
-         color,
-         grade,
-         imei,
-         purchaseDate,
-         status,
-         melding,
-      } = req.body;
-
-      // Find corresponding IDs for each attribute
-      const brandRecord = await Brand.findOne({ where: { name: brand } });
-      const modelRecord = await Model.findOne({ where: { name: model } });
-      const ramRecord = await RAM.findOne({ where: { size: ram } });
-      const storageRecord = await Storage.findOne({
-         where: { capacity: storage },
-      });
-      const colorRecord = await Color.findOne({ where: { name: color } });
-      const gradeRecord = await Grade.findOne({ where: { name: grade } });
-      const statusRecord = await Status.findOne({ where: { name: status } });
-
-      // Validate all required records are found
+      // Validate request body
       if (
-         !brandRecord ||
-         !modelRecord ||
-         !ramRecord ||
-         !storageRecord ||
-         !colorRecord ||
-         !gradeRecord ||
-         !statusRecord
+         !imei ||
+         !brandId ||
+         !modelId ||
+         !ramId ||
+         !storageId ||
+         !colorId ||
+         !gradeId ||
+         !statusId ||
+         !melding ||
+         !catalogId ||
+         !purchaseDate
       ) {
-         return res
-            .status(400)
-            .json({ error: "Invalid attribute value provided" });
+         return res.status(400).send("Missing required fields");
       }
 
-      // Create new device record
+      // Create the new device
       const newDevice = await Device.create({
          imei,
-         brandId: brandRecord.id,
-         modelId: modelRecord.id,
-         ramId: ramRecord.id,
-         storageId: storageRecord.id,
-         colorId: colorRecord.id,
-         gradeId: gradeRecord.id,
-         statusId: statusRecord.id,
-         melding: melding === "Yes", // Convert to boolean
-         purchaseDate: new Date(purchaseDate),
-         catalogId: 1, // Example default catalog ID, adjust as needed
+         brandId,
+         modelId,
+         ramId,
+         storageId,
+         colorId,
+         gradeId,
+         statusId,
+         melding,
+         catalogId,
+         purchaseDate,
       });
 
-      res.status(201).json(newDevice);
+      res.status(201).json({
+         status: "success",
+         data: {
+            device: newDevice,
+         },
+      });
    } catch (error) {
-      console.error("Error creating device:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      console.error("Error adding Device:", error);
+      res.status(500).send("Error adding Device");
    }
 };
 

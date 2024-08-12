@@ -52,6 +52,7 @@ exports.getAllSelectOptions = async (req, res) => {
          storages,
          colors,
          grades,
+         catalog,
       });
    } catch (error) {
       console.error("Error fetching select options:", error);

@@ -7,6 +7,7 @@ const RAM = require("./RAM");
 const Storage = require("./Storage");
 const Color = require("./Color");
 const Grade = require("./Grade");
+const Catalog = require("./Catalog");
 
 const Device = sequelize.define(
    "Device",
@@ -135,5 +136,6 @@ Device.belongsTo(RAM, { foreignKey: "ramId" });
 Device.belongsTo(Storage, { foreignKey: "storageId" });
 Device.belongsTo(Color, { foreignKey: "colorId" });
 Device.belongsTo(Grade, { foreignKey: "gradeId" });
+Device.belongsTo(Catalog, { foreignKey: "catalogId" });
 
 module.exports = Device;

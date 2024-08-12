@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
    const app = document.getElementById("app");
-   const homeBtn = document.getElementById("homeBtn");
-   const addDeviceBtn = document.getElementById("addDeviceBtn");
-   const viewDevicesBtn = document.getElementById("viewDevicesBtn");
+   // const homeBtn = document.getElementById("homeBtn");
+   // const addDeviceBtn = document.getElementById("addDeviceBtn");
+   // const viewDevicesBtn = document.getElementById("viewDevicesBtn");
 
    // Load initial view (Dashboard)
    loadHome();
 
-   homeBtn.addEventListener("click", loadHome);
-   addDeviceBtn.addEventListener("click", loadAddDevice);
-   viewDevicesBtn.addEventListener("click", loadViewDevices);
+   // homeBtn.addEventListener("click", loadHome);
+   // addDeviceBtn.addEventListener("click", loadAddDevice);
+   // viewDevicesBtn.addEventListener("click", loadViewDevices);
 
    async function loadHome() {
       app.innerHTML = `
@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
          </section>
       `;
-      updateSummary();
+      // console.log("Before updateSummary");
+      // await updateSummary(); // Direct call to updateSummary
+      // console.log("After updateSummary");
       await loadBrandChart(); // Load chart data after summary
    }
 
@@ -93,142 +95,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
    }
 
-   function loadAddDevice() {
-      app.innerHTML = `
-         <section>
-            <h2>Add New Device</h2>
-            <form id="deviceForm">
-               <!-- form fields here -->
-               <button type="submit">Save Device</button>
-            </form>
-         </section>
-      `;
-      const deviceForm = document.getElementById("deviceForm");
-
-      deviceForm.addEventListener("submit", function (e) {
-         e.preventDefault();
-         const newDevice = {
-            brand: deviceForm.brand.value,
-            model: deviceForm.model.value,
-            ram: deviceForm.ram.value,
-            storage: deviceForm.storage.value,
-            color: deviceForm.color.value,
-            grade: deviceForm.grade.value,
-            imei: deviceForm.imei.value,
-            serialNumber: deviceForm.serialNumber.value,
-            purchaseDate: deviceForm.purchaseDate.value,
-            status: deviceForm.status.value,
-            notes: deviceForm.notes.value,
-         };
-         saveDevice(newDevice);
-         loadHome();
-      });
-   }
-
-   async function loadViewDevices() {
-      app.innerHTML = `
-         <section>
-            <h2>All Devices</h2>
-            <table id="deviceTable">
-               <thead>
-                  <tr>
-                     <th>No.</th> 
-                     <th>Brand</th>
-                     <th>Model</th>
-                     <th>IMEI</th>
-                     <th>RAM (GB)</th>
-                     <th>Storage (GB)</th>
-                     <th>Color</th>
-                     <th>Grade</th>
-                     <th>Status</th>
-                     <th>Melded</th>
-                     <th>Purchase Date</th>
-                  </tr>
-               </thead>
-               <tbody id="deviceTableBody"></tbody>
-            </table>
-         </section>
-      `;
-      const deviceTableBody = document.getElementById("deviceTableBody");
-
-      try {
-         const response = await getDevices(); // Fetch JSON data
-         const devicesByBrand = response.devicesByBrand; // Extract devicesByBrand from the response
-         const devices = [];
-
-         // Flatten the devicesByBrand object into a single list
-         for (const brand in devicesByBrand) {
-            if (devicesByBrand.hasOwnProperty(brand)) {
-               devicesByBrand[brand].forEach((device) => {
-                  devices.push({ brand, ...device });
-               });
-            }
-         }
-
-         // Sort devices: prioritize Apple and Samsung first
-         devices.sort((a, b) => {
-            const priority = ["Apple", "Samsung"];
-            const aPriority = priority.indexOf(a.brand);
-            const bPriority = priority.indexOf(b.brand);
-
-            // If both brands are in the priority list, sort them accordingly
-            if (aPriority > -1 && bPriority > -1) {
-               return aPriority - bPriority;
-            }
-            // Place priority brands (Apple, Samsung) first
-            if (aPriority > -1) {
-               return -1; // a is a priority brand, so it should come first
-            }
-            if (bPriority > -1) {
-               return 1; // b is a priority brand, so it should come first
-            }
-            // If neither are priority brands, maintain original order
-            return 0;
-         });
-
-         // Create and append rows to the table
-         devices.forEach((device, index) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-               <td>${index + 1}</td>
-               <td>${device.brand}</td>
-               <td>${device.model}</td>
-               <td>${device.imei}</td>
-               <td>${device.ram}</td>
-               <td>${device.storage}</td>
-               <td>${device.color}</td>
-               <td>${device.grade}</td>
-               <td>${device.status}</td>
-               <td>${device.melding ? "Yes" : "No"}</td>
-               <td>${new Date(device.purchaseDate).toLocaleDateString()}</td>
-            `;
-            deviceTableBody.appendChild(row);
-         });
-      } catch (error) {
-         console.error("Error fetching devices:", error);
-         deviceTableBody.innerHTML =
-            "<tr><td colspan='11'>Failed to load devices.</td></tr>";
-      }
-   }
-
-   async function saveDevice(device) {
-      try {
-         const response = await fetch("http://localhost:3000/api/v1/devices", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(device),
-         });
-         if (!response.ok) {
-            throw new Error("Network response was not ok.");
-         }
-         await response.json();
-      } catch (error) {
-         console.error("Error saving device:", error);
-      }
-   }
-
    async function getDevices() {
       try {
          const response = await fetch("http://localhost:3000/api/v1/devices");
@@ -243,9 +109,32 @@ document.addEventListener("DOMContentLoaded", function () {
       }
    }
 
-   async function updateSummary() {
+   async function getStatusStats() {
+      console.log("getStatusStats called"); // Log at the start
+
       try {
-         const result = await getDevices();
+         const response = await fetch(
+            "http://localhost:3000/api/v1/devices/statusstats"
+         );
+         if (!response.ok) {
+            throw new Error("Network response was not ok.");
+         }
+         const result = await response.json();
+         console.log("getStatusStats result JSON:", result); // Log the parsed JSON
+
+         return result;
+      } catch (error) {
+         console.error("Error fetching devices:", error);
+         return { devicesByBrand: {} }; // Return a default empty object if error occurs
+      }
+   }
+
+   async function updateSummary() {
+      console.log("updateSummary called"); // Log at the start
+
+      try {
+         const result = await getStatusStats();
+         console.log("*************", result);
          const devices = result.devices;
          const totalDevices = result.count;
          document.getElementById("totalDevices").textContent = totalDevices;
@@ -262,3 +151,142 @@ document.addEventListener("DOMContentLoaded", function () {
       }
    }
 });
+
+//
+//
+//
+// function loadAddDevice() {
+//    app.innerHTML = `
+//       <section>
+//          <h2>Add New Device</h2>
+//          <form id="deviceForm">
+//             <!-- form fields here -->
+//             <button type="submit">Save Device</button>
+//          </form>
+//       </section>
+//    `;
+//    const deviceForm = document.getElementById("deviceForm");
+
+//    deviceForm.addEventListener("submit", function (e) {
+//       e.preventDefault();
+//       const newDevice = {
+//          brand: deviceForm.brand.value,
+//          model: deviceForm.model.value,
+//          ram: deviceForm.ram.value,
+//          storage: deviceForm.storage.value,
+//          color: deviceForm.color.value,
+//          grade: deviceForm.grade.value,
+//          imei: deviceForm.imei.value,
+//          serialNumber: deviceForm.serialNumber.value,
+//          purchaseDate: deviceForm.purchaseDate.value,
+//          status: deviceForm.status.value,
+//          notes: deviceForm.notes.value,
+//       };
+//       saveDevice(newDevice);
+//       loadHome();
+//    });
+// }
+
+// async function loadViewDevices() {
+//    app.innerHTML = `
+//       <section>
+//          <h2>All Devices</h2>
+//          <table id="deviceTable">
+//             <thead>
+//                <tr>
+//                   <th>No.</th>
+//                   <th>Brand</th>
+//                   <th>Model</th>
+//                   <th>IMEI</th>
+//                   <th>RAM (GB)</th>
+//                   <th>Storage (GB)</th>
+//                   <th>Color</th>
+//                   <th>Grade</th>
+//                   <th>Status</th>
+//                   <th>Melded</th>
+//                   <th>Purchase Date</th>
+//                </tr>
+//             </thead>
+//             <tbody id="deviceTableBody"></tbody>
+//          </table>
+//       </section>
+//    `;
+//    const deviceTableBody = document.getElementById("deviceTableBody");
+
+//    try {
+//       const response = await getDevices(); // Fetch JSON data
+//       const devicesByBrand = response.devicesByBrand; // Extract devicesByBrand from the response
+//       const devices = [];
+
+//       // Flatten the devicesByBrand object into a single list
+//       for (const brand in devicesByBrand) {
+//          if (devicesByBrand.hasOwnProperty(brand)) {
+//             devicesByBrand[brand].forEach((device) => {
+//                devices.push({ brand, ...device });
+//             });
+//          }
+//       }
+
+//       // Sort devices: prioritize Apple and Samsung first
+//       devices.sort((a, b) => {
+//          const priority = ["Apple", "Samsung"];
+//          const aPriority = priority.indexOf(a.brand);
+//          const bPriority = priority.indexOf(b.brand);
+
+//          // If both brands are in the priority list, sort them accordingly
+//          if (aPriority > -1 && bPriority > -1) {
+//             return aPriority - bPriority;
+//          }
+//          // Place priority brands (Apple, Samsung) first
+//          if (aPriority > -1) {
+//             return -1; // a is a priority brand, so it should come first
+//          }
+//          if (bPriority > -1) {
+//             return 1; // b is a priority brand, so it should come first
+//          }
+//          // If neither are priority brands, maintain original order
+//          return 0;
+//       });
+
+//       // Create and append rows to the table
+//       devices.forEach((device, index) => {
+//          const row = document.createElement("tr");
+//          row.innerHTML = `
+//             <td>${index + 1}</td>
+//             <td>${device.brand}</td>
+//             <td>${device.model}</td>
+//             <td>${device.imei}</td>
+//             <td>${device.ram}</td>
+//             <td>${device.storage}</td>
+//             <td>${device.color}</td>
+//             <td>${device.grade}</td>
+//             <td>${device.status}</td>
+//             <td>${device.melding ? "Yes" : "No"}</td>
+//             <td>${new Date(device.purchaseDate).toLocaleDateString()}</td>
+//          `;
+//          deviceTableBody.appendChild(row);
+//       });
+//    } catch (error) {
+//       console.error("Error fetching devices:", error);
+//       deviceTableBody.innerHTML =
+//          "<tr><td colspan='11'>Failed to load devices.</td></tr>";
+//    }
+// }
+
+// async function saveDevice(device) {
+//    try {
+//       const response = await fetch("http://localhost:3000/api/v1/devices", {
+//          method: "POST",
+//          headers: {
+//             "Content-Type": "application/json",
+//          },
+//          body: JSON.stringify(device),
+//       });
+//       if (!response.ok) {
+//          throw new Error("Network response was not ok.");
+//       }
+//       await response.json();
+//    } catch (error) {
+//       console.error("Error saving device:", error);
+//    }
+// }

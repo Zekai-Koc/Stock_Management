@@ -23,4 +23,9 @@ const Brand = sequelize.define(
    }
 );
 
+// Brand.hasMany(Model, {
+//    foreignKey: "brandId", // Foreign key in the Model table
+//    as: "models", // Alias for the association
+// });
+
 module.exports = Brand;

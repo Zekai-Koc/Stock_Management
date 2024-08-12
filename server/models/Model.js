@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database"); // Adjust the path to your Sequelize instance
 const Brand = require("./Brand"); // Adjust the path to your Brand model
+// const Device = require("./Device"); // Adjust the path to your Device model
 
 const Model = sequelize.define(
    "Model",

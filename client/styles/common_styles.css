@@ -7,7 +7,8 @@ body {
 
 #container {
    display: flex;
-   width: 100%;
+   /* width: 100%; */
+   height: 100%;
 }
 
 #sidebar {
@@ -18,6 +19,7 @@ body {
    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
    display: flex;
    flex-direction: column;
+   height: 100%;
 }
 
 #sidebar h2 {
@@ -46,6 +48,10 @@ body {
    padding: 20px;
    background-color: #f4f4f4;
    overflow-y: auto;
+   display: flex;
+   flex-direction: column;
+   height: 100%; /* Ensures the app area takes up full height */
+   box-sizing: border-box;
 }
 
 form {
