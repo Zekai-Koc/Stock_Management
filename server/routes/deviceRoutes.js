@@ -8,7 +8,6 @@ const {
    deleteDevice,
    checkID,
    checkBody,
-   getDeviceStats,
 } = require("../controllers/deviceController");
 
 const router = express.Router();
@@ -16,8 +15,6 @@ const router = express.Router();
 router.param("id", checkID);
 
 router.route("/").get(getAllDevices).post(checkBody, createDevice);
-
-router.route("/stats").get(getDeviceStats);
 
 router.route("/:IMEI").get(getDevice).patch(updateDevice).delete(deleteDevice);
 

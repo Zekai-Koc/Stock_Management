@@ -24,12 +24,20 @@ document.addEventListener("DOMContentLoaded", function () {
             <div>
                <canvas id="brandChart" width="400" height="400"></canvas>
             </div>
+            <div>
+               <canvas id="statusChart" width="400" height="400"></canvas>
+            </div>
+            <div>
+               <canvas id="gradeChart" width="400" height="400"></canvas>
+            </div>
          </section>
       `;
       // console.log("Before updateSummary");
       // await updateSummary(); // Direct call to updateSummary
       // console.log("After updateSummary");
       await loadBrandChart(); // Load chart data after summary
+      // await loadStatusChart(); // Load status chart
+      await loadGradeChart(); // Load grade chart
    }
 
    async function loadBrandChart() {
@@ -95,6 +103,172 @@ document.addEventListener("DOMContentLoaded", function () {
       }
    }
 
+   async function loadStatusChart() {
+      try {
+         const result = await getStatusStats();
+         const devicesByStatus = result.devicesByStatus;
+
+         // Prepare data for status chart
+         const statusCounts = {};
+         for (const device of devicesByStatus) {
+            const statusName = device.statusName;
+            statusCounts[statusName] =
+               (statusCounts[statusName] || 0) + device.count;
+         }
+
+         const labels = Object.keys(statusCounts);
+         const data = Object.values(statusCounts);
+
+         const ctx = document.getElementById("statusChart").getContext("2d");
+         new Chart(ctx, {
+            type: "bar",
+            data: {
+               labels: labels,
+               datasets: [
+                  {
+                     data: data,
+                     backgroundColor: "#4BC0C0",
+                  },
+               ],
+            },
+            options: {
+               responsive: true,
+               maintainAspectRatio: false,
+               plugins: {
+                  legend: { display: true },
+                  tooltip: { enabled: true },
+                  datalabels: {
+                     color: "#fff",
+                     formatter: (value) => `${value}`,
+                     font: { weight: "bold", size: 14 },
+                  },
+               },
+               scales: {
+                  x: { beginAtZero: true },
+                  y: { beginAtZero: true },
+               },
+            },
+            plugins: [ChartDataLabels],
+         });
+      } catch (error) {
+         console.error("Error loading status chart:", error);
+      }
+   }
+
+   async function loadGradeChart() {
+      try {
+         const response = await fetch(
+            "http://localhost:3000/api/v1/stats/getGroupedDevicesByGradeWithCounts"
+         );
+         if (!response.ok) {
+            throw new Error("Network response was not ok.");
+         }
+         const devicesByGrade = await response.json();
+
+         // Prepare data for chart
+         const labels = devicesByGrade.map((item) => item.gradeName);
+         const data = devicesByGrade.map((item) => item.count);
+
+         const ctx = document.getElementById("gradeChart").getContext("2d");
+         new Chart(ctx, {
+            type: "bar",
+            data: {
+               labels: labels,
+               datasets: [
+                  {
+                     label: "Device Count",
+                     data: data,
+                     backgroundColor: "#36A2EB",
+                     borderColor: "#1F77B4",
+                     borderWidth: 1,
+                  },
+               ],
+            },
+            options: {
+               responsive: true,
+               maintainAspectRatio: false,
+               scales: {
+                  x: {
+                     beginAtZero: true,
+                  },
+                  y: {
+                     beginAtZero: true,
+                  },
+               },
+               plugins: {
+                  legend: { display: true },
+                  datalabels: {
+                     color: "#fff",
+                     formatter: (value) => value,
+                     font: { weight: "bold", size: 14 },
+                  },
+               },
+            },
+            plugins: [ChartDataLabels],
+         });
+      } catch (error) {
+         console.error("Error loading grade chart:", error);
+      }
+   }
+
+   // async function loadGradeChart() {
+   //    try {
+   //       const result = await getGrades();
+   //       console.log("result", result);
+   //       const devicesByGrade = result.devicesByGrade;
+
+   //       // Prepare data for grade chart
+   //       const gradeCounts = {};
+   //       for (const device of devicesByGrade) {
+   //          const gradeName = device.gradeName;
+   //          gradeCounts[gradeName] =
+   //             (gradeCounts[gradeName] || 0) + device.count;
+   //       }
+
+   //       const labels = Object.keys(gradeCounts);
+   //       const data = Object.values(gradeCounts);
+
+   //       const ctx = document.getElementById("gradeChart").getContext("2d");
+   //       new Chart(ctx, {
+   //          type: "doughnut",
+   //          data: {
+   //             labels: labels,
+   //             datasets: [
+   //                {
+   //                   data: data,
+   //                   backgroundColor: [
+   //                      "#FF6384",
+   //                      "#36A2EB",
+   //                      "#FFCE56",
+   //                      "#4BC0C0",
+   //                      "#9966FF",
+   //                   ],
+   //                },
+   //             ],
+   //          },
+   //          options: {
+   //             responsive: true,
+   //             maintainAspectRatio: false,
+   //             plugins: {
+   //                legend: { display: true },
+   //                tooltip: { enabled: true },
+   //                datalabels: {
+   //                   color: "#fff",
+   //                   formatter: (value, context) =>
+   //                      `${
+   //                         context.chart.data.labels[context.dataIndex]
+   //                      }: ${value}`,
+   //                   font: { weight: "bold", size: 14 },
+   //                },
+   //             },
+   //          },
+   //          plugins: [ChartDataLabels],
+   //       });
+   //    } catch (error) {
+   //       console.error("Error loading grade chart:", error);
+   //    }
+   // }
+
    async function getDevices() {
       try {
          const response = await fetch("http://localhost:3000/api/v1/devices");
@@ -106,6 +280,36 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (error) {
          console.error("Error fetching devices:", error);
          return { devicesByBrand: {} }; // Return a default empty object if error occurs
+      }
+   }
+
+   async function getStatusStats() {
+      try {
+         const response = await fetch(
+            "http://localhost:3000/api/v1/devices/statusstats"
+         );
+         if (!response.ok) {
+            throw new Error("Network response was not ok.");
+         }
+         return await response.json();
+      } catch (error) {
+         console.error("Error fetching status stats:", error);
+         return { devicesByStatus: [] }; // Return a default empty array if error occurs
+      }
+   }
+
+   async function getGrades() {
+      try {
+         const response = await fetch(
+            "http://localhost:3000/api/v1/stats/getGroupedDevicesByGradeWithCounts"
+         );
+         if (!response.ok) {
+            throw new Error("Network response was not ok.");
+         }
+         return await response.json();
+      } catch (error) {
+         console.error("Error fetching grades:", error);
+         return { devicesByGrade: [] }; // Return a default empty array if error occurs
       }
    }
 

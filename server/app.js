@@ -8,13 +8,14 @@ const deviceRouter = require("./routes/deviceRoutes");
 const selectOptionsRouter = require("./routes/selectOptionsRoutes");
 const statusStatsRouter = require("./routes/statusStatsRoutes");
 const getModelsByBrand = require("./routes/getModelsByBrandRoutes");
+const statsRouter = require("./routes/statsRoutes");
 
 const app = express();
 app.use(cors());
 
-if (process.env.NODE_ENV === "development") {
-   app.use(morgan("dev"));
-}
+// if (process.env.NODE_ENV === "development") {
+app.use(morgan("dev"));
+// }
 
 app.use(express.json());
 
@@ -22,5 +23,6 @@ app.use("/api/v1/devices", deviceRouter);
 app.use("/api/v1/selectoptions", selectOptionsRouter);
 app.use("/api/v1/statusstats", statusStatsRouter);
 app.use("/api/v1/getModelsByBrand", getModelsByBrand);
+app.use("/api/v1/stats", statsRouter);
 
 module.exports = app;
