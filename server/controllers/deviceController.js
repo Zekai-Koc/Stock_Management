@@ -322,104 +322,6 @@ const checkBody = async (req, res, next) => {
    next();
 };
 
-const getDeviceStats = async (req, res) => {
-   try {
-      // Total count of devices
-      const totalDevices = await Device.count();
-
-      // Count devices grouped by brand name
-      const devicesByBrand = await Device.findAll({
-         attributes: [
-            // [Sequelize.col("Brand.id"), "brandId"],
-            [Sequelize.col("Brand.name"), "brandName"],
-            [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
-         ],
-         include: [{ model: Brand, attributes: [] }],
-         group: ["Brand.id", "Brand.name"],
-      });
-
-      // Count devices grouped by model name
-      const devicesByModel = await Device.findAll({
-         attributes: [
-            // [Sequelize.col("Model.id"), "modelId"],
-            [Sequelize.col("Model.name"), "modelName"],
-            [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
-         ],
-         include: [{ model: Model, attributes: [] }],
-         group: ["Model.id", "Model.name"],
-      });
-
-      // Count devices grouped by status name
-      const devicesByStatus = await Device.findAll({
-         attributes: [
-            // [Sequelize.col("Status.id"), "statusId"],
-            [Sequelize.col("Status.name"), "statusName"],
-            [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
-         ],
-         include: [{ model: Status, attributes: [] }],
-         group: ["Status.id", "Status.name"],
-      });
-
-      // Count devices grouped by RAM size
-      const devicesByRAM = await Device.findAll({
-         attributes: [
-            // [Sequelize.col("RAM.id"), "ramId"],
-            [Sequelize.col("RAM.size"), "ramSize"],
-            [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
-         ],
-         include: [{ model: RAM, attributes: [] }],
-         group: ["RAM.id", "RAM.size"],
-      });
-
-      // Count devices grouped by storage capacity
-      const devicesByStorage = await Device.findAll({
-         attributes: [
-            // [Sequelize.col("Storage.id"), "storageId"],
-            [Sequelize.col("Storage.capacity"), "storage"],
-            [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
-         ],
-         include: [{ model: Storage, attributes: [] }],
-         group: ["Storage.id", "Storage.capacity"],
-      });
-
-      // Count devices grouped by color
-      const devicesByColor = await Device.findAll({
-         attributes: [
-            // [Sequelize.col("Color.id"), "colorId"],
-            [Sequelize.col("Color.name"), "colorName"],
-            [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
-         ],
-         include: [{ model: Color, attributes: [] }],
-         group: ["Color.id", "Color.name"],
-      });
-
-      // Count devices grouped by grade
-      const devicesByGrade = await Device.findAll({
-         attributes: [
-            // [Sequelize.col("Grade.id"), "gradeId"],
-            [Sequelize.col("Grade.name"), "gradeName"],
-            [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
-         ],
-         include: [{ model: Grade, attributes: [] }],
-         group: ["Grade.id", "Grade.name"],
-      });
-
-      res.json({
-         totalDevices,
-         devicesByBrand,
-         devicesByModel,
-         devicesByStatus,
-         devicesByRAM,
-         devicesByStorage,
-         devicesByColor,
-         devicesByGrade,
-      });
-   } catch (error) {
-      console.error("Error fetching device stats:", error);
-      res.status(500).send("Error fetching device stats");
-   }
-};
-
 module.exports = {
    getAllDevices,
    getDevice,
@@ -428,5 +330,4 @@ module.exports = {
    deleteDevice,
    checkID,
    checkBody,
-   getDeviceStats,
 };
