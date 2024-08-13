@@ -1,0 +1,13 @@
+/* Ensure that the chart containers are responsive */
+.chart-container {
+   position: relative;
+   height: 100px; /* Adjust height as needed */
+   width: 100px; /* Full width of the parent container */
+   max-width: 600px; /* Optional max-width for larger screens */
+   margin: 0 auto; /* Center the chart container */
+}
+
+/* Optional: add some spacing around the charts */
+.chart-container + .chart-container {
+   margin-top: 20px;
+}

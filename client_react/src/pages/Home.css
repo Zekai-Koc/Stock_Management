@@ -1,0 +1,9 @@
+.summary {
+   display: flex;
+   justify-content: space-around;
+   margin-bottom: 20px;
+}
+
+.summary div {
+   font-size: 1.2em;
+}
