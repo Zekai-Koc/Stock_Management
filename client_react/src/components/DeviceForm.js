@@ -1,0 +1,98 @@
+import React from "react";
+import FormField from "./FormField";
+import CheckboxField from "./CheckboxField";
+import "./DeviceForm.css"; // Import CSS for styling
+
+const DeviceForm = ({ formData, options, onChange, onSubmit }) => {
+   return (
+      <form id="deviceForm" onSubmit={onSubmit}>
+         <FormField
+            id="brand"
+            label="Brand"
+            type="select"
+            value={formData.brand}
+            options={options.brands}
+            onChange={onChange}
+         />
+         <FormField
+            id="model"
+            label="Model"
+            type="select"
+            value={formData.model}
+            options={options.models}
+            onChange={onChange}
+         />
+         <FormField
+            id="ram"
+            label="RAM"
+            type="select"
+            value={formData.ram}
+            options={options.rams}
+            onChange={onChange}
+         />
+         <FormField
+            id="storage"
+            label="Storage Capacity"
+            type="select"
+            value={formData.storage}
+            options={options.storages}
+            onChange={onChange}
+         />
+         <FormField
+            id="color"
+            label="Color"
+            type="select"
+            value={formData.color}
+            options={options.colors}
+            onChange={onChange}
+         />
+         <FormField
+            id="grade"
+            label="Grade"
+            type="select"
+            value={formData.grade}
+            options={options.grades}
+            onChange={onChange}
+         />
+         <FormField
+            id="purchaseDate"
+            label="Purchase Date"
+            type="date"
+            value={formData.purchaseDate}
+            onChange={onChange}
+         />
+         <FormField
+            id="status"
+            label="Status"
+            type="select"
+            value={formData.status}
+            options={options.statuses}
+            onChange={onChange}
+         />
+         <FormField
+            id="imei"
+            label="IMEI"
+            type="text"
+            value={formData.imei}
+            onChange={onChange}
+         />
+         <FormField
+            id="catalog"
+            label="Catalog"
+            type="select"
+            value={formData.catalog}
+            options={options.catalogs}
+            onChange={onChange}
+         />
+         <CheckboxField
+            id="melding"
+            label="Melding"
+            checked={formData.melding}
+            onChange={onChange}
+         />
+         <button type="submit">Add Device(s) to DB</button>
+      </form>
+   );
+};
+
+export default DeviceForm;

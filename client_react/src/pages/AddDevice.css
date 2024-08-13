@@ -1,0 +1,49 @@
+/* AddDevice.css */
+form {
+   display: flex;
+   flex-direction: column;
+   max-width: 600px;
+   margin: 0 auto;
+}
+
+label {
+   margin-top: 10px;
+}
+
+select,
+input {
+   margin-top: 5px;
+}
+
+button {
+   margin-top: 20px;
+   padding: 10px;
+   background-color: #007bff;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+}
+
+button:hover {
+   background-color: #0056b3;
+}
+
+.table-container {
+   margin-top: 20px;
+}
+
+#devicesTable {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+#devicesTable th,
+#devicesTable td {
+   border: 1px solid #ddd;
+   padding: 8px;
+}
+
+#devicesTable th {
+   background-color: #f2f2f2;
+}

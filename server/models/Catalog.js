@@ -9,7 +9,7 @@ const Catalog = sequelize.define(
          autoIncrement: true,
          primaryKey: true,
       },
-      catalog_number: {
+      name: {
          type: DataTypes.STRING,
          allowNull: false,
          unique: true,

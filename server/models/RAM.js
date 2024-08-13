@@ -9,7 +9,7 @@ const RAM = sequelize.define(
          autoIncrement: true,
          primaryKey: true,
       },
-      size: {
+      name: {
          type: DataTypes.INTEGER,
          allowNull: false,
          unique: true,

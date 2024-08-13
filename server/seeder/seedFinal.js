@@ -24,12 +24,12 @@ const seed = async () => {
          { name: "Google" },
          { name: "OnePlus" },
          { name: "Sony" },
-       	{ name: "Huawei" },
-	      { name: "Xiaomi" },
+         { name: "Huawei" },
+         { name: "Xiaomi" },
          { name: "Vivo" },
          { name: "Realme" },
          { name: "Lg" },
-       	{ name: "Nokia" },
+         { name: "Nokia" },
          { name: "Poco" },
          { name: "Honor" },
          { name: "Motorola" },
@@ -71,7 +71,7 @@ const seed = async () => {
          { name: "iPhone 14 Plus", brandId: apple.id },
          { name: "iPhone 14 Pro", brandId: apple.id },
          { name: "iPhone 14 Pro Max", brandId: apple.id },
-         
+
          { name: "Samsung Galaxy A01", brandId: samsung.id },
          { name: "Samsung Galaxy A02", brandId: samsung.id },
          { name: "Samsung Galaxy A03", brandId: samsung.id },
@@ -120,7 +120,7 @@ const seed = async () => {
          { name: "Samsung Galaxy A9", brandId: samsung.id },
          { name: "Samsung Galaxy A90", brandId: samsung.id },
          { name: "Samsung Galaxy A9 Pro", brandId: samsung.id },
-         
+
          { name: "Samsung Galaxy M013", brandId: samsung.id },
          { name: "Samsung Galaxy M015", brandId: samsung.id },
          { name: "Samsung Galaxy M017", brandId: samsung.id },
@@ -137,7 +137,7 @@ const seed = async () => {
          { name: "Samsung Galaxy M0405", brandId: samsung.id },
          { name: "Samsung Galaxy M0426", brandId: samsung.id },
          { name: "Samsung Galaxy M0515", brandId: samsung.id },
-         
+
          { name: "Samsung Galaxy S6", brandId: samsung.id },
          { name: "Samsung Galaxy S7", brandId: samsung.id },
          { name: "Samsung Galaxy S8", brandId: samsung.id },
@@ -160,7 +160,7 @@ const seed = async () => {
          { name: "Samsung Galaxy S24", brandId: samsung.id },
          { name: "Samsung Galaxy S24+", brandId: samsung.id },
          { name: "Samsung Galaxy S24 Ultra", brandId: samsung.id },
-         
+
          { name: "Samsung Galaxy Z Flip", brandId: samsung.id },
          { name: "Samsung Galaxy Z Fold", brandId: samsung.id },
          { name: "Samsung Galaxy Z Fold 2", brandId: samsung.id },
@@ -168,9 +168,9 @@ const seed = async () => {
          { name: "Samsung Galaxy Z Fold 3 ", brandId: samsung.id },
          { name: "Samsung Galaxy Z Flip 4", brandId: samsung.id },
          { name: "Samsung Galaxy Z Fold 4", brandId: samsung.id },
-         
+
          { name: "Samsung Galaxy Xcover 4", brandId: samsung.id },
-         
+
          { name: "Samsung Galaxy Note", brandId: samsung.id },
          { name: "Samsung Galaxy Note 2", brandId: samsung.id },
          { name: "Samsung Galaxy Note 3", brandId: samsung.id },
@@ -183,11 +183,8 @@ const seed = async () => {
          { name: "Samsung Galaxy Note 9", brandId: samsung.id },
          { name: "Samsung Galaxy Note 10", brandId: samsung.id },
          { name: "Samsung Galaxy Note 20", brandId: samsung.id },
-         
+
          { name: "Pixel 6", brandId: google.id },
-         { name: "OnePlus 9", brandId: onePlus.id },
-         { name: "Xperia 5 III", brandId: sony.id },
-         
          { name: "OnePlus 9", brandId: onePlus.id },
          { name: "Xperia 5 III", brandId: sony.id },
       ]);
@@ -195,7 +192,9 @@ const seed = async () => {
       const iphone12Pro = await Model.findOne({
          where: { name: "iPhone 12 Pro" },
       });
-      const galaxyS21 = await Model.findOne({ where: { name: "Galaxy S21" } });
+      const galaxyS21 = await Model.findOne({
+         where: { name: "Samsung Galaxy S21" },
+      });
       const pixel6 = await Model.findOne({ where: { name: "Pixel 6" } });
       const onePlus9 = await Model.findOne({ where: { name: "OnePlus 9" } });
       const xperia5III = await Model.findOne({
@@ -214,7 +213,7 @@ const seed = async () => {
          { name: "Red" },
          { name: "Silver" },
          { name: "White" },
-         { name: "Yellow" }
+         { name: "Yellow" },
       ]);
 
       const black = await Color.findOne({ where: { name: "Black" } });
@@ -223,48 +222,48 @@ const seed = async () => {
       const red = await Color.findOne({ where: { name: "Red" } });
 
       await RAM.bulkCreate([
-         { size: "2" },
-         { size: "4" },
-         { size: "6" },
-         { size: "8" },
-         { size: "10" },
-         { size: "12" },
-         { size: "14" },
-         { size: "16" },
-         { size: "18" },
-         { size: "20" },
+         { name: "2" },
+         { name: "4" },
+         { name: "6" },
+         { name: "8" },
+         { name: "10" },
+         { name: "12" },
+         { name: "14" },
+         { name: "16" },
+         { name: "18" },
+         { name: "20" },
       ]);
 
-      const ram4 = await RAM.findOne({ where: { size: "4" } });
-      const ram6 = await RAM.findOne({ where: { size: "6" } });
-      const ram8 = await RAM.findOne({ where: { size: "8" } });
-      const ram10 = await RAM.findOne({ where: { size: "10" } });
-      const ram12 = await RAM.findOne({ where: { size: "12" } });
+      const ram4 = await RAM.findOne({ where: { name: "4" } });
+      const ram6 = await RAM.findOne({ where: { name: "6" } });
+      const ram8 = await RAM.findOne({ where: { name: "8" } });
+      const ram10 = await RAM.findOne({ where: { name: "10" } });
+      const ram12 = await RAM.findOne({ where: { name: "12" } });
 
       await Storage.bulkCreate([
-         { capacity: "32" },
-         { capacity: "64" },
-         { capacity: "128" },
-         { capacity: "256" },
-         { capacity: "512" },
-         { capacity: "1024" },
-         { capacity: "2048" },
+         { name: "32" },
+         { name: "64" },
+         { name: "128" },
+         { name: "256" },
+         { name: "512" },
+         { name: "1024" },
+         { name: "2048" },
       ]);
 
       const storage64 = await Storage.findOne({
-         where: { capacity: "64" },
+         where: { name: "64" },
       });
       const storage256 = await Storage.findOne({
-         where: { capacity: "256" },
+         where: { name: "256" },
       });
       const storage128 = await Storage.findOne({
-         where: { capacity: "128" },
+         where: { name: "128" },
       });
       const storage512 = await Storage.findOne({
-         where: { capacity: "512" },
+         where: { name: "512" },
       });
       const storage1024 = await Storage.findOne({
-         where: { capacity: "1024" },
+         where: { name: "1024" },
       });
 
       await Grade.bulkCreate([
@@ -277,7 +276,7 @@ const seed = async () => {
          { name: "Very Good" },
          { name: "Good" },
          { name: "Fair" },
-         { name: "Poor" }
+         { name: "Poor" },
       ]);
 
       const gradeB = await Grade.findOne({ where: { name: "B" } });
@@ -291,6 +290,7 @@ const seed = async () => {
          { name: "Returned" },
          { name: "Repair" },
          { name: "Warranty" },
+         { name: "Pending" },
          { name: "KAPUT" },
       ]);
 
@@ -303,24 +303,26 @@ const seed = async () => {
       });
 
       await Catalog.bulkCreate([
-         { catalog_number: "s242" },
-         { catalog_number: "dc246" },
-         { catalog_number: "dc247" },
-         { catalog_number: "dcx1" },
-         { catalog_number: "nc241" },
+         { name: "s242" },
+         { name: "dc246" },
+         { name: "dc247" },
+         { name: "dcx1" },
+         { name: "nc241" },
+         { name: "ds250" },
+         { name: "dl212" },
       ]);
 
       const catalogS242 = await Catalog.findOne({
-         where: { catalog_number: "s242" },
+         where: { name: "s242" },
       });
       const catalogDC246 = await Catalog.findOne({
-         where: { catalog_number: "dc246" },
+         where: { name: "dc246" },
       });
       const catalogDS250 = await Catalog.findOne({
-         where: { catalog_number: "ds250" },
+         where: { name: "ds250" },
       });
       const catalogDL212 = await Catalog.findOne({
-         where: { catalog_number: "dl212" },
+         where: { name: "dl212" },
       });
 
       // Insert data into Devices table

@@ -25,11 +25,11 @@ exports.getAllSelectOptions = async (req, res) => {
       });
 
       const rams = await RAM.findAll({
-         attributes: ["id", "size"],
+         attributes: ["id", "name"],
       });
 
       const storages = await Storage.findAll({
-         attributes: ["id", "capacity"],
+         attributes: ["id", "name"],
       });
 
       const colors = await Color.findAll({
@@ -40,8 +40,8 @@ exports.getAllSelectOptions = async (req, res) => {
          attributes: ["id", "name"],
       });
 
-      const catalog = await Catalog.findAll({
-         attributes: ["id", "catalog_number"],
+      const catalogs = await Catalog.findAll({
+         attributes: ["id", "name"],
       });
 
       res.json({
@@ -52,7 +52,7 @@ exports.getAllSelectOptions = async (req, res) => {
          storages,
          colors,
          grades,
-         catalog,
+         catalogs,
       });
    } catch (error) {
       console.error("Error fetching select options:", error);

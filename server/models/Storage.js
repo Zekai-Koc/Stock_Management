@@ -9,7 +9,7 @@ const Storage = sequelize.define(
          autoIncrement: true,
          primaryKey: true,
       },
-      capacity: {
+      name: {
          type: DataTypes.INTEGER,
          allowNull: false,
          unique: true,

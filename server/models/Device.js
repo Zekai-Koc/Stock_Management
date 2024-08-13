@@ -99,6 +99,12 @@ const Device = sequelize.define(
          type: DataTypes.DATE,
          allowNull: false,
       },
+      // Add an active field to track device deactivation/deletion
+      // active: {
+      //    type: DataTypes.BOOLEAN,
+      //    allowNull: false,
+      //    defaultValue: true,
+      // },
    },
    {
       timestamps: false, // Disable automatic timestamps if not needed
