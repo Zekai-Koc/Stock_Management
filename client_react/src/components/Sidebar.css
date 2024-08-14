@@ -1,17 +1,16 @@
 /* Sidebar.css */
 
-/* Reset margins and paddings for the whole page */
 body,
 html {
    margin: 0;
    padding: 0;
    box-sizing: border-box;
-   height: 100%; /* Ensure full height */
+   height: 100%;
 }
 
 .app-container {
    display: flex;
-   height: 100vh; /* Full viewport height */
+   height: 100vh;
 }
 
 #sidebar {
@@ -41,4 +40,10 @@ html {
 
 #sidebar nav button:hover {
    background-color: #1abc9c;
+}
+
+/* Highlight active button */
+#sidebar nav button.active {
+   background-color: #1abc9c;
+   color: white;
 }
