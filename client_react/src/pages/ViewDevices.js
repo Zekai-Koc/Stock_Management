@@ -10,7 +10,7 @@ const ViewDevices = () => {
       const fetchData = async () => {
          try {
             const response = await fetch(
-               "http://localhost:7000/api/v1/devices"
+               "http://192.168.178.185:7000/api/v1/devices"
             );
             if (!response.ok) {
                throw new Error(`HTTP error! Status: ${response.status}`);
