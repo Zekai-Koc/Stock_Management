@@ -1,7 +1,7 @@
 import React from "react";
 import FormField from "./FormField";
 import CheckboxField from "./CheckboxField";
-import "./DeviceForm.css"; // Import CSS for styling
+import "./DeviceForm.css";
 
 const DeviceForm = ({ formData, options, onChange, onSubmit }) => {
    return (

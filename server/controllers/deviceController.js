@@ -115,7 +115,17 @@ const createDevice = async (req, res) => {
    console.log("createDevice");
    console.log("createDevice", req.body);
 
-   const {
+   const { imei, melding, purchaseDate } = req.body;
+   const brandId = req.body.brand;
+   const modelId = req.body.model;
+   const ramId = req.body.ram;
+   const storageId = req.body.storage;
+   const colorId = req.body.color;
+   const gradeId = req.body.grade;
+   const statusId = req.body.status;
+   const catalogId = req.body.catalog;
+
+   console.log(
       imei,
       brandId,
       modelId,
@@ -126,8 +136,8 @@ const createDevice = async (req, res) => {
       statusId,
       melding,
       catalogId,
-      purchaseDate,
-   } = req.body;
+      purchaseDate
+   );
 
    try {
       // Validate request body
@@ -144,6 +154,7 @@ const createDevice = async (req, res) => {
          !catalogId ||
          !purchaseDate
       ) {
+         console.log("Missing required fields");
          return res.status(400).send("Missing required fields");
       }
 

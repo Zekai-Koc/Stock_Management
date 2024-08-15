@@ -40,7 +40,7 @@ const AddDevice = () => {
          try {
             const response = await fetch(
                "http://localhost:7000/api/v1/selectoptions"
-            ); // Adjust URL as needed
+            );
             const data = await response.json();
             console.log(data);
             setOptions(data);
