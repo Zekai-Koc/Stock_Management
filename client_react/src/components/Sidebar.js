@@ -39,20 +39,20 @@ const Sidebar = () => {
             >
                Update Device Status
             </button>
-            <button
+            {/* <button
                id="updateDeviceBtn"
                className={activeButton === "/update-device" ? "active" : ""}
                onClick={() => handleNavigation("/update-device")}
             >
                Update Device
-            </button>
-            <button
+            </button> */}
+            {/* <button
                id="deleteDeviceBtn"
                className={activeButton === "/delete-device" ? "active" : ""}
                onClick={() => handleNavigation("/delete-device")}
             >
                Delete Device
-            </button>
+            </button> */}
             <button
                id="viewDevicesBtn"
                className={activeButton === "/view-devices" ? "active" : ""}

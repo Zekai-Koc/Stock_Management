@@ -150,7 +150,7 @@ const createDevice = async (req, res) => {
          !colorId ||
          !gradeId ||
          !statusId ||
-         !melding ||
+         // !melding ||
          !catalogId ||
          !purchaseDate
       ) {

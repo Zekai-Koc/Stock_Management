@@ -1,6 +1,6 @@
 import React from "react";
 import FormField from "./FormField";
-import CheckboxField from "./CheckboxField";
+// import CheckboxField from "./CheckboxField";
 import "./DeviceForm.css";
 
 const DeviceForm = ({ formData, options, onChange, onSubmit }) => {
@@ -70,13 +70,6 @@ const DeviceForm = ({ formData, options, onChange, onSubmit }) => {
             onChange={onChange}
          />
          <FormField
-            id="imei"
-            label="IMEI"
-            type="text"
-            value={formData.imei}
-            onChange={onChange}
-         />
-         <FormField
             id="catalog"
             label="Catalog"
             type="select"
@@ -84,13 +77,27 @@ const DeviceForm = ({ formData, options, onChange, onSubmit }) => {
             options={options.catalogs}
             onChange={onChange}
          />
-         <CheckboxField
-            id="melding"
-            label="Melding"
-            checked={formData.melding}
+         <FormField
+            id="imei"
+            label="IMEI"
+            type="text"
+            value={formData.imei}
             onChange={onChange}
          />
-         <button type="submit">Add Device(s) to DB</button>
+
+         <div id="spacer-div"></div>
+
+         <div className="checkbox-field">
+            <input
+               type="checkbox"
+               id="melding"
+               label="Melding"
+               checked={formData.melding}
+               onChange={onChange}
+            />
+            <label htmlFor="melding">Melding</label>
+         </div>
+         {/* <button type="submit">Add Device(s) to DB</button> */}
       </form>
    );
 };
