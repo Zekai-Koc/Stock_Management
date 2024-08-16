@@ -90,6 +90,8 @@ const DeviceForm = ({ formData, options, onChange, onSubmit }) => {
          <div className="checkbox-field">
             <input
                type="checkbox"
+               name="melding"
+
                id="melding"
                label="Melding"
                checked={formData.melding}

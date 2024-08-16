@@ -44,7 +44,7 @@ const ViewDevices = () => {
       if (confirmDelete) {
          try {
             const response = await fetch(
-               `http://localhost:7000/api/v1/devices/${imei}`,
+               `http://192.168.178.185:7000/api/v1/devices/${imei}`,
                {
                   method: "DELETE",
                }

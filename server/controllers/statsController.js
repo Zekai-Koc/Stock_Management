@@ -50,22 +50,22 @@ const getDeviceStats = async (req, res) => {
       const devicesByRAM = await Device.findAll({
          attributes: [
             // [Sequelize.col("RAM.id"), "ramId"],
-            [Sequelize.col("RAM.size"), "ramSize"],
+            [Sequelize.col("RAM.name"), "ramSize"],
             [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
          ],
          include: [{ model: RAM, attributes: [] }],
-         group: ["RAM.id", "RAM.size"],
+         group: ["RAM.id", "RAM.name"],
       });
 
       // Count devices grouped by storage capacity
       const devicesByStorage = await Device.findAll({
          attributes: [
             // [Sequelize.col("Storage.id"), "storageId"],
-            [Sequelize.col("Storage.capacity"), "storage"],
+            [Sequelize.col("Storage.name"), "storage"],
             [Sequelize.fn("COUNT", Sequelize.col("Device.imei")), "count"],
          ],
          include: [{ model: Storage, attributes: [] }],
-         group: ["Storage.id", "Storage.capacity"],
+         group: ["Storage.id", "Storage.name"],
       });
 
       // Count devices grouped by color

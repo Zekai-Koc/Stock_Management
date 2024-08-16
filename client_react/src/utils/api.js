@@ -1,6 +1,6 @@
 export const getDevices = async () => {
    try {
-      const response = await fetch("192.168.178.185:3000/api/v1/devices");
+      const response = await fetch("192.168.178.185:7000/api/v1/devices");
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
    } catch (error) {
@@ -12,7 +12,7 @@ export const getDevices = async () => {
 export const getStatusStats = async () => {
    try {
       const response = await fetch(
-         "192.168.178.185:3000/api/v1/devices/statusstats"
+         "192.168.178.185:7000/api/v1/devices/statusstats"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -25,7 +25,7 @@ export const getStatusStats = async () => {
 export const getGrades = async () => {
    try {
       const response = await fetch(
-         "192.168.178.185:3000/api/v1/stats/getGroupedDevicesByGradeWithCounts"
+         "192.168.178.185:7000/api/v1/stats/getGroupedDevicesByGradeWithCounts"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();

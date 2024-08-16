@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Chart from "../components/Chart.js";
+import Charts from "../components/Charts.js";
 import { getDevices, getStatusStats, getGrades } from "../utils/api";
 import "./Home.css";
 
@@ -92,13 +92,7 @@ const Home = () => {
                </div>
             </div>
             <div>
-               <Chart id="brandChart" type="pie" data={brandChartData} />
-            </div>
-            <div>
-               <Chart id="statusChart" type="bar" data={statusChartData} />
-            </div>
-            <div>
-               <Chart id="gradeChart" type="bar" data={gradeChartData} />
+               <Charts id="brandChart" type="pie" data={brandChartData} />
             </div>
          </section>
       </main>
