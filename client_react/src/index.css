@@ -52,7 +52,7 @@ html {
 
 .main-content {
    margin-left: 250px;
-   padding: 20px;
+   padding: 10px;
    /* background-color: #d72b18; */
    flex: 1; /* Ensure content area takes remaining space */
    min-height: 100vh; /* Full viewport height */

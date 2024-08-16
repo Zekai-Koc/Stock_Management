@@ -2,8 +2,9 @@
 
 form#deviceForm {
    display: grid;
-   grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-   gap: 20px; /* Spacing between columns */
+   grid-template-columns: repeat(3, 1fr);
+   gap: 20px;
+   font-family: Arial, Helvetica, sans-serif;
 }
 
 .form-field,
@@ -11,6 +12,15 @@ form#deviceForm {
    margin-bottom: 15px;
    display: flex;
    flex-direction: column;
+}
+
+.checkbox-field {
+   flex-direction: row;
+   align-items: center;
+}
+
+.checkbox-field input[type="checkbox"] {
+   margin-right: 11px; /* Space between checkbox and label */
 }
 
 label {
@@ -27,7 +37,7 @@ select {
 }
 
 button[type="submit"] {
-   grid-column: span 3; /* The button spans all three columns */
+   grid-column: span 3;
    padding: 10px 20px;
    background-color: #007bff;
    color: white;
@@ -39,22 +49,3 @@ button[type="submit"] {
 button[type="submit"]:hover {
    background-color: #0056b3;
 }
-
-/* .form-field,
-.checkbox-field {
-   margin-bottom: 15px;
-}
-
-label {
-   display: block;
-   margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="date"],
-select {
-   width: 100%;
-   padding: 8px;
-   border: 1px solid #ccc;
-   border-radius: 4px;
-} */
