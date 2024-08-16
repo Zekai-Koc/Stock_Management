@@ -1,101 +1,122 @@
 import React, { useEffect, useState } from "react";
-import Charts from "../components/Charts.js";
-import { getDevices, getStatusStats, getGrades } from "../utils/api";
+import PieChart from "../components/PieChart.js";
+import BarChart from "../components/BarChart.js";
+import LineChart from "../components/LineChart.js";
+import {
+   devicesByBrand,
+   devicesByModel,
+   devicesByGrade,
+   devicesByStatus,
+   devicesByColor,
+} from "../utils/getStatsData.js";
 import "./Home.css";
 
 const Home = () => {
-   const [summary, setSummary] = useState({
-      totalDevices: 0,
-      inStock: 0,
-      sold: 0,
-      pending: 0,
-   });
-   const [brandChartData, setBrandChartData] = useState({
-      labels: [],
-      data: [],
-   });
-   const [statusChartData, setStatusChartData] = useState({
-      labels: [],
-      data: [],
-   });
-   const [gradeChartData, setGradeChartData] = useState({
-      labels: [],
-      data: [],
-   });
+   const [brandData, setBrandData] = useState([]);
+   const [modelData, setModelData] = useState([]);
+   const [gradeData, setGradeData] = useState([]);
+   const [statusData, setStatusData] = useState([]);
+   const [colorData, setColorData] = useState([]);
 
    useEffect(() => {
+      // Fetch data for brand, model, and grade
       const fetchData = async () => {
-         try {
-            // Fetch and update summary
-            const statusData = await getStatusStats();
-            updateSummary(statusData);
+         const brandResponse = await devicesByBrand();
+         setBrandData(brandResponse.devicesByBrand);
 
-            // Fetch and update charts
-            const devicesData = await getDevices();
-            updateBrandChart(devicesData);
+         const modelResponse = await devicesByModel();
+         setModelData(modelResponse.devicesByModel);
 
-            const gradesData = await getGrades();
-            updateGradeChart(gradesData);
-         } catch (error) {
-            console.error("Error fetching data:", error);
-         }
+         const gradeResponse = await devicesByGrade();
+         setGradeData(gradeResponse.devicesByGrade);
+
+         const statusResponse = await devicesByStatus();
+         setStatusData(statusResponse.devicesByStatus);
+
+         const colorResponse = await devicesByColor();
+         setColorData(colorResponse.devicesByColor);
       };
 
       fetchData();
    }, []);
 
-   const updateSummary = (data) => {
-      const devices = data.devices || [];
-      setSummary({
-         totalDevices: data.count || 0,
-         inStock: devices.filter((d) => d.statusId === 1).length,
-         sold: devices.filter((d) => d.statusId === 2).length,
-         pending: devices.filter((d) => d.statusId === 3).length,
-      });
-   };
-
-   const updateBrandChart = (data) => {
-      const devicesByBrand = data.devicesByBrand || {};
-      const brandCounts = {};
-      for (const brand in devicesByBrand) {
-         brandCounts[brand] = devicesByBrand[brand].length;
-      }
-      setBrandChartData({
-         labels: Object.keys(brandCounts),
-         data: Object.values(brandCounts),
-      });
-   };
-
-   const updateGradeChart = (data) => {
-      const labels = data.map((item) => item.gradeName);
-      const chartData = data.map((item) => item.count);
-      setGradeChartData({ labels, data: chartData });
-   };
-
    return (
-      <main id="app">
-         <section>
-            <h2>Dashboard</h2>
-            <div className="summary">
-               <div>
-                  Total Devices:{" "}
-                  <span id="totalDevices">{summary.totalDevices}</span>
-               </div>
-               <div>
-                  In Stock: <span id="inStock">{summary.inStock}</span>
-               </div>
-               <div>
-                  Sold: <span id="sold">{summary.sold}</span>
-               </div>
-               <div>
-                  Pending: <span id="pending">{summary.pending}</span>
-               </div>
-            </div>
-            <div>
-               <Charts id="brandChart" type="pie" data={brandChartData} />
-            </div>
-         </section>
-      </main>
+      <div>
+         <h2>Device Statistics</h2>
+         <div className="chart-container">
+            <PieChart
+               title="Devices by Brand"
+               data={brandData}
+               labelKey="brandName"
+               valueKey="count"
+            />
+            <BarChart
+               title="Devices by Brand"
+               data={brandData}
+               labelKey="brandName"
+               valueKey="count"
+            />
+         </div>
+         <div className="chart-container">
+            <PieChart
+               title="Devices by Grade"
+               data={gradeData}
+               labelKey="gradeName"
+               valueKey="count"
+            />
+            <BarChart
+               title="Devices by Grade"
+               data={gradeData}
+               labelKey="gradeName"
+               valueKey="count"
+            />
+         </div>
+
+         <div className="chart-container">
+            <BarChart
+               title="Devices by Status"
+               data={statusData}
+               labelKey="statusName"
+               valueKey="count"
+            />
+            <PieChart
+               title="Devices by Status"
+               data={statusData}
+               labelKey="statusName"
+               valueKey="count"
+            />
+         </div>
+
+         <div className="chart-container">
+            <BarChart
+               title="Devices by Model"
+               data={modelData}
+               labelKey="modelName"
+               valueKey="count"
+            />
+            <PieChart
+               title="Devices by Model"
+               data={modelData}
+               labelKey="modelName"
+               valueKey="count"
+            />
+         </div>
+
+         <div className="chart-container">
+            <LineChart
+               title="Devices by Color"
+               data={colorData}
+               labelKey="colorName"
+               valueKey="count"
+            />
+            <LineChart
+               title="Devices by Model"
+               data={modelData}
+               labelKey="modelName"
+               valueKey="count"
+            />
+         </div>
+      </div>
    );
 };
 

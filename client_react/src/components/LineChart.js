@@ -4,33 +4,59 @@ import {
    LineElement,
    CategoryScale,
    LinearScale,
+   PointElement,
    Tooltip,
-   Legend,
+   Title,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
 // Register necessary components for Chart.js
-ChartJS.register(LineElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(
+   LineElement,
+   CategoryScale,
+   LinearScale,
+   PointElement,
+   Tooltip,
+   Title
+);
 
-const LineChart = () => {
-   const data = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+const LineChart = ({ title, data, labelKey, valueKey, showLegend = false }) => {
+   // Transform the incoming data into chart.js format
+   const chartData = {
+      labels: data.map((item) => item[labelKey]),
       datasets: [
          {
-            label: "Monthly Sales",
-            data: [65, 59, 80, 81, 56, 55, 40],
+            label: title,
+            data: data.map((item) => parseInt(item[valueKey], 10)),
             fill: false,
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
             borderColor: "rgba(75, 192, 192, 1)",
-            tension: 0.1,
+            borderWidth: 2,
+            tension: 0.4, // Creates smooth curves on the line
          },
       ],
    };
 
    const options = {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
          legend: {
+            display: showLegend, // Show/hide legend based on prop
+         },
+         title: {
+            display: true,
+            text: title,
             position: "top",
+            align: "center",
+            font: {
+               size: 18,
+               weight: "bold",
+            },
+            padding: {
+               top: 10,
+               bottom: 20,
+            },
          },
          tooltip: {
             callbacks: {
@@ -52,8 +78,7 @@ const LineChart = () => {
 
    return (
       <div style={{ width: "600px", height: "400px" }}>
-         <h2>Line Chart</h2>
-         <Line data={data} options={options} />
+         <Line data={chartData} options={options} />
       </div>
    );
 };

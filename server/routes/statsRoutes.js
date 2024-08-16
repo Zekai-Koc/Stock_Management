@@ -1,21 +1,25 @@
 const express = require("express");
 
 const {
-   getDeviceStats,
-   getModelsByBrand,
-   getDevicesByGrade,
-   getGroupedDevicesByGrade,
-   getGroupedDevicesByGradeWithCounts,
+   deviceStats,
+   devicesByBrand,
+   devicesByModel,
+   devicesByStatus,
+   devicesByRam,
+   devicesByStorage,
+   devicesByColor,
+   devicesByGrade,
 } = require("../controllers/statsController");
 
 const router = express.Router();
 
-router.route("/getdevicestats").get(getDeviceStats);
-router.route("/getmodelsbybrand").get(getModelsByBrand);
-router.route("/getdevicesbygrade").get(getDevicesByGrade);
-router.route("/getgroupeddevicesbygrade").get(getGroupedDevicesByGrade);
-router
-   .route("/getGroupedDevicesByGradeWithCounts")
-   .get(getGroupedDevicesByGradeWithCounts);
+router.route("/devicestats").get(deviceStats);
+router.route("/devicesbybrand").get(devicesByBrand);
+router.route("/devicesbymodel").get(devicesByModel);
+router.route("/devicesbystatus").get(devicesByStatus);
+router.route("/devicesbyram").get(devicesByRam);
+router.route("/devicesbystorage").get(devicesByStorage);
+router.route("/devicesbycolor").get(devicesByColor);
+router.route("/devicesbygrade").get(devicesByGrade);
 
 module.exports = router;
