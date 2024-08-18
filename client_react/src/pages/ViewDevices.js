@@ -91,15 +91,18 @@ const ViewDevices = () => {
    if (error) return <p>Error: {error.message}</p>;
 
    return (
-      <div>
+      <div className="view-devices-container">
          <h1>View Devices</h1>
-         <input
-            type="text"
-            placeholder="Search by IMEI or Model"
-            value={searchQuery}
-            onChange={handleSearch}
-            className="search-bar"
-         />
+         <div>
+            <input
+               type="text"
+               placeholder="Search by IMEI or Model"
+               value={searchQuery}
+               onChange={handleSearch}
+               className="search-bar"
+            />
+         </div>
+
          {Object.keys(filteredDevices).length === 0 ? (
             <p>No devices found.</p>
          ) : (

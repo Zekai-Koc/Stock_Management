@@ -41,8 +41,11 @@ const Home = () => {
    }, []);
 
    return (
-      <div>
+      <div className="device-statistics-container">
          <h2>Device Statistics</h2>
+         <div>
+            <label>Total Device Number: {brandData.totalDevices}</label>
+         </div>
          <div className="chart-container">
             <PieChart
                title="Devices by Brand"

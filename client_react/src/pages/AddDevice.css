@@ -1,49 +1,45 @@
 /* AddDevice.css */
 
+.container-selects {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-around;
+   margin-bottom: 20px;
+}
+
+.three-elements {
+   display: flex;
+   align-items: center;
+   margin-top: 30px;
+   flex-basis: 50%;
+}
+
 .add-device-container h2 {
    font-family: "Arial", sans-serif;
-   /* font-size: 1.5em;  */
-   /* margin-bottom: 15px; */
-   /* border: 1px solid red; */
    margin: 10px;
    text-align: center;
 }
 
-.container-selects {
-   display: flex;
-   flex-direction: column;
-   justify-content: space-around;
-   margin-top: 20px;
-}
-
-form {
-   display: flex;
-   flex-direction: column;
-   max-width: 600px;
-   margin: 0 auto;
-}
-
-label {
-   margin-top: 10px;
-}
-
-select,
-input {
+label select,
+label input {
    margin-top: 5px;
+   padding: 11px;
+   font-size: 14px;
+   width: 100%;
+   box-sizing: border-box;
 }
 
-button {
-   margin-top: 20px;
-   padding: 10px;
-   background-color: #007bff;
-   color: white;
-   border: none;
-   border-radius: 5px;
-   cursor: pointer;
+.checkbox-field {
+   display: flex;
+   align-items: center;
 }
 
-button:hover {
-   background-color: #0056b3;
+.checkbox-field label {
+   margin-left: 5px;
+}
+
+.checkbox-field input {
+   margin-left: 40px;
 }
 
 .table-container {
@@ -63,4 +59,8 @@ button:hover {
 
 #devicesTable th {
    background-color: #f2f2f2;
+}
+
+.section-title-table {
+   padding-top: 20px;
 }
