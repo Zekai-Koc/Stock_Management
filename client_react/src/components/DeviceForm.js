@@ -85,13 +85,22 @@ const DeviceForm = ({ formData, options, onChange, onSubmit }) => {
             onChange={onChange}
          />
 
-         <div id="spacer-div"></div>
-
+         {/* <div id="spacer-div"></div> */}
+         <div className="checkbox-field">
+            <input
+               type="checkbox"
+               name="imeiValidity"
+               id="imeiValidity"
+               label="IMEI Validity"
+               checked={formData.imeiValidity}
+               onChange={onChange}
+            />
+            <label htmlFor="imeiValidity">IMEI Validity</label>
+         </div>
          <div className="checkbox-field">
             <input
                type="checkbox"
                name="melding"
-
                id="melding"
                label="Melding"
                checked={formData.melding}

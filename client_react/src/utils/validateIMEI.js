@@ -1,3 +1,6 @@
+// valid IMEI number: 356766086875164
+// valid IMEI number: 353067102354511
+
 export const validateIMEI = (imei) => {
    const isValidLength = /^\d{15}$/.test(imei);
 

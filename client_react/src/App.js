@@ -8,9 +8,9 @@ import {
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import AddDevice from "./pages/AddDevice";
-import UpdateDeviceStatus from "./pages/UpdateDeviceStatus";
+// import UpdateDeviceStatus from "./pages/UpdateDeviceStatus";
 import UpdateDevice from "./pages/UpdateDevice";
-import DeleteDevice from "./pages/DeleteDevice";
+// import DeleteDevice from "./pages/DeleteDevice";
 import ViewDevices from "./pages/ViewDevices";
 import "./components/Sidebar.css";
 
@@ -24,18 +24,17 @@ function App() {
                   <Route path="/" element={<Navigate to="/home" />} />
                   <Route path="/home" element={<Home />} />
                   <Route path="/add-device" element={<AddDevice />} />
-                  <Route
+                  {/* <Route
                      path="/update-device-status"
                      element={<UpdateDeviceStatus />}
-                  />
+                  /> */}
 
                   {/* Dynamic Route for UpdateDevice with IMEI */}
                   <Route
                      path="/update-device/:imei"
                      element={<UpdateDevice />}
                   />
-
-                  <Route path="/delete-device" element={<DeleteDevice />} />
+                  {/* <Route path="/delete-device" element={<DeleteDevice />} /> */}
                   <Route path="/view-devices" element={<ViewDevices />} />
                </Routes>
             </div>
