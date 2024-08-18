@@ -222,7 +222,32 @@ const createDevice = async (req, res) => {
 // Update a Device by IMEI
 const updateDevice = async (req, res) => {
    const { IMEI } = req.params;
-   const {
+   // const {
+   //    brandId,
+   //    modelId,
+   //    ramId,
+   //    storageId,
+   //    colorId,
+   //    gradeId,
+   //    statusId,
+   //    melding,
+   //    catalogId,
+   //    purchaseDate,
+   // } = req.body;
+
+   // console.log(req.body);
+
+   const { melding, purchaseDate } = req.body;
+   const brandId = req.body.brand;
+   const modelId = req.body.model;
+   const ramId = req.body.ram;
+   const storageId = req.body.storage;
+   const colorId = req.body.color;
+   const gradeId = req.body.grade;
+   const statusId = req.body.status;
+   const catalogId = req.body.catalog;
+
+   console.log(
       brandId,
       modelId,
       ramId,
@@ -232,14 +257,13 @@ const updateDevice = async (req, res) => {
       statusId,
       melding,
       catalogId,
-      purchaseDate,
-   } = req.body;
+      purchaseDate
+   );
 
    try {
       // Find the device by IMEI
       const device = await Device.findOne({ where: { imei: IMEI } });
       if (device) {
-         // Update the device with all provided values
          await device.update({
             brandId,
             modelId,

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DevicesTable from "../components/DevicesTable";
 import "./AddDevice.css";
 import { validateIMEI } from "../utils/validateIMEI";
+import { getCurrentDate } from "../utils/getCurrentDate";
 
 const AddDevice = () => {
    const [formData, setFormData] = useState({
@@ -11,7 +12,7 @@ const AddDevice = () => {
       storage: "1",
       color: "1",
       grade: "1",
-      purchaseDate: "2024-08-10",
+      purchaseDate: getCurrentDate(),
       status: "1",
       catalog: "1",
       melding: false,
@@ -93,26 +94,9 @@ const AddDevice = () => {
          ...prev,
          [name]: value,
       }));
-
-      // console.log("value:", value);
-      // console.log("value.length:", value.length);
-
-      // if (name === "imei" && value.length === 15) {
-      //    if (imeiValidity) {
-      //       if (!validateIMEI(value).isValid) {
-      //          alert(
-      //             "IMEI must be a valid 15-digit number with a valid checksum."
-      //          );
-      //          return;
-      //       }
-      //    }
-      //    handleSubmit();
-      // }
    };
 
    const handleSubmit = async () => {
-      // e.preventDefault();
-
       console.log("Submitting form data:", formData);
       console.log("formData.imei:", formData.imei);
 

@@ -21,6 +21,7 @@ const ViewDevices = () => {
                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
+            console.log(data);
             setDevices(data.devicesByBrand);
             setLoading(false);
          } catch (err) {
@@ -52,7 +53,6 @@ const ViewDevices = () => {
             if (!response.ok) {
                throw new Error(`Failed to delete device with IMEI: ${imei}`);
             }
-            // Remove the device from the local state after successful deletion
             setDevices((prevDevices) => {
                const updatedDevices = { ...prevDevices };
                Object.keys(updatedDevices).forEach((brand) => {
