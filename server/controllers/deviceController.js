@@ -110,6 +110,115 @@ const getDevice = async (req, res) => {
    }
 };
 
+// // Create a new Device
+// const createDevice = async (req, res) => {
+//    console.log("createDevice");
+//    console.log("createDevice", req.body);
+
+//    const { imei, melding, purchaseDate } = req.body;
+//    const brandId = req.body.brand;
+//    const modelId = req.body.model;
+//    const ramId = req.body.ram;
+//    const storageId = req.body.storage;
+//    const colorId = req.body.color;
+//    const gradeId = req.body.grade;
+//    const statusId = req.body.status;
+//    const catalogId = req.body.catalog;
+
+//    console.log(
+//       imei,
+//       brandId,
+//       modelId,
+//       ramId,
+//       storageId,
+//       colorId,
+//       gradeId,
+//       statusId,
+//       melding,
+//       catalogId,
+//       purchaseDate
+//    );
+
+//    try {
+//       // Validate request body
+//       const missingFields = [];
+
+//       // Check each field and add to missingFields if not provided
+//       if (!imei) missingFields.push("IMEI");
+//       if (!brandId) missingFields.push("Brand");
+//       if (!modelId) missingFields.push("Model");
+//       if (!ramId) missingFields.push("RAM");
+//       if (!storageId) missingFields.push("Storage");
+//       if (!colorId) missingFields.push("Color");
+//       if (!gradeId) missingFields.push("Grade");
+//       if (!statusId) missingFields.push("Status");
+//       if (!catalogId) missingFields.push("Catalog");
+//       if (!purchaseDate) missingFields.push("Purchase Date");
+
+//       // If there are missing fields, return a 400 error with the specific message
+//       if (missingFields.length > 0) {
+//          const errorMessage = `Missing required fields: ${missingFields.join(
+//             ", "
+//          )}`;
+//          console.log(errorMessage);
+//          return res.status(400).json({ error: errorMessage });
+//       }
+
+//       // Create the new device
+//       const newDevice = await Device.create({
+//          imei,
+//          brandId,
+//          modelId,
+//          ramId,
+//          storageId,
+//          colorId,
+//          gradeId,
+//          statusId,
+//          melding,
+//          catalogId,
+//          purchaseDate,
+//       });
+
+//       res.status(201).json({
+//          status: "success",
+//          data: {
+//             device: newDevice,
+//          },
+//       });
+//    } catch (error) {
+//       console.error("Error adding Device:", error);
+
+//       // Check if it's a unique constraint error (like 'imei must be unique')
+//       if (error.name === "SequelizeUniqueConstraintError") {
+//          const uniqueErrorMessage = error.errors
+//             .map((err) => err.message)
+//             .join(", ");
+//          return res.status(400).json({
+//             status: "fail",
+//             error: "Unique Constraint Error",
+//             message: uniqueErrorMessage,
+//          });
+//       }
+
+//       // Check for other database-related errors
+//       if (error.name === "SequelizeValidationError") {
+//          const validationMessages = error.errors.map((err) => err.message);
+//          return res.status(400).json({
+//             status: "fail",
+//             error: "Validation Error",
+//             details: validationMessages,
+//          });
+//       }
+
+//       // Handle other types of errors
+//       return res.status(500).json({
+//          status: "error",
+//          message: "An unexpected error occurred while adding the device.",
+//          details: error.message,
+//       });
+//    }
+// };
+
 // Create a new Device
 const createDevice = async (req, res) => {
    console.log("createDevice");
@@ -143,7 +252,6 @@ const createDevice = async (req, res) => {
       // Validate request body
       const missingFields = [];
 
-      // Check each field and add to missingFields if not provided
       if (!imei) missingFields.push("IMEI");
       if (!brandId) missingFields.push("Brand");
       if (!modelId) missingFields.push("Model");
@@ -155,7 +263,6 @@ const createDevice = async (req, res) => {
       if (!catalogId) missingFields.push("Catalog");
       if (!purchaseDate) missingFields.push("Purchase Date");
 
-      // If there are missing fields, return a 400 error with the specific message
       if (missingFields.length > 0) {
          const errorMessage = `Missing required fields: ${missingFields.join(
             ", "
@@ -179,16 +286,53 @@ const createDevice = async (req, res) => {
          purchaseDate,
       });
 
+      // Fetch the newly created device with associated data
+      const deviceWithDetails = await Device.findOne({
+         where: { imei: newDevice.imei },
+         include: [
+            { model: Brand },
+            { model: Model },
+            { model: Status },
+            { model: RAM },
+            { model: Storage },
+            { model: Color },
+            { model: Grade },
+            { model: Catalog },
+         ],
+      });
+
+      if (!deviceWithDetails) {
+         return res.status(500).json({
+            status: "error",
+            message:
+               "An unexpected error occurred while retrieving the device data.",
+         });
+      }
+
+      // Construct the response object with full data
+      const responseData = {
+         imei: deviceWithDetails.imei,
+         brand: deviceWithDetails.Brand.name,
+         model: deviceWithDetails.Model.name,
+         ram: deviceWithDetails.RAM.name,
+         storage: deviceWithDetails.Storage.name,
+         color: deviceWithDetails.Color.name,
+         grade: deviceWithDetails.Grade.name,
+         status: deviceWithDetails.Status.name,
+         catalog: deviceWithDetails.Catalog.name,
+         melding: deviceWithDetails.melding,
+         purchaseDate: deviceWithDetails.purchaseDate,
+      };
+
       res.status(201).json({
          status: "success",
          data: {
-            device: newDevice,
+            device: responseData,
          },
       });
    } catch (error) {
       console.error("Error adding Device:", error);
 
-      // Check if it's a unique constraint error (like 'imei must be unique')
       if (error.name === "SequelizeUniqueConstraintError") {
          const uniqueErrorMessage = error.errors
             .map((err) => err.message)
@@ -200,7 +344,6 @@ const createDevice = async (req, res) => {
          });
       }
 
-      // Check for other database-related errors
       if (error.name === "SequelizeValidationError") {
          const validationMessages = error.errors.map((err) => err.message);
          return res.status(400).json({
@@ -210,7 +353,6 @@ const createDevice = async (req, res) => {
          });
       }
 
-      // Handle other types of errors
       return res.status(500).json({
          status: "error",
          message: "An unexpected error occurred while adding the device.",
@@ -222,20 +364,6 @@ const createDevice = async (req, res) => {
 // Update a Device by IMEI
 const updateDevice = async (req, res) => {
    const { IMEI } = req.params;
-   // const {
-   //    brandId,
-   //    modelId,
-   //    ramId,
-   //    storageId,
-   //    colorId,
-   //    gradeId,
-   //    statusId,
-   //    melding,
-   //    catalogId,
-   //    purchaseDate,
-   // } = req.body;
-
-   // console.log(req.body);
 
    const { melding, purchaseDate } = req.body;
    const brandId = req.body.brand;
@@ -286,6 +414,59 @@ const updateDevice = async (req, res) => {
    }
 };
 
+// Update a Device by IMEI
+const updateDeviceStatus = async (req, res) => {
+   const { IMEI } = req.params;
+   const statusId = req.body.status;
+
+   console.log("updateDeviceStatus statusID", statusId);
+
+   try {
+      // Find the device and include associated models
+      const device = await Device.findOne({
+         where: { imei: IMEI },
+         include: [
+            { model: Brand },
+            { model: Model },
+            { model: Status },
+            { model: RAM },
+            { model: Storage },
+            { model: Color },
+            { model: Grade },
+            { model: Catalog },
+         ],
+      });
+
+      if (device) {
+         // Update the status of the device
+         await device.update({ statusId });
+
+         // Construct the response object with full data
+         const updatedDevice = {
+            imei: device.imei,
+            brand: device.Brand.name,
+            model: device.Model.name,
+            ram: device.RAM.name,
+            storage: device.Storage.name,
+            color: device.Color.name,
+            grade: device.Grade.name,
+            status: device.Status.name,
+            catalog: device.Catalog.name,
+            purchaseDate: device.purchaseDate,
+            melding: device.melding,
+         };
+
+         res.status(200).json(updatedDevice);
+      } else {
+         console.error("Device not found");
+         res.status(404).send("Device not found");
+      }
+   } catch (error) {
+      console.error("Error updating Device:", error);
+      res.status(500).send("Error updating Device");
+   }
+};
+
 // Delete a Device by IMEI
 const deleteDevice = async (req, res) => {
    console.log("deleteDevice");
@@ -321,6 +502,7 @@ module.exports = {
    getDevice,
    createDevice,
    updateDevice,
+   updateDeviceStatus,
    deleteDevice,
    checkID,
    checkBody,

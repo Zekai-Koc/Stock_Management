@@ -20,7 +20,7 @@ const ViewDevices = () => {
                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log(data);
+            console.log("ViewDevices: incoming devices:", data);
             setDevices(data.devicesByBrand);
             setLoading(false);
          } catch (err) {

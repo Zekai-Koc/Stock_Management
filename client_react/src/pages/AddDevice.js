@@ -129,25 +129,6 @@ const AddDevice = () => {
       }
    };
 
-   const getOptionValue = (id, optionsArray) => {
-      const option = optionsArray.find((item) => item.id === id);
-      return option ? option.name : "N/A";
-   };
-
-   const transformDevices = (devices) => {
-      return devices.map((device) => ({
-         ...device,
-         brand: getOptionValue(device.brandId, options.brands),
-         model: getOptionValue(device.modelId, options.models),
-         ram: getOptionValue(device.ramId, options.rams),
-         storage: getOptionValue(device.storageId, options.storages),
-         color: getOptionValue(device.colorId, options.colors),
-         grade: getOptionValue(device.gradeId, options.grades),
-         status: getOptionValue(device.statusId, options.statuses),
-         catalog: getOptionValue(device.catalogId, options.catalogs),
-      }));
-   };
-
    return (
       <main id="app" className="add-device-container">
          <section>
@@ -338,10 +319,7 @@ const AddDevice = () => {
 
          <section>
             <h2 className="section-title-table">Added Devices</h2>
-            <DevicesTable
-               devices={transformDevices(devices)}
-               setDevices={setDevices}
-            />
+            <DevicesTable devices={devices} setDevices={setDevices} />
          </section>
       </main>
    );
