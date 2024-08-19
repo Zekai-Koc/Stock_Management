@@ -103,7 +103,7 @@ const DevicesTable = ({ devices, setDevices }) => {
                ))
             ) : (
                <tr>
-                  <td colSpan="13">No devices found.</td>
+                  <td colSpan="13"></td>
                </tr>
             )}
          </tbody>

@@ -17,12 +17,16 @@ const Home = () => {
    const [gradeData, setGradeData] = useState([]);
    const [statusData, setStatusData] = useState([]);
    const [colorData, setColorData] = useState([]);
+   const [totalDevices, setTotalDevices] = useState(0)
 
    useEffect(() => {
       // Fetch data for brand, model, and grade
       const fetchData = async () => {
          const brandResponse = await devicesByBrand();
+         console.log(brandResponse)
+         console.log(brandResponse.totalDevices)
          setBrandData(brandResponse.devicesByBrand);
+         setTotalDevices(brandResponse.totalDevices)
 
          const modelResponse = await devicesByModel();
          setModelData(modelResponse.devicesByModel);
@@ -32,6 +36,8 @@ const Home = () => {
 
          const statusResponse = await devicesByStatus();
          setStatusData(statusResponse.devicesByStatus);
+         console.log(statusResponse)
+
 
          const colorResponse = await devicesByColor();
          setColorData(colorResponse.devicesByColor);
@@ -42,10 +48,28 @@ const Home = () => {
 
    return (
       <div className="device-statistics-container">
-         <h2>Device Statistics</h2>
+         <h2>Device Statistics </h2>
          <div>
-            <label>Total Device Number: {brandData.totalDevices}</label>
+            <label>Total Device Number: {totalDevices} </label>
          </div>
+
+         <table className="status-table">
+            <thead>
+               <tr>
+                  <th>Status</th>
+                  <th>Count</th>
+               </tr>
+            </thead>
+            <tbody>
+               {statusData.map((status, index) => (
+                  <tr key={index}>
+                     <td>{status.statusName}</td>
+                     <td>{status.count}</td>
+                  </tr>
+               ))}
+            </tbody>
+         </table>
+
          <div className="chart-container">
             <PieChart
                title="Devices by Brand"

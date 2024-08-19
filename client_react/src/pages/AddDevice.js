@@ -38,7 +38,7 @@ const AddDevice = () => {
       const fetchOptions = async () => {
          try {
             const response = await fetch(
-               "http://localhost:7000/api/v1/selectoptions"
+               "http://192.168.178.185:7000/api/v1/selectoptions"
             );
             const data = await response.json();
             console.log("Options data:", data);
@@ -101,7 +101,7 @@ const AddDevice = () => {
       console.log("formData.imei:", formData.imei);
 
       try {
-         const response = await fetch("http://localhost:7000/api/v1/devices", {
+         const response = await fetch("http://192.168.178.185:7000/api/v1/devices", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -333,7 +333,7 @@ const AddDevice = () => {
          </section>
 
          <section>
-            <h2 className="section-title-table">Added Devices List</h2>
+            <h2 className="section-title-table">Added Devices</h2>
             <DevicesTable
                devices={transformDevices(devices)}
                setDevices={setDevices}

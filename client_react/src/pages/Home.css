@@ -11,3 +11,27 @@
    margin: 50px;
    /* padding: 50px; */
 }
+
+.status-table {
+   width: 10%; /* Adjust the overall width of the table */
+   border-collapse: collapse;
+   margin-top: 10px;
+   table-layout: fixed; /* Ensures columns have fixed width */
+}
+
+.status-table th, .status-table td {
+   border: 1px solid #ddd;
+   padding: 8px;
+   text-align: left;
+   word-wrap: break-word; /* Ensures long text wraps within the cell */
+}
+
+.status-table th {
+   background-color: #f4f4f4;
+   font-weight: bold;
+   width: 70%; /* Set a fixed width for the first column */
+}
+
+.status-table td:last-child {
+   width: 30%; /* Set a fixed width for the second column */
+}

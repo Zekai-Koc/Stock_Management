@@ -10,7 +10,7 @@ const {
    Catalog,
 } = require("../models");
 
-exports.getAllSelectOptions = async (req, res) => {
+const getAllSelectOptions = async (req, res) => {
    try {
       const brands = await Brand.findAll({
          attributes: ["id", "name"],
@@ -59,3 +59,26 @@ exports.getAllSelectOptions = async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
    }
 };
+
+const getStatusOptions = async (req, res) => {
+   try {
+
+      const statuses = await Status.findAll({
+         attributes: ["id", "name"],
+      });
+
+      res.json({
+
+         statuses,
+
+      });
+   } catch (error) {
+      console.error("Error fetching select options:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+   }
+};
+
+module.exports = {
+   getAllSelectOptions,
+   getStatusOptions
+}

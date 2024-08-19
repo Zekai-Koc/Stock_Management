@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { validateIMEI } from "../utils/validateIMEI";
 import "./AddDevice.css";
+import "./UpdateDevice.css"
 
 const UpdateDevice = () => {
    const { imei } = useParams(); // Extract IMEI from route params
@@ -40,7 +41,7 @@ const UpdateDevice = () => {
       const fetchDeviceData = async () => {
          try {
             const response = await fetch(
-               `http://localhost:7000/api/v1/devices/${imei}`
+               `http://192.168.178.185:7000/api/v1/devices/${imei}`
             );
             const deviceData = await response.json();
 
@@ -74,7 +75,7 @@ const UpdateDevice = () => {
       const fetchOptions = async () => {
          try {
             const response = await fetch(
-               "http://localhost:7000/api/v1/selectoptions"
+               "http://192.168.178.185:7000/api/v1/selectoptions"
             );
             const data = await response.json();
             setOptions(data);
@@ -101,7 +102,7 @@ const UpdateDevice = () => {
 
       try {
          const response = await fetch(
-            `http://localhost:7000/api/v1/devices/${imei}`,
+            `http://192.168.178.185:7000/api/v1/devices/${imei}`,
             {
                method: "PATCH",
                headers: {
@@ -131,158 +132,185 @@ const UpdateDevice = () => {
          <section>
             <h2 className="section-title">Update Device with IMEI: {imei}</h2>
             <form onSubmit={handleSubmit}>
-               <label>
-                  Brand:
-                  <select
-                     name="brand"
-                     value={formData.brand}
-                     onChange={handleChange}
-                  >
-                     {options.brands.map((brand) => (
-                        <option key={brand.id} value={brand.id}>
-                           {brand.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
 
-               <label>
-                  Model:
-                  <select
-                     name="model"
-                     value={formData.model}
-                     onChange={handleChange}
-                  >
-                     {options.models.map((model) => (
-                        <option key={model.id} value={model.id}>
-                           {model.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+               <div className="container-selects">
 
-               <label>
-                  RAM:
-                  <select
-                     name="ram"
-                     value={formData.ram}
-                     onChange={handleChange}
-                  >
-                     {options.rams.map((ram) => (
-                        <option key={ram.id} value={ram.id}>
-                           {ram.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+                  <div className="three-elements">
+                     <label>
+                        Brand:
+                        <select
+                           name="brand"
+                           value={formData.brand}
+                           onChange={handleChange}
+                        >
+                           {options.brands.map((brand) => (
+                              <option key={brand.id} value={brand.id}>
+                                 {brand.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
 
-               <label>
-                  Storage:
-                  <select
-                     name="storage"
-                     value={formData.storage}
-                     onChange={handleChange}
-                  >
-                     {options.storages.map((storage) => (
-                        <option key={storage.id} value={storage.id}>
-                           {storage.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+                     <label>
+                        Model:
+                        <select
+                           name="model"
+                           value={formData.model}
+                           onChange={handleChange}
+                        >
+                           {options.models.map((model) => (
+                              <option key={model.id} value={model.id}>
+                                 {model.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
 
-               <label>
-                  Color:
-                  <select
-                     name="color"
-                     value={formData.color}
-                     onChange={handleChange}
-                  >
-                     {options.colors.map((color) => (
-                        <option key={color.id} value={color.id}>
-                           {color.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+                     <label>
+                        Storage:
+                        <select
+                           name="storage"
+                           value={formData.storage}
+                           onChange={handleChange}
+                        >
+                           {options.storages.map((storage) => (
+                              <option key={storage.id} value={storage.id}>
+                                 {storage.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
 
-               <label>
-                  Grade:
-                  <select
-                     name="grade"
-                     value={formData.grade}
-                     onChange={handleChange}
-                  >
-                     {options.grades.map((grade) => (
-                        <option key={grade.id} value={grade.id}>
-                           {grade.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
+                  </div>
 
-               <label>
-                  Status:
-                  <select
-                     name="status"
-                     value={formData.status}
-                     onChange={handleChange}
-                  >
-                     {options.statuses.map((status) => (
-                        <option key={status.id} value={status.id}>
-                           {status.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
 
-               <label>
-                  Catalog:
-                  <select
-                     name="catalog"
-                     value={formData.catalog}
-                     onChange={handleChange}
-                  >
-                     {options.catalogs.map((catalog) => (
-                        <option key={catalog.id} value={catalog.id}>
-                           {catalog.name}
-                        </option>
-                     ))}
-                  </select>
-               </label>
 
-               <label>
-                  IMEI:
-                  <input
-                     type="text"
-                     name="imei"
-                     value={formData.imei || imei}
-                     onChange={handleChange}
-                     readOnly
-                  />
-               </label>
+                  <div className="three-elements">
 
-               <label>
-                  Purchase Date:
-                  <input
-                     type="date"
-                     name="purchaseDate"
-                     value={formData.purchaseDate}
-                     onChange={handleChange}
-                  />
-               </label>
+                     <label>
+                        Status:
+                        <select
+                           name="status"
+                           value={formData.status}
+                           onChange={handleChange}
+                        >
+                           {options.statuses.map((status) => (
+                              <option key={status.id} value={status.id}>
+                                 {status.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
 
-               <div className="checkbox-field">
-                  <input
-                     type="checkbox"
-                     name="melding"
-                     checked={formData.melding}
-                     onChange={handleChange}
-                  />
-                  <label htmlFor="melding">Melding</label>
+                     <label>
+                        Catalog:
+                        <select
+                           name="catalog"
+                           value={formData.catalog}
+                           onChange={handleChange}
+                        >
+                           {options.catalogs.map((catalog) => (
+                              <option key={catalog.id} value={catalog.id}>
+                                 {catalog.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
+
+                     <label>
+                        Purchase Date:
+                        <input
+                           type="date"
+                           name="purchaseDate"
+                           value={formData.purchaseDate}
+                           onChange={handleChange}
+                        />
+                     </label>
+
+                  </div>
+
+
+
+
+
+                  <div className="three-elements">
+
+                     <label>
+                        Color:
+                        <select
+                           name="color"
+                           value={formData.color}
+                           onChange={handleChange}
+                        >
+                           {options.colors.map((color) => (
+                              <option key={color.id} value={color.id}>
+                                 {color.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
+
+                     <label>
+                        Grade:
+                        <select
+                           name="grade"
+                           value={formData.grade}
+                           onChange={handleChange}
+                        >
+                           {options.grades.map((grade) => (
+                              <option key={grade.id} value={grade.id}>
+                                 {grade.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
+
+                     <label>
+                        RAM:
+                        <select
+                           name="ram"
+                           value={formData.ram}
+                           onChange={handleChange}
+                        >
+                           {options.rams.map((ram) => (
+                              <option key={ram.id} value={ram.id}>
+                                 {ram.name}
+                              </option>
+                           ))}
+                        </select>
+                     </label>
+
+                  </div>
+
+
+                  <div className="three-elements">
+
+
+                     <label>
+                        IMEI:
+                        <input
+                           type="text"
+                           name="imei"
+                           value={formData.imei || imei}
+                           onChange={handleChange}
+                           readOnly
+                        />
+                     </label>
+
+
+                     <div className="checkbox-field">
+                        <input
+                           type="checkbox"
+                           name="melding"
+                           checked={formData.melding}
+                           onChange={handleChange}
+                        />
+                        <label htmlFor="melding">Melding</label>
+                     </div>
+                  </div>
+
                </div>
-
-               <button type="submit">Update Device</button>
+               <button type="submit" id="Update-Device-Button">Update Device</button>
             </form>
          </section>
       </main>
@@ -334,7 +362,7 @@ export default UpdateDevice;
 //       const fetchOptions = async () => {
 //          try {
 //             const response = await fetch(
-//                "http://localhost:7000/api/v1/selectoptions"
+//                "http://192.168.178.185:7000/api/v1/selectoptions"
 //             );
 //             const data = await response.json();
 //             setOptions(data);
@@ -383,7 +411,7 @@ export default UpdateDevice;
 //    const handleSubmit = async (e) => {
 //       e.preventDefault();
 //       try {
-//          const response = await fetch("http://localhost:7000/api/v1/devices", {
+//          const response = await fetch("http://192.168.178.185:7000/api/v1/devices", {
 //             method: "POST",
 //             headers: {
 //                "Content-Type": "application/json",

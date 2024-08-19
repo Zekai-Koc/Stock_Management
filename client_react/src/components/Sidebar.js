@@ -30,15 +30,16 @@ const Sidebar = () => {
             >
                Add Device(s)
             </button>
-            {/* <button
+            <button
                id="updateDeviceStatusBtn"
                className={
                   activeButton === "/update-device-status" ? "active" : ""
                }
                onClick={() => handleNavigation("/update-device-status")}
             >
-               Update Device Status
-            </button> */}
+               Update Device(s) Status
+            </button>
+
             {/* <button
                id="updateDeviceBtn"
                className={activeButton === "/update-device" ? "active" : ""}
