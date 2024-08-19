@@ -3,6 +3,7 @@ import DevicesTable from "../components/DevicesTable";
 import "./AddDevice.css";
 import { validateIMEI } from "../utils/validateIMEI";
 import { getCurrentDate } from "../utils/getCurrentDate";
+import config from "../utils/config";
 
 const AddDevice = () => {
    const [formData, setFormData] = useState({
@@ -37,9 +38,7 @@ const AddDevice = () => {
    useEffect(() => {
       const fetchOptions = async () => {
          try {
-            const response = await fetch(
-               "http://192.168.178.185:7000/api/v1/selectoptions"
-            );
+            const response = await fetch(`${config.apiUrl}/selectoptions`);
             const data = await response.json();
             console.log("Options data:", data);
             setOptions(data);
@@ -101,7 +100,7 @@ const AddDevice = () => {
       console.log("formData.imei:", formData.imei);
 
       try {
-         const response = await fetch("http://192.168.178.185:7000/api/v1/devices", {
+         const response = await fetch(`${config.apiUrl}/devices`, {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -290,6 +289,16 @@ const AddDevice = () => {
                         ))}
                      </select>
                   </label>
+                  <div className="checkbox-field">
+                     <input
+                        type="checkbox"
+                        name="melding"
+                        id="melding"
+                        checked={formData.melding}
+                        onChange={handleChange}
+                     />
+                     <label htmlFor="melding">Melding</label>
+                  </div>
                </div>
 
                <div className="three-elements">
@@ -312,15 +321,10 @@ const AddDevice = () => {
                      />
                      <label htmlFor="imeiValidity">IMEI Validity</label>
                   </div>
-                  <div className="checkbox-field">
-                     <input
-                        type="checkbox"
-                        name="melding"
-                        id="melding"
-                        checked={formData.melding}
-                        onChange={handleChange}
-                     />
-                     <label htmlFor="melding">Melding</label>
+                  <div className="export-button-wrapper">
+                     <button id="button-export-from-xls">
+                        Export from XLS
+                     </button>
                   </div>
                </div>
 

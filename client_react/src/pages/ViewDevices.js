@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./ViewDevices.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import config from "../utils/config";
 
 const ViewDevices = () => {
    const [devices, setDevices] = useState({});
@@ -14,9 +15,7 @@ const ViewDevices = () => {
    useEffect(() => {
       const fetchData = async () => {
          try {
-            const response = await fetch(
-               "http://192.168.178.185:7000/api/v1/devices"
-            );
+            const response = await fetch(`${config.apiUrl}/devices`);
             if (!response.ok) {
                throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -45,7 +44,9 @@ const ViewDevices = () => {
       if (confirmDelete) {
          try {
             const response = await fetch(
-               `http://192.168.178.185:7000/api/v1/devices/${imei}`,
+               `${config.apiUrl}/devices/${imei}`,
+
+               // `http://192.168.178.185:7000/api/v1/devices/${imei}`,
                {
                   method: "DELETE",
                }

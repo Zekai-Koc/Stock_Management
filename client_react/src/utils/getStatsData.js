@@ -1,7 +1,10 @@
+import config from "../utils/config";
+
 export const deviceStats = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicestats"
+         `${config.apiUrl}/stats/devicestats`
+         // "http://192.168.178.185:7000/api/v1/stats/devicestats"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -14,7 +17,8 @@ export const deviceStats = async () => {
 export const devicesByBrand = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicesbybrand"
+         `${config.apiUrl}/stats/devicesbybrand`
+         // "http://192.168.178.185:7000/api/v1/stats/devicesbybrand"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -27,7 +31,9 @@ export const devicesByBrand = async () => {
 export const devicesByModel = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicesbymodel"
+         `${config.apiUrl}/stats/devicesbymodel`
+
+         // "http://192.168.178.185:7000/api/v1/stats/devicesbymodel"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -40,7 +46,8 @@ export const devicesByModel = async () => {
 export const devicesByStatus = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicesbystatus"
+         `${config.apiUrl}/stats/devicesbystatus`
+         // "http://192.168.178.185:7000/api/v1/stats/devicesbystatus"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -53,7 +60,8 @@ export const devicesByStatus = async () => {
 export const devicesByRAM = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicesbyram"
+         `${config.apiUrl}/stats/devicesbyram`
+         // "http://192.168.178.185:7000/api/v1/stats/devicesbyram"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -66,7 +74,8 @@ export const devicesByRAM = async () => {
 export const devicesByStorage = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicesbystorage"
+         `${config.apiUrl}/stats/devicesbystorage`
+         // "http://192.168.178.185:7000/api/v1/stats/devicesbystorage"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -79,7 +88,8 @@ export const devicesByStorage = async () => {
 export const devicesByColor = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicesbycolor"
+         `${config.apiUrl}/stats/devicesbycolor`
+         // "http://192.168.178.185:7000/api/v1/stats/devicesbycolor"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();
@@ -92,7 +102,8 @@ export const devicesByColor = async () => {
 export const devicesByGrade = async () => {
    try {
       const response = await fetch(
-         "http://192.168.178.185:7000/api/v1/stats/devicesbygrade"
+         `${config.apiUrl}/stats/devicesbygrade`
+         // "http://192.168.178.185:7000/api/v1/stats/devicesbygrade"
       );
       if (!response.ok) throw new Error("Network response was not ok.");
       return await response.json();

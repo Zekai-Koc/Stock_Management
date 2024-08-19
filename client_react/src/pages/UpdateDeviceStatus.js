@@ -1,9 +1,9 @@
 // UpdateDeviceStatus.js
 import React, { useState, useEffect } from "react";
 import DevicesTable from "../components/DevicesTable";
+import config from "../utils/config";
 
 const UpdateDeviceStatus = () => {
-
    const [status, setStatus] = useState();
    const [statusArray, setStatusArray] = useState([]);
 
@@ -11,7 +11,9 @@ const UpdateDeviceStatus = () => {
       const fetchOptions = async () => {
          try {
             const response = await fetch(
-               "http://192.168.178.185:7000/api/v1/selectoptions/statuses"
+               `${config.apiUrl}/selectoptions/statuses`
+
+               // "http://192.168.178.185:7000/api/v1/selectoptions/statuses"
             );
             const data = await response.json();
             console.log("Options data:", data);
@@ -34,8 +36,8 @@ const UpdateDeviceStatus = () => {
                <input
                   type="text"
                   name="imei"
-               // value={formData.imei}
-               // onChange={handleChange}
+                  // value={formData.imei}
+                  // onChange={handleChange}
                />
             </label>
 
@@ -43,8 +45,8 @@ const UpdateDeviceStatus = () => {
                Status:
                <select
                   name="status"
-               // value={formData.status}
-               // onChange={handleChange}
+                  // value={formData.status}
+                  // onChange={handleChange}
                >
                   <option value="">Select Status</option>
                   {/* {options.statuses.map((status) => (
@@ -53,7 +55,7 @@ const UpdateDeviceStatus = () => {
                            </option>
                         ))} */}
                </select>
-            </label>         
+            </label>
          </div>
 
          <section>
@@ -63,10 +65,7 @@ const UpdateDeviceStatus = () => {
                setDevices={setDevices}
             /> */}
          </section>
-
       </div>
-
-
    );
 };
 
