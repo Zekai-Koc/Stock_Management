@@ -17,16 +17,16 @@ const Home = () => {
    const [gradeData, setGradeData] = useState([]);
    const [statusData, setStatusData] = useState([]);
    const [colorData, setColorData] = useState([]);
-   const [totalDevices, setTotalDevices] = useState(0)
+   const [totalDevices, setTotalDevices] = useState(0);
 
    useEffect(() => {
       // Fetch data for brand, model, and grade
       const fetchData = async () => {
          const brandResponse = await devicesByBrand();
-         console.log(brandResponse)
-         console.log(brandResponse.totalDevices)
+         // console.log(brandResponse)
+         // console.log(brandResponse.totalDevices)
          setBrandData(brandResponse.devicesByBrand);
-         setTotalDevices(brandResponse.totalDevices)
+         setTotalDevices(brandResponse.totalDevices);
 
          const modelResponse = await devicesByModel();
          setModelData(modelResponse.devicesByModel);
@@ -36,8 +36,7 @@ const Home = () => {
 
          const statusResponse = await devicesByStatus();
          setStatusData(statusResponse.devicesByStatus);
-         console.log(statusResponse)
-
+         // console.log(statusResponse)
 
          const colorResponse = await devicesByColor();
          setColorData(colorResponse.devicesByColor);
