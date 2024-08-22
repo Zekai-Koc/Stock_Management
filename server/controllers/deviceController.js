@@ -497,6 +497,14 @@ const checkBody = async (req, res, next) => {
    next();
 };
 
+
+// Delete a Device by IMEI
+const uploadDevicesFromExcel = async (req, res) => {
+   console.log("uploadDevicesFromExcel", req.body);
+
+
+};
+
 module.exports = {
    getAllDevices,
    getDevice,
@@ -506,4 +514,5 @@ module.exports = {
    deleteDevice,
    checkID,
    checkBody,
+   uploadDevicesFromExcel
 };
