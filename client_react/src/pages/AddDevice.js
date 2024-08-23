@@ -35,6 +35,7 @@ const AddDevice = () => {
    });
 
    const [devices, setDevices] = useState([]);
+   const [file, setFile] = useState([]);
 
    useEffect(() => {
       const fetchOptions = async () => {
@@ -130,6 +131,7 @@ const AddDevice = () => {
       }
    };
 
+<<<<<<< HEAD
    const handleFileUpload = async (event) => {
       const file = event.target.files[0];
       if (!file) return;
@@ -184,6 +186,83 @@ const AddDevice = () => {
          reader.readAsArrayBuffer(file);
       });
    };
+=======
+   const handleFileChange = (e) => {
+      const selectedFile = e.target.files[0];
+      console.log("File selected:", selectedFile); // Log the selected file
+      setFile(e.target.files[0]);
+  };
+
+
+  const handleFileUpload = async () => {
+   if (!file) {
+       alert("Please select a file first.");
+       return;
+   }
+
+   const formData = new FormData();
+   formData.append("file", file);
+   console.log("File appended to formData");
+
+   for (let [key, value] of formData.entries()) {
+       console.log(`${key}:`, value); // This should show the file details
+   }
+
+   try {
+       const response = await fetch(`${config.apiUrl}/devices/upload-excel`, {
+           method: "POST",
+           body: formData,
+       });
+
+       if (response.ok) {
+           const result = await response.json();
+           setDevices(result); // Assuming result is an array of devices
+       } else {
+           const errorMessage = await response.text();
+           console.error("Failed to upload file:", errorMessage);
+           alert(`Failed to upload file: ${errorMessage}`);
+       }
+   } catch (err) {
+       console.error("Failed to upload file:", err);
+   }
+};
+
+//   const handleFileUpload = async () => {
+//    console.log("handleFileUpload Selected file:", file);
+//    if (!file) {
+//        alert("Please select a file first.");
+//        return;
+//    }
+
+//    const formData = new FormData();
+//    formData.append("file", file);
+
+//    console.log("formData: ", formData)
+
+//    for (let [key, value] of formData.entries()) {
+//       console.log(`${key}:`, value);
+//   }
+
+//    try {
+//        const response = await fetch(`${config.apiUrl}/devices/upload-excel`, {
+//            method: "POST",
+//            body: formData,
+//        });
+
+//        if (response.ok) {
+//            const result = await response.json();
+//            setDevices(result); // Assuming result is an array of devices
+//        } else {
+//            const errorMessage = await response.text();
+//            console.error("Failed to upload file:", errorMessage);
+//            alert(`Failed to upload file: ${errorMessage}`);
+//        }
+//    } catch (err) {
+//        console.error("Failed to upload file:", err);
+//    }
+// };
+
+>>>>>>> 97af1bdd5e1476cff807c58ae6867b7ec7f648ba
 
    return (
       <main id="app" className="add-device-container">
@@ -359,6 +438,7 @@ const AddDevice = () => {
                      <label htmlFor="imeiValidity">IMEI Validity</label>
                   </div>
                   <div className="export-button-wrapper">
+<<<<<<< HEAD
                      <input
                         type="file"
                         id="fileInput"
@@ -374,6 +454,16 @@ const AddDevice = () => {
                      >
                         Import from XLS
                      </button>
+=======
+                        <input
+                                type="file"
+                                accept=".xls,.xlsx"
+                                onChange={handleFileChange}
+                            />
+                        <button id="button-upload-file" onClick={handleFileUpload}>
+                           Upload Excel File
+                        </button>
+>>>>>>> 97af1bdd5e1476cff807c58ae6867b7ec7f648ba
                   </div>
                </div>
 
