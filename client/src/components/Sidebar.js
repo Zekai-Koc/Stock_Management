@@ -94,6 +94,14 @@ const Sidebar = () => {
                   Manage Colors
                </button>
             </div>
+
+            <button
+               id="importDevicesBtn"
+               className={activeButton === "/import" ? "active" : ""}
+               onClick={() => handleNavigation("/import")}
+            >
+               Import From Excel
+            </button>
          </nav>
       </aside>
    );

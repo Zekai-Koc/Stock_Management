@@ -102,7 +102,7 @@ const Device = sequelize.define(
          allowNull: false,
       },
       cost: {
-         type: DataTypes.DECIMAL(10, 2), // Adjust the precision as needed
+         type: DataTypes.DECIMAL(10, 2),
          allowNull: true,
       },
       notes: {

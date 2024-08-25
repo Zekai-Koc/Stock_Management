@@ -1,0 +1,64 @@
+/* ImportDevicesFromExcel.css */
+
+.import-excel-container {
+   padding: 20px;
+   font-family: Arial, sans-serif;
+}
+
+.section-title {
+   font-size: 24px;
+   margin-bottom: 20px;
+}
+
+.import-form {
+   margin-bottom: 20px;
+   display: flex;
+   gap: 10px; /* Space between buttons */
+   align-items: center;
+}
+
+.import-form button {
+   padding: 10px 20px;
+   border: none;
+   border-radius: 4px;
+   color: #fff;
+   background-color: #007bff;
+   cursor: pointer;
+   font-size: 16px;
+   flex: 1; /* Ensure buttons take up equal space */
+   max-width: 200px; /* Limit the maximum width of buttons */
+}
+
+.import-form button:disabled {
+   background-color: #6c757d;
+   cursor: not-allowed;
+}
+
+.excel-table {
+   margin-top: 20px;
+   max-width: 100%;
+   overflow-x: auto;
+}
+
+.table-title {
+   font-size: 18px;
+   margin-bottom: 10px;
+}
+
+.excel-table table {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+.excel-table th,
+.excel-table td {
+   border: 1px solid #ddd;
+   padding: 8px;
+   text-align: left;
+   font-size: 12px; /* Adjust font size to be small */
+}
+
+.excel-table th {
+   background-color: #f4f4f4;
+   font-weight: bold;
+}

@@ -136,60 +136,60 @@ const AddDevice = () => {
       }
    };
 
-   const handleFileUpload = async (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
+   // const handleFileUpload = async (event) => {
+   //    const file = event.target.files[0];
+   //    if (!file) return;
 
-      try {
-         const data = await readExcelFile(file);
-         console.log("Parsed data:", data);
+   //    try {
+   //       const data = await readExcelFile(file);
+   //       console.log("Parsed data:", data);
 
-         const response = await fetch(
-            `${config.apiUrl}/devices/uploadfromexcel`,
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ data }),
-            }
-         );
+   //       const response = await fetch(
+   //          `${config.apiUrl}/devices/uploadfromexcel`,
+   //          {
+   //             method: "POST",
+   //             headers: {
+   //                "Content-Type": "application/json",
+   //             },
+   //             body: JSON.stringify({ data }),
+   //          }
+   //       );
 
-         if (response.ok) {
-            const result = await response.json();
-            console.log("Upload successful:", result);
-         } else {
-            const errorMessage = await response.text();
-            console.error("Failed to upload data:", errorMessage);
-            alert(`Failed to upload data: ${errorMessage}`);
-         }
-      } catch (err) {
-         console.error("Error handling file upload:", err);
-         alert("Error handling file upload");
-      }
-   };
+   //       if (response.ok) {
+   //          const result = await response.json();
+   //          console.log("Upload successful:", result);
+   //       } else {
+   //          const errorMessage = await response.text();
+   //          console.error("Failed to upload data:", errorMessage);
+   //          alert(`Failed to upload data: ${errorMessage}`);
+   //       }
+   //    } catch (err) {
+   //       console.error("Error handling file upload:", err);
+   //       alert("Error handling file upload");
+   //    }
+   // };
 
-   // Function to read and parse the Excel file
-   const readExcelFile = (file) => {
-      return new Promise((resolve, reject) => {
-         const reader = new FileReader();
+   // // Function to read and parse the Excel file
+   // const readExcelFile = (file) => {
+   //    return new Promise((resolve, reject) => {
+   //       const reader = new FileReader();
 
-         reader.onload = (e) => {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: "array" });
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
-            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-            resolve(jsonData);
-         };
+   //       reader.onload = (e) => {
+   //          const data = new Uint8Array(e.target.result);
+   //          const workbook = XLSX.read(data, { type: "array" });
+   //          const sheetName = workbook.SheetNames[0];
+   //          const worksheet = workbook.Sheets[sheetName];
+   //          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+   //          resolve(jsonData);
+   //       };
 
-         reader.onerror = (error) => {
-            reject(error);
-         };
+   //       reader.onerror = (error) => {
+   //          reject(error);
+   //       };
 
-         reader.readAsArrayBuffer(file);
-      });
-   };
+   //       reader.readAsArrayBuffer(file);
+   //    });
+   // };
 
    return (
       <main id="app" className="add-device-container">
@@ -364,7 +364,7 @@ const AddDevice = () => {
                      />
                      <label htmlFor="imeiValidity">IMEI Validity</label>
                   </div>
-                  <div className="export-button-wrapper">
+                  {/* <div className="export-button-wrapper">
                      <input
                         type="file"
                         id="fileInput"
@@ -380,7 +380,7 @@ const AddDevice = () => {
                      >
                         Import from XLS
                      </button>
-                  </div>
+                  </div> */}
                </div>
 
                {/* <label> 123456789112345</label>

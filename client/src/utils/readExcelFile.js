@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 
-export const readExcelFile = (file) => {
+const readExcelFile = (file) => {
    return new Promise((resolve, reject) => {
       // Check file type
       const allowedMimeTypes = [
@@ -63,3 +63,5 @@ export const readExcelFile = (file) => {
       reader.readAsArrayBuffer(file); // Read file as an array buffer for Excel processing
    });
 };
+
+export default readExcelFile;

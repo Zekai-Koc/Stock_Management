@@ -32,9 +32,4 @@ const Model = sequelize.define(
    }
 );
 
-Model.belongsTo(Brand, {
-   foreignKey: "brandId",
-   as: "brand",
-});
-
 module.exports = Model;

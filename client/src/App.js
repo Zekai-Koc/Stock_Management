@@ -14,6 +14,7 @@ import ViewDevices from "./pages/ViewDevices";
 import ManageBrands from "./pages/ManageBrands"; // New component
 import ManageCatalogs from "./pages/ManageCatalogs"; // New component
 import ManageColors from "./pages/ManageColors"; // New component
+import ImportDevicesFromExcel from "./pages/ImportDevicesFromExcel";
 import "./components/Sidebar.css";
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/manage-brands" element={<ManageBrands />} />
                   <Route path="/manage-catalogs" element={<ManageCatalogs />} />
                   <Route path="/manage-colors" element={<ManageColors />} />
+                  <Route path="/import" element={<ImportDevicesFromExcel />} />
                </Routes>
             </div>
          </div>

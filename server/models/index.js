@@ -10,6 +10,7 @@ const Storage = require("./Storage");
 const Color = require("./Color");
 const Grade = require("./Grade");
 const Catalog = require("./Catalog");
+const DeviceStatusHistory = require("./DeviceStatusHistory"); // Import the new model
 
 // Define associations
 Brand.hasMany(Device, { foreignKey: "brandId" });
@@ -31,9 +32,15 @@ Grade.hasMany(Device, { foreignKey: "gradeId" });
 
 Catalog.hasMany(Device, { foreignKey: "catalogId" });
 
+// DeviceStatusHistory Associations
+Device.hasMany(DeviceStatusHistory, { foreignKey: "deviceId" });
+DeviceStatusHistory.belongsTo(Device, { foreignKey: "deviceId" });
+
+Status.hasMany(DeviceStatusHistory, { foreignKey: "statusId" });
+DeviceStatusHistory.belongsTo(Status, { foreignKey: "statusId" });
+
 // Export all models and sequelize instance
 module.exports = {
-   // sequelize,
    Brand,
    Device,
    Model,
@@ -43,4 +50,6 @@ module.exports = {
    Color,
    Grade,
    Catalog,
+   DeviceStatusHistory, // Export the new model
+   sequelize, // Also export the sequelize instance
 };
