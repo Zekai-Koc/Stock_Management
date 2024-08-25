@@ -23,6 +23,7 @@ const Model = sequelize.define(
             key: "id",
          },
          allowNull: false,
+         onDelete: "RESTRICT", // Prevent deletion of brand if associated models exist
       },
    },
    {

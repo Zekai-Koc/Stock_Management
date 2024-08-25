@@ -34,6 +34,7 @@ const Device = sequelize.define(
             model: "Brands",
             key: "id",
          },
+         onDelete: "RESTRICT", // Prevent deletion of brand if associated devices exist
       },
       modelId: {
          type: DataTypes.INTEGER,
@@ -75,6 +76,10 @@ const Device = sequelize.define(
             key: "id",
          },
       },
+      melding: {
+         type: DataTypes.BOOLEAN,
+         allowNull: false,
+      },
       statusId: {
          type: DataTypes.INTEGER,
          allowNull: false,
@@ -83,10 +88,7 @@ const Device = sequelize.define(
             key: "id",
          },
       },
-      melding: {
-         type: DataTypes.BOOLEAN,
-         allowNull: false,
-      },
+
       catalogId: {
          type: DataTypes.INTEGER,
          allowNull: false,
@@ -99,16 +101,23 @@ const Device = sequelize.define(
          type: DataTypes.DATE,
          allowNull: false,
       },
-      // Add an active field to track device deactivation/deletion
-      // active: {
-      //    type: DataTypes.BOOLEAN,
-      //    allowNull: false,
-      //    defaultValue: true,
-      // },
+      cost: {
+         type: DataTypes.DECIMAL(10, 2), // Adjust the precision as needed
+         allowNull: true,
+      },
+      notes: {
+         type: DataTypes.TEXT,
+         allowNull: true,
+      },
+      active: {
+         type: DataTypes.BOOLEAN,
+         allowNull: false,
+         defaultValue: true,
+      },
    },
    {
-      timestamps: false, // Disable automatic timestamps if not needed
-      tableName: "Devices", // Explicit table name specification
+      timestamps: false,
+      tableName: "Devices",
    }
 );
 

@@ -1,12 +1,223 @@
-/* Sidebar.css */
-
+/* General styles */
 body,
 html {
    margin: 0;
    padding: 0;
    box-sizing: border-box;
    height: 100%;
-   font-family:Arial, Helvetica, sans-serif;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-container {
+   display: flex;
+   height: 100vh;
+}
+
+#sidebar {
+   width: 250px;
+   background-color: #2c3e50;
+   color: white;
+   padding: 20px;
+   position: fixed;
+   left: 0;
+   top: 0;
+   bottom: 0;
+   overflow-y: auto;
+}
+
+#sidebar h2 {
+   font-size: 24px;
+   color: white;
+   margin-bottom: 20px;
+}
+
+#sidebar nav button {
+   display: block;
+   width: 100%;
+   padding: 10px;
+   margin: 10px 0;
+   background-color: #34495e;
+   color: white;
+   border: none;
+   cursor: pointer;
+   text-align: left;
+   font-size: 16px;
+   transition: background-color 0.3s ease;
+}
+
+#sidebar nav button:hover {
+   background-color: #1abc9c;
+}
+
+/* Highlight active button */
+#sidebar nav button.active {
+   background-color: #1abc9c;
+   color: white;
+}
+
+/* Management Section */
+#sidebar .management-btn {
+   font-weight: bold;
+   font-size: 16px;
+   background-color: #34495e;
+   color: white;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+   display: flex; /* Use flexbox to space out elements */
+   justify-content: space-between; /* Push the arrow to the right edge */
+   align-items: center; /* Center items vertically */
+}
+
+#sidebar .management-btn:hover {
+   background-color: #1abc9c;
+}
+
+#sidebar .management-btn .arrow {
+   margin-left: 10px; /* Add space between label and arrow */
+}
+
+.management-submenu {
+   margin-left: 15px; /* Indentation for the submenu */
+   display: none; /* Initially hidden */
+}
+
+.management-submenu.open {
+   display: block; /* Display when open */
+}
+
+.management-submenu button {
+   background-color: #3b4a59;
+   color: white;
+   border: none;
+   cursor: pointer;
+   text-align: left;
+   padding: 10px;
+   margin: 5px 0;
+   transition: background-color 0.3s ease;
+}
+
+.management-submenu button:hover {
+   background-color: #1abc9c;
+}
+
+.management-submenu button.active {
+   background-color: #16a085;
+}
+
+/* Optional transition for smoother open/close effect */
+.management-submenu {
+   transition: max-height 0.3s ease-out;
+   overflow: hidden;
+}
+
+/* body,
+html {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   height: 100%;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-container {
+   display: flex;
+   height: 100vh;
+}
+
+#sidebar {
+   width: 250px;
+   background-color: #2c3e50;
+   color: white;
+   padding: 20px;
+   position: fixed;
+   left: 0;
+   top: 0;
+   bottom: 0;
+   overflow-y: auto;
+}
+
+#sidebar h2 {
+   font-size: 24px;
+   color: white;
+   margin-bottom: 20px;
+}
+
+#sidebar nav button {
+   display: block;
+   width: 100%;
+   padding: 10px;
+   margin: 10px 0;
+   background-color: #34495e;
+   color: white;
+   border: none;
+   cursor: pointer;
+   text-align: left;
+   font-size: 16px;
+   transition: background-color 0.3s ease;
+}
+
+#sidebar nav button:hover {
+   background-color: #1abc9c;
+}
+
+#sidebar nav button.active {
+   background-color: #1abc9c;
+   color: white;
+}
+
+#sidebar .management-btn {
+   font-weight: bold;
+   font-size: 16px;
+   background-color: #34495e;
+   color: white;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+}
+
+#sidebar .management-btn:hover {
+   background-color: #1abc9c;
+}
+
+.management-submenu {
+   margin-left: 15px; 
+   display: none; 
+}
+
+.management-submenu.open {
+   display: block;
+}
+
+.management-submenu button {
+   background-color: #3b4a59;
+   color: white;
+   border: none;
+   cursor: pointer;
+   text-align: left;
+   padding: 10px;
+   margin: 5px 0;
+   transition: background-color 0.3s ease;
+}
+
+.management-submenu button:hover {
+   background-color: #1abc9c;
+}
+
+.management-submenu button.active {
+   background-color: #16a085;
+}
+
+.management-submenu {
+   transition: max-height 0.3s ease-out;
+   overflow: hidden;
+} */
+
+/* body,
+html {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   height: 100%;
+   font-family: Arial, Helvetica, sans-serif;
 }
 
 .app-container {
@@ -43,8 +254,7 @@ html {
    background-color: #1abc9c;
 }
 
-/* Highlight active button */
 #sidebar nav button.active {
    background-color: #1abc9c;
    color: white;
-}
+} */

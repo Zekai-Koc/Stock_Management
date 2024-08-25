@@ -1,0 +1,102 @@
+/* Ensure that there is no margin and padding by default */
+body,
+html {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Container for the Managecolors page */
+.manage-colors-container {
+   padding: 10px;
+   max-width: 800px;
+   margin: auto;
+}
+
+/* Title styling */
+.manage-colors-container h1 {
+   font-size: 24px;
+   margin-bottom: 20px;
+   color: #333;
+}
+
+/* Input and button container styling */
+.manage-colors-container > div {
+   margin-bottom: 20px;
+   display: flex;
+   align-items: center;
+}
+
+/* Input field styling */
+.manage-colors-container input[type="text"] {
+   padding: 10px;
+   font-size: 16px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   width: 300px;
+   margin-right: 10px;
+}
+
+/* Button styling */
+.manage-colors-container button {
+   padding: 5px 15px;
+   font-size: 16px;
+   color: #fff;
+   background-color: #3498db;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+   margin-right: 10px;
+}
+
+/* Button hover effect */
+.manage-colors-container button:hover {
+   background-color: #2980b9;
+}
+
+/* Cancel button styling */
+.manage-colors-container button.cancel {
+   background-color: #e74c3c;
+}
+
+.manage-colors-container button.cancel:hover {
+   background-color: #c0392b;
+}
+
+/* List item styling */
+.manage-colors-container ul {
+   list-style-type: none;
+   padding: 0;
+   margin: 0;
+}
+
+.manage-colors-container li {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 5px 0;
+   border-bottom: 1px solid #ddd;
+}
+
+.manage-colors-container li:last-child {
+   border-bottom: none;
+}
+
+/* Brand name styling */
+.manage-colors-container li span {
+   font-size: 18px;
+   color: #333;
+   flex: 1; /* This makes sure the brand name takes up available space */
+}
+
+/* Buttons in the list */
+.manage-colors-container li button {
+   background-color: #2ecc71;
+   margin-left: 10px;
+}
+
+.manage-colors-container li button:hover {
+   background-color: #27ae60;
+}
