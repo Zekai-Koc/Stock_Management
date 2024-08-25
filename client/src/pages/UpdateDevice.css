@@ -1,14 +1,21 @@
 #Update-Device-Button {
-    padding: 15px 30px;  /* Increases the size of the button */
-    font-size: 20px;     /* Makes the text larger */
-    background-color: #4CAF50; /* Sets a green background color */
-    color: white;        /* Sets the text color to white */
-    border: none;        /* Removes the border */
-    border-radius: 8px;  /* Rounds the corners of the button */
-    cursor: pointer;     /* Changes the cursor to a pointer on hover */
-    transition: background-color 0.3s ease; /* Adds a transition effect on hover */
+   padding: 15px 30px; /* Increases the size of the button */
+   font-size: 20px; /* Makes the text larger */
+   background-color: #4caf50; /* Sets a green background color */
+   color: white; /* Sets the text color to white */
+   border: none; /* Removes the border */
+   border-radius: 8px; /* Rounds the corners of the button */
+   cursor: pointer; /* Changes the cursor to a pointer on hover */
+   transition: background-color 0.3s ease; /* Adds a transition effect on hover */
 }
 
 #Update-Device-Button:hover {
-    background-color: #45a049; /* Darkens the background color on hover */
+   background-color: #45a049; /* Darkens the background color on hover */
 }
+
+/* .total-cost {
+   margin-top: 10px;
+   font-size: 18px;
+   font-weight: bold;
+   text-align: right;
+} */

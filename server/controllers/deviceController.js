@@ -10,6 +10,7 @@ const {
    Color,
    Grade,
    Catalog,
+   DeviceStatusHistory,
 } = require("../models");
 const generateUniqueIMEI = require("../utils/generateUniqueIMEI");
 
@@ -88,18 +89,42 @@ const getAllDevices = async (req, res) => {
    }
 };
 
-// Read a specific Device by IMEI
+// Read a specific Device by IMEI and include status history
 const getDevice = async (req, res) => {
    console.log("getDevice");
    const { IMEI } = req.params;
 
    try {
-      // Find the device by IMEI
-      const device = await Device.findOne({ where: { imei: IMEI } });
+      // Find the device by IMEI and include its status history
+      const device = await Device.findOne({
+         where: { imei: IMEI },
+         include: [
+            {
+               model: DeviceStatusHistory,
+               attributes: ["changeDate", "cost"], // Select the specific fields
+               include: [
+                  {
+                     model: Status,
+                     attributes: ["name"], // Include the status name
+                  },
+               ],
+            },
+         ],
+      });
 
       if (device) {
-         // If device is found, return it as a JSON response
-         res.json(device);
+         // If there is no status history, return an empty array instead of undefined
+         const statusHistory = device.DeviceStatusHistories || [];
+
+         // Format and return the response
+         res.json({
+            device,
+            statusHistory: statusHistory.map((history) => ({
+               status: history.Status ? history.Status.name : "Unknown", // Handle potential null status
+               changeDate: history.changeDate,
+               cost: history.cost,
+            })),
+         });
       } else {
          // If device is not found, send a 404 response
          res.status(404).send("Device not found");
@@ -110,6 +135,30 @@ const getDevice = async (req, res) => {
       res.status(500).send("Error fetching Device");
    }
 };
+
+module.exports = { getDevice };
+
+// const getDevice = async (req, res) => {
+//    console.log("getDevice");
+//    const { IMEI } = req.params;
+
+//    try {
+//       // Find the device by IMEI
+//       const device = await Device.findOne({ where: { imei: IMEI } });
+
+//       if (device) {
+//          // If device is found, return it as a JSON response
+//          res.json(device);
+//       } else {
+//          // If device is not found, send a 404 response
+//          res.status(404).send("Device not found");
+//       }
+//    } catch (error) {
+//       // Handle any errors that occur during the query
+//       console.error("Error fetching Device:", error);
+//       res.status(500).send("Error fetching Device");
+//    }
+// };
 
 // Create a new Device
 const createDevice = async (req, res) => {
@@ -306,12 +355,13 @@ const updateDevice = async (req, res) => {
    }
 };
 
-// Update a Device by IMEI
 const updateDeviceStatus = async (req, res) => {
    const { IMEI } = req.params;
-   const statusId = req.body.status;
+   const { statusId } = req.body;
 
-   console.log("updateDeviceStatus statusID", statusId);
+   const cost = req.body.cost || 0; // Set default cost to 0 if not provided
+
+   console.log("updateDeviceStatus", IMEI, statusId, cost);
 
    try {
       // Find the device and include associated models
@@ -333,6 +383,13 @@ const updateDeviceStatus = async (req, res) => {
          // Update the status of the device
          await device.update({ statusId });
 
+         // Log the status change in DeviceStatusHistory
+         await DeviceStatusHistory.create({
+            deviceId: device.imei,
+            statusId: statusId,
+            cost: cost,
+         });
+
          // Construct the response object with full data
          const updatedDevice = {
             imei: device.imei,
@@ -346,6 +403,7 @@ const updateDeviceStatus = async (req, res) => {
             catalog: device.Catalog.name,
             purchaseDate: device.purchaseDate,
             melding: device.melding,
+            cost: cost, // Include cost in response if needed
          };
 
          res.status(200).json(updatedDevice);
@@ -358,6 +416,60 @@ const updateDeviceStatus = async (req, res) => {
       res.status(500).send("Error updating Device");
    }
 };
+
+module.exports = { updateDeviceStatus };
+
+// Update a Device by IMEI
+// const updateDeviceStatus = async (req, res) => {
+//    const { IMEI } = req.params;
+
+//    const { statusId, cost } = req.body;
+
+//    try {
+//       // Find the device and include associated models
+//       const device = await Device.findOne({
+//          where: { imei: IMEI },
+//          include: [
+//             { model: Brand },
+//             { model: Model },
+//             { model: Status },
+//             { model: RAM },
+//             { model: Storage },
+//             { model: Color },
+//             { model: Grade },
+//             { model: Catalog },
+//          ],
+//       });
+
+//       if (device) {
+//          // Update the status of the device
+//          await device.update({ statusId });
+
+//          // Construct the response object with full data
+//          const updatedDevice = {
+//             imei: device.imei,
+//             brand: device.Brand.name,
+//             model: device.Model.name,
+//             ram: device.RAM.name,
+//             storage: device.Storage.name,
+//             color: device.Color.name,
+//             grade: device.Grade.name,
+//             status: device.Status.name,
+//             catalog: device.Catalog.name,
+//             purchaseDate: device.purchaseDate,
+//             melding: device.melding,
+//          };
+
+//          res.status(200).json(updatedDevice);
+//       } else {
+//          console.error("Device not found");
+//          res.status(404).send("Device not found");
+//       }
+//    } catch (error) {
+//       console.error("Error updating Device:", error);
+//       res.status(500).send("Error updating Device");
+//    }
+// };
 
 // Delete a Device by IMEI
 const deleteDevice = async (req, res) => {

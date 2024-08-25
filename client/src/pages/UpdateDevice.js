@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { validateIMEI } from "../utils/validateIMEI";
 import "./AddDevice.css";
-import "./UpdateDevice.css"
+import "./UpdateDevice.css";
+import config from "../utils/config";
 
 const UpdateDevice = () => {
    const { imei } = useParams(); // Extract IMEI from route params
@@ -33,6 +34,7 @@ const UpdateDevice = () => {
       statuses: [],
       catalogs: [],
    });
+   const [statusHistory, setStatusHistory] = useState([]);
 
    const [loading, setLoading] = useState(true);
 
@@ -40,26 +42,30 @@ const UpdateDevice = () => {
    useEffect(() => {
       const fetchDeviceData = async () => {
          try {
-            const response = await fetch(
-               `http://192.168.178.185:7000/api/v1/devices/${imei}`
-            );
+            const response = await fetch(`${config.apiUrl}/devices/${imei}`);
             const deviceData = await response.json();
+
+            console.log("deviceData", deviceData);
 
             // Update formData with fetched device data
             setFormData({
-               brand: deviceData.brandId,
-               model: deviceData.modelId,
-               ram: deviceData.ramId,
-               storage: deviceData.storageId,
-               color: deviceData.colorId,
-               grade: deviceData.gradeId,
-               purchaseDate: deviceData.purchaseDate.split("T")[0], // Extract date without time
-               status: deviceData.statusId,
-               catalog: deviceData.catalogId,
-               melding: deviceData.melding,
-               imei: deviceData.imei,
-               imeiValidity: validateIMEI(deviceData.imei).isValid,
+               brand: deviceData.device.brandId,
+               model: deviceData.device.modelId,
+               ram: deviceData.device.ramId,
+               storage: deviceData.device.storageId,
+               color: deviceData.device.colorId,
+               grade: deviceData.device.gradeId,
+               purchaseDate: deviceData.device.purchaseDate.split("T")[0], // Extract date without time
+               status: deviceData.device.statusId,
+               catalog: deviceData.device.catalogId,
+               melding: deviceData.device.melding,
+               imei: deviceData.device.imei,
+               imeiValidity: validateIMEI(deviceData.device.imei).isValid,
             });
+
+            // Set status history data
+            setStatusHistory(deviceData.statusHistory || []);
+
             setLoading(false);
          } catch (err) {
             console.error("Failed to fetch device data:", err);
@@ -74,9 +80,7 @@ const UpdateDevice = () => {
    useEffect(() => {
       const fetchOptions = async () => {
          try {
-            const response = await fetch(
-               "http://192.168.178.185:7000/api/v1/selectoptions"
-            );
+            const response = await fetch(`${config.apiUrl}/selectoptions`);
             const data = await response.json();
             setOptions(data);
          } catch (err) {
@@ -101,16 +105,13 @@ const UpdateDevice = () => {
       e.preventDefault();
 
       try {
-         const response = await fetch(
-            `http://192.168.178.185:7000/api/v1/devices/${imei}`,
-            {
-               method: "PATCH",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ ...formData }),
-            }
-         );
+         const response = await fetch(`${config.apiUrl}/devices/${imei}`, {
+            method: "PATCH",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ...formData }),
+         });
 
          if (response.ok) {
             alert("Device updated successfully!");
@@ -132,9 +133,7 @@ const UpdateDevice = () => {
          <section>
             <h2 className="section-title">Update Device with IMEI: {imei}</h2>
             <form onSubmit={handleSubmit}>
-
                <div className="container-selects">
-
                   <div className="three-elements">
                      <label>
                         Brand:
@@ -180,13 +179,9 @@ const UpdateDevice = () => {
                            ))}
                         </select>
                      </label>
-
                   </div>
 
-
-
                   <div className="three-elements">
-
                      <label>
                         Status:
                         <select
@@ -226,15 +221,9 @@ const UpdateDevice = () => {
                            onChange={handleChange}
                         />
                      </label>
-
                   </div>
 
-
-
-
-
                   <div className="three-elements">
-
                      <label>
                         Color:
                         <select
@@ -279,13 +268,9 @@ const UpdateDevice = () => {
                            ))}
                         </select>
                      </label>
-
                   </div>
 
-
                   <div className="three-elements">
-
-
                      <label>
                         IMEI:
                         <input
@@ -297,7 +282,6 @@ const UpdateDevice = () => {
                         />
                      </label>
 
-
                      <div className="checkbox-field">
                         <input
                            type="checkbox"
@@ -308,10 +292,69 @@ const UpdateDevice = () => {
                         <label htmlFor="melding">Melding</label>
                      </div>
                   </div>
-
                </div>
-               <button type="submit" id="Update-Device-Button">Update Device</button>
+               <button type="submit" id="Update-Device-Button">
+                  Update Device
+               </button>
             </form>
+
+            {/* Status History Section */}
+            <section>
+               <h3>Status History</h3>
+               {statusHistory.length > 0 ? (
+                  <>
+                     <table>
+                        <thead>
+                           <tr>
+                              <th>Status</th>
+                              <th>Change Date</th>
+                              <th>Cost</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {statusHistory.map((history, index) => (
+                              <tr key={index}>
+                                 <td>{history.status}</td>
+                                 <td>
+                                    {new Date(
+                                       history.changeDate
+                                    ).toLocaleDateString()}
+                                 </td>
+                                 <td>
+                                    {history.cost ? `$${history.cost}` : "N/A"}
+                                 </td>
+                              </tr>
+                           ))}
+
+                           {/* Total Cost Row */}
+                           <tr>
+                              <td
+                                 colSpan="2"
+                                 style={{
+                                    fontWeight: "bold",
+                                    textAlign: "center",
+                                 }}
+                              >
+                                 Total Cost
+                              </td>
+                              <td style={{ fontWeight: "bold" }}>
+                                 {`$${statusHistory
+                                    .reduce((total, history) => {
+                                       return (
+                                          total +
+                                          (parseFloat(history.cost) || 0)
+                                       );
+                                    }, 0)
+                                    .toFixed(2)}`}
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </>
+               ) : (
+                  <p>No status history available.</p>
+               )}
+            </section>
          </section>
       </main>
    );

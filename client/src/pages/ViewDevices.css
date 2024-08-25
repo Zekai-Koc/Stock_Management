@@ -74,6 +74,25 @@ button.delete-button:hover {
    ); /* Optional: slight lift on hover for better UX */
 }
 
+.search-container {
+   display: flex;
+   /* flex-direction: column; */
+   margin-top: 10px;
+}
+
+.search-section {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   margin-bottom: 10px;
+}
+
+.search-bar {
+   width: 100%;
+   padding: 8px;
+   margin-top: 4px;
+}
+
 /* You can also customize the buttons further, but this is optional */
 /* button.edit-button {
    background-color: #3498db; 

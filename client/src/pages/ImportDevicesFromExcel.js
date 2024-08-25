@@ -73,13 +73,12 @@ const ImportDevicesFromExcel = () => {
                <button
                   id="button-save-to-db"
                   onClick={handleSaveToDB}
-                  disabled={excelData.length === 0} // Disable if no data
+                  disabled={excelData.length === 0}
                >
                   Save to Database
                </button>
             </div>
 
-            {/* Render the table if excelData has content */}
             {excelData.length > 0 && (
                <div className="excel-table">
                   <h3 className="table-title">Preview of Imported Data</h3>

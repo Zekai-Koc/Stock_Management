@@ -37,7 +37,7 @@
 .excel-table {
    margin-top: 20px;
    max-width: 100%;
-   overflow-x: auto;
+   overflow-x: auto; /* Horizontal scroll if table is too wide */
 }
 
 .table-title {
@@ -48,6 +48,7 @@
 .excel-table table {
    width: 100%;
    border-collapse: collapse;
+   /* Avoid fixed layout to adapt to content size */
 }
 
 .excel-table th,
@@ -56,9 +57,16 @@
    padding: 8px;
    text-align: left;
    font-size: 12px; /* Adjust font size to be small */
+   white-space: nowrap; /* Prevent text wrapping */
 }
 
 .excel-table th {
    background-color: #f4f4f4;
    font-weight: bold;
+}
+
+.excel-table td {
+   overflow: hidden; /* Hide overflow text */
+   text-overflow: ellipsis; /* Add ellipsis for overflow text */
+   word-break: break-word; /* Ensure long text can break properly */
 }

@@ -1,0 +1,16 @@
+.three-elements {
+   display: flex;
+   /* flex-direction: column; */
+   gap: 10px;
+}
+
+input[type="text"],
+select {
+   padding: 8px;
+   width: 100%;
+   box-sizing: border-box;
+}
+
+label {
+   font-weight: bold;
+}
