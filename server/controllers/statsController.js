@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-const Device = require("../models/Device");
+const Device = require("../models/DenormalizedDevice");
 const Brand = require("../models/Brand");
 const Model = require("../models/Model");
 const Grade = require("../models/Grade");

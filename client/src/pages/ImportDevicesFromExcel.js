@@ -26,16 +26,13 @@ const ImportDevicesFromExcel = () => {
       }
 
       try {
-         const response = await fetch(
-            `${config.apiUrl}/devices/uploadfromexcel`,
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ data: excelData }),
-            }
-         );
+         const response = await fetch(`${config.apiUrl}/devices/bulk`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ data: excelData }),
+         });
 
          if (response.ok) {
             const result = await response.json();

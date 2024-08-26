@@ -1,26 +1,20 @@
 const express = require("express");
 
 const {
-   getAllDevices,
+   getDevices,
    getDevice,
    createDevice,
    updateDevice,
-   updateDeviceStatus,
    deleteDevice,
-   checkID,
-   checkBody,
-   // uploadFromExcel,
+   bulkCreateDevices,
 } = require("../controllers/deviceController");
 
 const router = express.Router();
 
-router.param("id", checkID);
+router.route("/").get(getDevices).post(createDevice);
 
-router.route("/").get(getAllDevices).post(checkBody, createDevice);
+router.route("/:imei").get(getDevice).patch(updateDevice).delete(deleteDevice);
 
-router.route("/:IMEI").get(getDevice).patch(updateDevice).delete(deleteDevice);
-router.route("/updatedevicestatus/:IMEI").patch(updateDeviceStatus);
-
-// router.route("/uploadfromexcel").post(checkBody, uploadFromExcel);
+router.route("/bulk").post(bulkCreateDevices);
 
 module.exports = router;
