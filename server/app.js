@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 
-const Device = require("./models/DenormalizedDevice");
+const Device = require("./models/Device");
 
 const deviceRouter = require("./routes/deviceRoutes");
 const statsRouter = require("./routes/statsRoutes");

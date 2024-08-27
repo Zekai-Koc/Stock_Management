@@ -19,7 +19,8 @@
    table-layout: fixed; /* Ensures columns have fixed width */
 }
 
-.status-table th, .status-table td {
+.status-table th,
+.status-table td {
    border: 1px solid #ddd;
    padding: 8px;
    text-align: left;
@@ -34,4 +35,63 @@
 
 .status-table td:last-child {
    width: 30%; /* Set a fixed width for the second column */
+}
+
+/* Home.css */
+
+.container {
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 20px;
+}
+
+h1 {
+   text-align: center;
+   color: #333;
+   margin-bottom: 30px;
+}
+
+h2 {
+   margin-top: 40px;
+   border-bottom: 2px solid #ddd;
+   padding-bottom: 10px;
+   color: #444;
+}
+
+table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-bottom: 40px;
+}
+
+table,
+th,
+td {
+   border: 1px solid #ddd;
+}
+
+th,
+td {
+   padding: 10px;
+   text-align: left;
+}
+
+th {
+   background-color: #f4f4f4;
+   color: #333;
+   font-weight: bold;
+}
+
+tbody tr:nth-child(even) {
+   background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+   background-color: #f1f1f1;
+}
+
+p {
+   text-align: center;
+   font-size: 18px;
+   color: #555;
 }

@@ -1,0 +1,74 @@
+.deviceDetailContainer {
+   padding: 20px;
+   font-family: Arial, sans-serif;
+}
+
+.deviceDetail {
+   max-width: 800px;
+   margin: 0 auto;
+   padding: 20px;
+   border: 1px solid #ddd;
+   border-radius: 8px;
+   background-color: #f9f9f9;
+}
+
+.deviceDetail h1 {
+   font-size: 24px;
+   color: #333;
+   margin-bottom: 20px;
+}
+
+.deviceDetail h2 {
+   font-size: 30px;
+   color: #555;
+   margin-bottom: 10px;
+   text-align: right;
+}
+
+.deviceDetail p {
+   margin: 10px 0;
+   font-size: 16px;
+   color: #666;
+   text-align: left; /* Aligns all text to the left */
+}
+
+.deviceDetail strong {
+   color: #333;
+   display: inline-block; /* Ensures label and value align left */
+   width: 150px; /* Set a fixed width for labels */
+}
+
+.deviceDetail .deviceDetailValue {
+   display: inline-block;
+   margin-left: 10px; /* Space between label and value */
+}
+
+.deviceDetail table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-top: 20px;
+}
+
+.deviceDetail th,
+.deviceDetail td {
+   padding: 10px;
+   border: 1px solid #ddd;
+   text-align: left; /* Ensure text is left-aligned in table */
+}
+
+.deviceDetail th {
+   background-color: #f4f4f4;
+}
+
+.deviceDetail td {
+   font-size: 14px;
+}
+
+.deviceDetail .logsTable {
+   margin-top: 20px;
+}
+
+.deviceDetail .noLogs {
+   font-style: italic;
+   color: #999;
+}

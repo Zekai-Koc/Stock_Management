@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../database/database");
-const DenormalizedDevice = require("../models/DenormalizedDevice");
+const Device = require("../models/Device");
 const DeviceLog = require("../models/DeviceLog");
 
 async function seed() {
@@ -56,19 +56,19 @@ async function seed() {
       // Create dummy data for DeviceLogs
       const deviceLogs = [
          {
-            deviceId: "123456789012345",
+            deviceId: "1",
             status: "Available",
             date: new Date("2023-01-10"),
             cost: 799.99,
          },
          {
-            deviceId: "234567890123456",
+            deviceId: "2",
             status: "Sold",
             date: new Date("2023-02-15"),
             cost: 999.99,
          },
          {
-            deviceId: "345678901234567",
+            deviceId: "3",
             status: "Available",
             date: new Date("2023-03-20"),
             cost: 599.99,
@@ -77,7 +77,7 @@ async function seed() {
       ];
 
       // Seed devices
-      await DenormalizedDevice.bulkCreate(devices);
+      await Device.bulkCreate(devices);
       console.log("Devices seeded.");
 
       // Seed device logs

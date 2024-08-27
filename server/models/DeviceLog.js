@@ -1,18 +1,18 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database");
+const Device = require("./Device"); // Ensure this path is correct
 
-// Define the DeviceLog model
 const DeviceLog = sequelize.define(
    "DeviceLog",
    {
       deviceId: {
-         type: DataTypes.STRING, // Assuming deviceId is of type STRING. Adjust if needed.
+         type: DataTypes.INTEGER,
          allowNull: false,
          references: {
-            model: "DenormalizedDevices",
-            key: "imei", // Assuming "imei" is the primary key in the Devices table.
+            model: Device, // Reference the model class directly
+            key: "id",
          },
-         onDelete: "CASCADE", // Automatically remove logs if the related device is deleted
+         onDelete: "CASCADE",
       },
       status: {
          type: DataTypes.STRING,
@@ -21,7 +21,7 @@ const DeviceLog = sequelize.define(
       date: {
          type: DataTypes.DATE,
          allowNull: false,
-         defaultValue: DataTypes.NOW, // Use current date/time if not provided
+         defaultValue: DataTypes.NOW,
       },
       cost: {
          type: DataTypes.DECIMAL(10, 2),
@@ -39,3 +39,53 @@ const DeviceLog = sequelize.define(
 );
 
 module.exports = DeviceLog;
+
+// const { DataTypes } = require("sequelize");
+// const sequelize = require("../database/database");
+// const Device = require("./Device");
+
+// // Define the DeviceLog model
+// const DeviceLog = sequelize.define(
+//    "DeviceLog",
+//    {
+//       deviceId: {
+//          type: DataTypes.INTEGER, // Assuming deviceId is of type STRING. Adjust if needed.
+//          allowNull: false,
+//          references: {
+//             model: "Devices",
+//             key: "id", // Assuming "imei" is the primary key in the Devices table.
+//          },
+//          onDelete: "CASCADE", // Automatically remove logs if the related device is deleted
+//       },
+//       status: {
+//          type: DataTypes.STRING,
+//          allowNull: false,
+//       },
+//       date: {
+//          type: DataTypes.DATE,
+//          allowNull: false,
+//          defaultValue: DataTypes.NOW, // Use current date/time if not provided
+//       },
+//       cost: {
+//          type: DataTypes.DECIMAL(10, 2),
+//          allowNull: false,
+//          get() {
+//             const rawValue = this.getDataValue("cost");
+//             return parseFloat(rawValue);
+//          },
+//       },
+//    },
+//    {
+//       timestamps: false,
+//       tableName: "DeviceLogs",
+//    }
+// );
+
+// // Define the association
+// DeviceLog.belongsTo(Device, {
+//    foreignKey: "deviceId",
+//    targetKey: "id",
+//    as: "device", // Alias for the association
+// });
+
+// module.exports = DeviceLog;

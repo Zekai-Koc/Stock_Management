@@ -8,18 +8,19 @@ const sequelize = new Sequelize("postgres", "postgres", "3570", {
    logging: false, // Disable logging
 });
 
-// Test the connection
-async function testConnection() {
+const initializeDatabase = async () => {
    try {
       await sequelize.authenticate();
-      console.log(
-         "Connection to the database has been established successfully."
-      );
+      console.log("Database connection has been established successfully.");
+
+      // Sync models
+      await sequelize.sync({ alter: true }); // Use `alter: true` to update tables
+      console.log("Database synced successfully.");
    } catch (error) {
       console.error("Unable to connect to the database:", error);
    }
-}
+};
 
-testConnection();
+initializeDatabase();
 
 module.exports = sequelize;

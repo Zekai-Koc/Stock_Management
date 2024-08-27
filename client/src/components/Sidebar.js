@@ -32,6 +32,15 @@ const Sidebar = () => {
             >
                Home (stats)
             </button>
+
+            <button
+               id="viewDevicesBtn"
+               className={activeButton === "/view-devices" ? "active" : ""}
+               onClick={() => handleNavigation("/view-devices")}
+            >
+               All Devices
+            </button>
+
             <button
                id="addDeviceBtn"
                className={activeButton === "/add-device" ? "active" : ""}
@@ -47,13 +56,6 @@ const Sidebar = () => {
                onClick={() => handleNavigation("/update-device-status")}
             >
                Update Device(s) Status
-            </button>
-            <button
-               id="viewDevicesBtn"
-               className={activeButton === "/view-devices" ? "active" : ""}
-               onClick={() => handleNavigation("/view-devices")}
-            >
-               View Devices
             </button>
 
             {/* Management Section */}
