@@ -28,7 +28,7 @@ const ViewDevices = () => {
                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            // console.log("ViewDevices: incoming devices:", data);
+            console.log("ViewDevices: incoming devices:", data);
             setDevices(data); // Assuming data is an array of devices
             setLoading(false);
          } catch (err) {
@@ -65,20 +65,23 @@ const ViewDevices = () => {
       }
    };
 
-   const handleDelete = async (imei) => {
+   const handleDelete = async (id) => {
       const confirmDelete = window.confirm(
          "Are you sure you want to delete this device?"
       );
+
+      console.log("id for deletion:", id)
+
       if (confirmDelete) {
          try {
-            const response = await fetch(`${config.apiUrl}/devices/${imei}`, {
+            const response = await fetch(`${config.apiUrl}/devices/${id}`, {
                method: "DELETE",
             });
             if (!response.ok) {
-               throw new Error(`Failed to delete device with IMEI: ${imei}`);
+               throw new Error(`Failed to delete device with ID: ${id}`);
             }
             setDevices((prevDevices) => {
-               return prevDevices.filter((device) => device.imei !== imei);
+               return prevDevices.filter((device) => device.id !== id);
             });
          } catch (err) {
             setError(err);
@@ -86,12 +89,13 @@ const ViewDevices = () => {
       }
    };
 
-   const handleEdit = (imei) => {
-      navigate(`/update-device/${imei}`);
+   const handleEdit = (id) => {
+      navigate(`/update-device/${id}`);
    };
 
-   const handleRowClick = (imei) => {
-      navigate(`/device-details/${imei}`);
+   const handleRowClick = (id) => {
+      console.log("device.id: ", id)
+      navigate(`/device-details/${id}`);
    };
 
    const safeToLowerCase = (value) => (value ? value.toLowerCase() : "");
@@ -202,7 +206,9 @@ const ViewDevices = () => {
                         <th>Status</th>
                         <th>Melding</th>
                         <th>Catalog</th>
+                        <th>Cost</th>
                         <th>Purchase Date</th>
+                        <th>Notes</th>
                         <th>Edit</th>
                         <th>Delete</th>
                      </tr>
@@ -211,7 +217,7 @@ const ViewDevices = () => {
                      {currentDevices.map((device) => (
                         <tr
                            key={device.id}
-                           onClick={() => handleRowClick(device.imei)}
+                           onClick={() => handleRowClick(device.id)}
                         >
                            <td>{device.imei}</td>
                            <td>{device.brand}</td>
@@ -223,16 +229,18 @@ const ViewDevices = () => {
                            <td>{device.status}</td>
                            <td>{device.melding ? "Yes" : "No"}</td>
                            <td>{device.catalog}</td>
+                           <td>{device.cost}</td>
                            <td>
                               {new Date(
                                  device.purchaseDate
                               ).toLocaleDateString()}
                            </td>
+                           <td>{device.notes}</td>
                            <td>
                               <button
                                  onClick={(e) => {
                                     e.stopPropagation();
-                                    handleEdit(device.imei);
+                                    handleEdit(device.id);
                                  }}
                                  className="edit-button"
                               >
@@ -243,7 +251,7 @@ const ViewDevices = () => {
                               <button
                                  onClick={(e) => {
                                     e.stopPropagation();
-                                    handleDelete(device.imei);
+                                    handleDelete(device.id);
                                  }}
                                  className="delete-button"
                               >

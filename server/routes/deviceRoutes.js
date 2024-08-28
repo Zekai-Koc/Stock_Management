@@ -19,7 +19,7 @@ router.route("/getDevicesWithLogs").get(getDevicesWithLogs);
 
 router.route("/stats").get(getDeviceStatistics);
 
-router.route("/:imei").get(getDevice).patch(updateDevice).delete(deleteDevice);
+router.route("/:id").get(getDevice).patch(updateDevice).delete(deleteDevice);
 
 router.route("/bulk").post(bulkCreateDevices);
 

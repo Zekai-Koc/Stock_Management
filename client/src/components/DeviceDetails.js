@@ -4,7 +4,11 @@ import config from "../utils/config";
 import styles from "../styles/DeviceDetails.module.css"; // Import CSS module
 
 const DeviceDetail = () => {
-   const { imei } = useParams(); // Get IMEI from URL parameters
+   const { id } = useParams();
+
+   console.log("id in device details: ", id)
+   console.log("useParams(): ", useParams())
+
    const [device, setDevice] = useState(null);
    const [logs, setLogs] = useState([]);
    const [loading, setLoading] = useState(true);
@@ -13,7 +17,7 @@ const DeviceDetail = () => {
    useEffect(() => {
       const fetchDeviceDetails = async () => {
          try {
-            const response = await fetch(`${config.apiUrl}/devices/${imei}`);
+            const response = await fetch(`${config.apiUrl}/devices/${id}`);
             if (!response.ok) {
                throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -28,7 +32,7 @@ const DeviceDetail = () => {
       };
 
       fetchDeviceDetails();
-   }, [imei]);
+   }, [id]);
 
    if (loading) return <p>Loading...</p>;
    if (error) return <p>Error: {error.message}</p>;

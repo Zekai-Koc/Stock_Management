@@ -38,6 +38,9 @@ const DeviceLog = sequelize.define(
    }
 );
 
+// Device.hasMany(DeviceLog, { foreignKey: "deviceId" });
+// DeviceLog.belongsTo(Device, { foreignKey: "deviceId" });
+
 module.exports = DeviceLog;
 
 // const { DataTypes } = require("sequelize");

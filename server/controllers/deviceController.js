@@ -15,15 +15,18 @@ const getDevices = async (req, res) => {
    }
 };
 
-// Get a single device by IMEI
+// Get a single device by id
 const getDevice = async (req, res) => {
    try {
-      const imei = req.params.imei;
-      const device = await Device.findOne({ where: { imei } });
+      const id = req.params.id;
+
+      console.log("incoming id:", id)
+
+      const device = await Device.findOne({ where: { id } });
       if (!device) {
          return res.status(404).json({ error: "Device not found" });
       }
-      const logs = await DeviceLog.findAll({ where: { deviceId: imei } });
+      const logs = await DeviceLog.findAll({ where: { deviceId: id } });
       console.log("Device logs:", logs);
       res.json({ device, logs });
    } catch (error) {
@@ -98,10 +101,12 @@ const updateDevice = async (req, res) => {
 
 // Delete a device by IMEI
 const deleteDevice = async (req, res) => {
-   const { imei } = req.params;
+   const { id } = req.params;
+
+   console.log("id: ", id)
 
    try {
-      const device = await Device.findOne({ where: { imei } });
+      const device = await Device.findOne({ where: { id } });
 
       if (!device) {
          return res.status(404).json({ message: "Device not found" });
