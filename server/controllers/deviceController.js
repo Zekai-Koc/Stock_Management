@@ -20,7 +20,7 @@ const getDevice = async (req, res) => {
    try {
       const id = req.params.id;
 
-      console.log("incoming id:", id)
+      console.log("incoming id:", id);
 
       const device = await Device.findOne({ where: { id } });
       if (!device) {
@@ -103,7 +103,7 @@ const updateDevice = async (req, res) => {
 const deleteDevice = async (req, res) => {
    const { id } = req.params;
 
-   console.log("id: ", id)
+   console.log("id: ", id);
 
    try {
       const device = await Device.findOne({ where: { id } });
@@ -145,6 +145,7 @@ const bulkCreateDevices = async (req, res) => {
             catalog = null,
             cost = null,
             purchasedate = Date.now(),
+            notes = null,
          } = normalizedDevice;
 
          // Return a normalized and formatted device object
@@ -161,32 +162,39 @@ const bulkCreateDevices = async (req, res) => {
             catalog,
             cost,
             purchaseDate: new Date(purchasedate), // Ensure it's a valid date
+            notes,
          };
       });
 
-      // // Filter out devices that have no IMEI (assuming IMEI is a must)
-      // const uniqueDevices = formattedDevices.filter(device => device.imei);
-
-      // if (uniqueDevices.length === 0) {
-      //    return res.status(400).json({
-      //       message: "No valid devices to create",
-      //    });
-      // }
-
-      // Use bulkCreate with the filtered and formatted devices
+      // Insert devices into the database
       const createdDevices = await Device.bulkCreate(formattedDevices, {
          validate: true, // Validate before inserting
          ignoreDuplicates: true, // Prevent failing on duplicates
       });
 
+      // Prepare device logs
+      const deviceLogs = createdDevices.map((device) => {
+         return {
+            deviceId: device.id, // Ensure `id` is available after creation
+            status: device.status, // Use the status from the device
+            cost: device.cost, // Use the cost from the device
+            date: new Date(), // Set current date for log entry
+         };
+      });
+
+      // Insert device logs into the database
+      await DeviceLog.bulkCreate(deviceLogs, {
+         validate: true, // Validate before inserting
+      });
+
       return res.status(201).json({
-         message: "Devices created successfully",
+         message: "Devices and logs created successfully",
          data: createdDevices,
       });
    } catch (error) {
-      console.error("Error bulk creating devices:", error);
+      console.error("Error bulk creating devices and logs:", error);
       return res.status(500).json({
-         message: "Error bulk creating devices",
+         message: "Error bulk creating devices and logs",
          error: error.message,
       });
    }
@@ -246,8 +254,13 @@ const getDeviceStatistics = async (req, res) => {
          group: ["catalog"],
       });
 
-      // Total cost
-      const totalCost = await Device.sum("cost");
+      // Total cost from Device table
+      // const totalDeviceCost = await Device.sum("cost");
+      // Total cost from DeviceLogs table
+      // const totalLogCost = await DeviceLog.sum("cost");
+      // Combine both costs
+      // const totalCost = totalDeviceCost + totalLogCost;
+      const totalCost = await DeviceLog.sum("cost");
 
       // Prepare response
       res.status(200).json({
@@ -295,6 +308,82 @@ const getDevicesWithLogs = async (req, res) => {
    }
 };
 
+const updateDeviceStatus = async (req, res) => {
+   const { imei } = req.params;
+   const { status, cost } = req.body;
+
+   console.log("Incoming status:", status);
+   console.log("Incoming cost:", cost);
+   console.log("Incoming imei:", imei);
+
+   try {
+      // Find the device by IMEI
+      const device = await Device.findOne({ where: { imei } });
+
+      if (!device) {
+         return res.status(404).json({ message: "Device not found" });
+      }
+
+      // Update the device with the new status and cost
+      device.status = status;
+      device.cost = cost;
+      await device.save();
+
+      // Create a new log entry in DeviceLogs
+      await DeviceLog.create({
+         deviceId: device.id,
+         status,
+         cost,
+         date: new Date(), // Optionally set the current date
+      });
+
+      return res.status(200).json(device);
+   } catch (error) {
+      console.error("Error updating device:", error);
+      return res.status(500).json({ message: "Error updating device", error });
+   }
+};
+
+const getTotalCostForCatalog = async (req, res) => {
+   try {
+      const catalog = req.query.catalog; // Get the catalog parameter from the query string
+      if (!catalog) {
+         return res.status(400).json({ error: "Catalog is required" });
+      }
+
+      // Retrieve all device IDs for the given catalog
+      const devices = await Device.findAll({
+         attributes: ["id"],
+         where: {
+            catalog: catalog,
+         },
+      });
+
+      // Map device IDs
+      const deviceIds = devices.map((device) => device.id);
+
+      // If no devices are found for the given catalog, return 0
+      if (deviceIds.length === 0) {
+         return res.status(200).json({ totalCost: 0 });
+      }
+
+      // Sum the costs from the DeviceLog table for all devices in the given catalog
+      const totalLogCost = await DeviceLog.sum("cost", {
+         where: {
+            deviceId: {
+               [Op.in]: deviceIds,
+            },
+         },
+      });
+
+      // Return the total log cost (if undefined, return 0)
+      return res.status(200).json({ totalCost: totalLogCost || 0 });
+   } catch (error) {
+      console.error("Error calculating total cost for catalog:", error);
+      return res.status(500).json({ error: "Internal server error" });
+   }
+};
+
 module.exports = {
    getDevices,
    getDevice,
@@ -304,7 +393,82 @@ module.exports = {
    bulkCreateDevices,
    getDeviceStatistics,
    getDevicesWithLogs,
+   updateDeviceStatus,
+   getTotalCostForCatalog,
 };
+
+// const bulkCreateDevices = async (req, res) => {
+//    try {
+//       const devices = req.body.data;
+
+//       // Normalize device properties and handle missing fields
+//       const formattedDevices = devices.map((device) => {
+//          // Normalize all keys to lowercase to handle case-insensitive keys
+//          const normalizedDevice = {};
+//          Object.keys(device).forEach((key) => {
+//             normalizedDevice[key.toLowerCase()] = device[key];
+//          });
+
+//          // Extract and provide default values using destructuring
+//          const {
+//             imei = null,
+//             model = null,
+//             brand = null,
+//             color = null,
+//             ram = null,
+//             storage = null,
+//             grade = null,
+//             status = null,
+//             melding = null,
+//             catalog = null,
+//             cost = null,
+//             purchasedate = Date.now(),
+//          } = normalizedDevice;
+
+//          // Return a normalized and formatted device object
+//          return {
+//             imei,
+//             model,
+//             brand,
+//             color,
+//             ram,
+//             storage,
+//             grade,
+//             status,
+//             melding,
+//             catalog,
+//             cost,
+//             purchaseDate: new Date(purchasedate), // Ensure it's a valid date
+//          };
+//       });
+
+//       // // Filter out devices that have no IMEI (assuming IMEI is a must)
+//       // const uniqueDevices = formattedDevices.filter(device => device.imei);
+
+//       // if (uniqueDevices.length === 0) {
+//       //    return res.status(400).json({
+//       //       message: "No valid devices to create",
+//       //    });
+//       // }
+
+//       // Use bulkCreate with the filtered and formatted devices
+//       const createdDevices = await Device.bulkCreate(formattedDevices, {
+//          validate: true, // Validate before inserting
+//          ignoreDuplicates: true, // Prevent failing on duplicates
+//       });
+
+//       return res.status(201).json({
+//          message: "Devices created successfully",
+//          data: createdDevices,
+//       });
+//    } catch (error) {
+//       console.error("Error bulk creating devices:", error);
+//       return res.status(500).json({
+//          message: "Error bulk creating devices",
+//          error: error.message,
+//       });
+//    }
+// };
 
 // const bulkCreateDevices = async (req, res) => {
 //    const devices = req.body.data;

@@ -6,8 +6,8 @@ import styles from "../styles/DeviceDetails.module.css"; // Import CSS module
 const DeviceDetail = () => {
    const { id } = useParams();
 
-   console.log("id in device details: ", id)
-   console.log("useParams(): ", useParams())
+   console.log("id in device details: ", id);
+   console.log("useParams(): ", useParams());
 
    const [device, setDevice] = useState(null);
    const [logs, setLogs] = useState([]);
@@ -37,75 +37,90 @@ const DeviceDetail = () => {
    if (loading) return <p>Loading...</p>;
    if (error) return <p>Error: {error.message}</p>;
 
+   // Calculate total cost
+   const totalCost = logs.reduce(
+      (acc, log) => acc + (parseFloat(log.cost) || 0),
+      0
+   );
+
    return (
       <div className={styles.deviceDetailContainer}>
          <h1 className={styles.deviceDetailHeader}>Device Details</h1>
          {device ? (
             <div className={styles.deviceDetail}>
-               <h2>{device.model}</h2>
-               <p>
-                  <strong>IMEI:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.imei}
-                  </span>
-               </p>
-               <p>
-                  <strong>RAM:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.ram} GB
-                  </span>
-               </p>
-               <p>
-                  <strong>Storage:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.storage} GB
-                  </span>
-               </p>
-               <p>
-                  <strong>Color:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.color}
-                  </span>
-               </p>
-               <p>
-                  <strong>Grade:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.grade}
-                  </span>
-               </p>
-               <p>
-                  <strong>Status:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.status}
-                  </span>
-               </p>
-               <p>
-                  <strong>Melding:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.melding ? "Yes" : "No"}
-                  </span>
-               </p>
-               <p>
-                  <strong>Catalog:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {device.catalog}
-                  </span>
-               </p>
-               <p>
-                  <strong>Purchase Date:</strong>
-                  <span className={styles.deviceDetailValue}>
-                     {" "}
-                     {new Date(device.purchaseDate).toLocaleDateString()}
-                  </span>
-               </p>
+               <div className={styles.deviceInfoTop}>
+                  <h2>{device.model}</h2>
+                  <p>
+                     <strong>IMEI:</strong>
+                     <span className={styles.deviceDetailValue}>
+                        {device.imei}
+                     </span>
+                  </p>
+               </div>
+
+               <hr />
+
+               <div className={styles.deviceInfoGrid}>
+                  <div className={styles.deviceInfoColumn}>
+                     <p>
+                        <strong>RAM:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {device.ram} GB
+                        </span>
+                     </p>
+                     <p>
+                        <strong>Storage:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {device.storage} GB
+                        </span>
+                     </p>
+                     <p>
+                        <strong>Color:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {device.color}
+                        </span>
+                     </p>
+                     <p>
+                        <strong>Grade:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {device.grade}
+                        </span>
+                     </p>
+                     <p>
+                        <strong>Melding:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {device.melding ? "Yes" : "No"}
+                        </span>
+                     </p>
+                  </div>
+                  <div className={styles.deviceInfoColumn}>
+                     <p>
+                        <strong>Status:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {device.status}
+                        </span>
+                     </p>
+                     <p>
+                        <strong>Catalog:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {device.catalog}
+                        </span>
+                     </p>
+                     <p>
+                        <strong>Purchase Date:</strong>
+                        <span className={styles.deviceDetailValue}>
+                           {new Date(device.purchaseDate).toLocaleDateString()}
+                        </span>
+                     </p>
+                     <p>
+                        <strong>Notes:</strong>
+                        <span className={styles.deviceDetailNotes}>
+                           {device.notes || "No notes available."}
+                        </span>
+                     </p>
+                  </div>
+               </div>
+               <hr />
 
                <h3>Logs</h3>
                {logs.length > 0 ? (
@@ -129,6 +144,14 @@ const DeviceDetail = () => {
                               </td>
                            </tr>
                         ))}
+                        <tr>
+                           <td colSpan="2" className={styles.totalCostLabel}>
+                              Total Cost:
+                           </td>
+                           <td className={styles.totalCostValue}>
+                              {totalCost ? `$${totalCost.toFixed(2)}` : "N/A"}
+                           </td>
+                        </tr>
                      </tbody>
                   </table>
                ) : (
@@ -146,15 +169,17 @@ const DeviceDetail = () => {
 
 export default DeviceDetail;
 
-// // src/components/DeviceDetail.js
-
 // import React, { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import config from "../utils/config";
-// import "../styles/DeviceDetails.css"; // Add styles as needed
+// import styles from "../styles/DeviceDetails.module.css"; // Import CSS module
 
 // const DeviceDetail = () => {
-//    const { imei } = useParams(); // Get IMEI from URL parameters
+//    const { id } = useParams();
+
+//    console.log("id in device details: ", id);
+//    console.log("useParams(): ", useParams());
+
 //    const [device, setDevice] = useState(null);
 //    const [logs, setLogs] = useState([]);
 //    const [loading, setLoading] = useState(true);
@@ -163,7 +188,7 @@ export default DeviceDetail;
 //    useEffect(() => {
 //       const fetchDeviceDetails = async () => {
 //          try {
-//             const response = await fetch(`${config.apiUrl}/devices/${imei}`);
+//             const response = await fetch(`${config.apiUrl}/devices/${id}`);
 //             if (!response.ok) {
 //                throw new Error(`HTTP error! Status: ${response.status}`);
 //             }
@@ -178,49 +203,92 @@ export default DeviceDetail;
 //       };
 
 //       fetchDeviceDetails();
-//    }, [imei]);
+//    }, [id]);
 
 //    if (loading) return <p>Loading...</p>;
 //    if (error) return <p>Error: {error.message}</p>;
 
 //    return (
-//       <div className="device-detail-container">
-//          <h1>Device Details</h1>
+//       <div className={styles.deviceDetailContainer}>
+//          <h1 className={styles.deviceDetailHeader}>Device Details</h1>
 //          {device ? (
-//             <div className="device-detail">
+//             <div className={styles.deviceDetail}>
 //                <h2>{device.model}</h2>
 //                <p>
-//                   <strong>IMEI:</strong> {device.imei}
+//                   <strong>IMEI:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.imei}
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>RAM:</strong> {device.ram} GB
+//                   <strong>RAM:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.ram} GB
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>Storage:</strong> {device.storage} GB
+//                   <strong>Storage:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.storage} GB
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>Color:</strong> {device.color}
+//                   <strong>Color:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.color}
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>Grade:</strong> {device.grade}
+//                   <strong>Grade:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.grade}
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>Status:</strong> {device.status}
+//                   <strong>Status:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.status}
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>Melding:</strong> {device.melding ? "Yes" : "No"}
+//                   <strong>Melding:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.melding ? "Yes" : "No"}
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>Catalog:</strong> {device.catalog}
+//                   <strong>Catalog:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {device.catalog}
+//                   </span>
 //                </p>
 //                <p>
-//                   <strong>Purchase Date:</strong>{" "}
-//                   {new Date(device.purchaseDate).toLocaleDateString()}
+//                   <strong>Purchase Date:</strong>
+//                   <span className={styles.deviceDetailValue}>
+//
+//                      {new Date(device.purchaseDate).toLocaleDateString()}
+//                   </span>
+//                </p>
+
+//                <p>
+//                   <strong>Notes:</strong>
+//                   <span className={styles.deviceDetailNotes}>
+//
+//                      {device.notes || "No notes available."}
+//                   </span>
 //                </p>
 
 //                <h3>Logs</h3>
 //                {logs.length > 0 ? (
-//                   <table>
+//                   <table className={styles.logsTable}>
 //                      <thead>
 //                         <tr>
 //                            <th>Status</th>
@@ -243,7 +311,9 @@ export default DeviceDetail;
 //                      </tbody>
 //                   </table>
 //                ) : (
-//                   <p>No logs available for this device.</p>
+//                   <p className={styles.noLogs}>
+//                      No logs available for this device.
+//                   </p>
 //                )}
 //             </div>
 //          ) : (
@@ -255,79 +325,188 @@ export default DeviceDetail;
 
 // export default DeviceDetail;
 
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import config from "../utils/config";
-// import "../styles/DeviceDetails.css";
+// // // src/components/DeviceDetail.js
 
-// const DeviceDetails = () => {
-//    const { imei } = useParams(); // Extract IMEI from URL params
-//    const [device, setDevice] = useState(null);
-//    const [loading, setLoading] = useState(true);
-//    const [error, setError] = useState(null);
+// // import React, { useEffect, useState } from "react";
+// // import { useParams } from "react-router-dom";
+// // import config from "../utils/config";
+// // import "../styles/DeviceDetails.css"; // Add styles as needed
 
-//    useEffect(() => {
-//       const fetchDevice = async () => {
-//          try {
-//             const response = await fetch(`${config.apiUrl}/devices/${imei}`);
-//             if (!response.ok) {
-//                throw new Error(`HTTP error! Status: ${response.status}`);
-//             }
-//             const data = await response.json();
-//             setDevice(data);
-//             setLoading(false);
-//          } catch (err) {
-//             setError(err);
-//             setLoading(false);
-//          }
-//       };
+// // const DeviceDetail = () => {
+// //    const { imei } = useParams(); // Get IMEI from URL parameters
+// //    const [device, setDevice] = useState(null);
+// //    const [logs, setLogs] = useState([]);
+// //    const [loading, setLoading] = useState(true);
+// //    const [error, setError] = useState(null);
 
-//       fetchDevice();
-//    }, [imei]);
+// //    useEffect(() => {
+// //       const fetchDeviceDetails = async () => {
+// //          try {
+// //             const response = await fetch(`${config.apiUrl}/devices/${imei}`);
+// //             if (!response.ok) {
+// //                throw new Error(`HTTP error! Status: ${response.status}`);
+// //             }
+// //             const data = await response.json();
+// //             setDevice(data.device);
+// //             setLogs(data.logs);
+// //             setLoading(false);
+// //          } catch (err) {
+// //             setError(err);
+// //             setLoading(false);
+// //          }
+// //       };
 
-//    if (loading) return <p>Loading...</p>;
-//    if (error) return <p>Error: {error.message}</p>;
-//    if (!device) return <p>Device not found.</p>;
+// //       fetchDeviceDetails();
+// //    }, [imei]);
 
-//    return (
-//       <div className="device-details-container">
-//          <h1>Device Details</h1>
-//          <div className="device-details">
-//             <p>
-//                <strong>IMEI:</strong> {device.imei}
-//             </p>
-//             <p>
-//                <strong>Model:</strong> {device.model}
-//             </p>
-//             <p>
-//                <strong>RAM:</strong> {device.ram} GB
-//             </p>
-//             <p>
-//                <strong>Storage:</strong> {device.storage} GB
-//             </p>
-//             <p>
-//                <strong>Color:</strong> {device.color}
-//             </p>
-//             <p>
-//                <strong>Grade:</strong> {device.grade}
-//             </p>
-//             <p>
-//                <strong>Status:</strong> {device.status}
-//             </p>
-//             <p>
-//                <strong>Melding:</strong> {device.melding ? "Yes" : "No"}
-//             </p>
-//             <p>
-//                <strong>Catalog:</strong> {device.catalog}
-//             </p>
-//             <p>
-//                <strong>Purchase Date:</strong>{" "}
-//                {new Date(device.purchaseDate).toLocaleDateString()}
-//             </p>
-//             {/* Add more device details as needed */}
-//          </div>
-//       </div>
-//    );
-// };
+// //    if (loading) return <p>Loading...</p>;
+// //    if (error) return <p>Error: {error.message}</p>;
 
-// export default DeviceDetails;
+// //    return (
+// //       <div className="device-detail-container">
+// //          <h1>Device Details</h1>
+// //          {device ? (
+// //             <div className="device-detail">
+// //                <h2>{device.model}</h2>
+// //                <p>
+// //                   <strong>IMEI:</strong> {device.imei}
+// //                </p>
+// //                <p>
+// //                   <strong>RAM:</strong> {device.ram} GB
+// //                </p>
+// //                <p>
+// //                   <strong>Storage:</strong> {device.storage} GB
+// //                </p>
+// //                <p>
+// //                   <strong>Color:</strong> {device.color}
+// //                </p>
+// //                <p>
+// //                   <strong>Grade:</strong> {device.grade}
+// //                </p>
+// //                <p>
+// //                   <strong>Status:</strong> {device.status}
+// //                </p>
+// //                <p>
+// //                   <strong>Melding:</strong> {device.melding ? "Yes" : "No"}
+// //                </p>
+// //                <p>
+// //                   <strong>Catalog:</strong> {device.catalog}
+// //                </p>
+// //                <p>
+// //                   <strong>Purchase Date:</strong>
+// //                   {new Date(device.purchaseDate).toLocaleDateString()}
+// //                </p>
+
+// //                <h3>Logs</h3>
+// //                {logs.length > 0 ? (
+// //                   <table>
+// //                      <thead>
+// //                         <tr>
+// //                            <th>Status</th>
+// //                            <th>Date</th>
+// //                            <th>Cost</th>
+// //                         </tr>
+// //                      </thead>
+// //                      <tbody>
+// //                         {logs.map((log, index) => (
+// //                            <tr key={index}>
+// //                               <td>{log.status}</td>
+// //                               <td>{new Date(log.date).toLocaleDateString()}</td>
+// //                               <td>
+// //                                  {typeof log.cost === "number"
+// //                                     ? `$${log.cost.toFixed(2)}`
+// //                                     : "N/A"}
+// //                               </td>
+// //                            </tr>
+// //                         ))}
+// //                      </tbody>
+// //                   </table>
+// //                ) : (
+// //                   <p>No logs available for this device.</p>
+// //                )}
+// //             </div>
+// //          ) : (
+// //             <p>Device not found.</p>
+// //          )}
+// //       </div>
+// //    );
+// // };
+
+// // export default DeviceDetail;
+
+// // import React, { useEffect, useState } from "react";
+// // import { useParams } from "react-router-dom";
+// // import config from "../utils/config";
+// // import "../styles/DeviceDetails.css";
+
+// // const DeviceDetails = () => {
+// //    const { imei } = useParams(); // Extract IMEI from URL params
+// //    const [device, setDevice] = useState(null);
+// //    const [loading, setLoading] = useState(true);
+// //    const [error, setError] = useState(null);
+
+// //    useEffect(() => {
+// //       const fetchDevice = async () => {
+// //          try {
+// //             const response = await fetch(`${config.apiUrl}/devices/${imei}`);
+// //             if (!response.ok) {
+// //                throw new Error(`HTTP error! Status: ${response.status}`);
+// //             }
+// //             const data = await response.json();
+// //             setDevice(data);
+// //             setLoading(false);
+// //          } catch (err) {
+// //             setError(err);
+// //             setLoading(false);
+// //          }
+// //       };
+
+// //       fetchDevice();
+// //    }, [imei]);
+
+// //    if (loading) return <p>Loading...</p>;
+// //    if (error) return <p>Error: {error.message}</p>;
+// //    if (!device) return <p>Device not found.</p>;
+
+// //    return (
+// //       <div className="device-details-container">
+// //          <h1>Device Details</h1>
+// //          <div className="device-details">
+// //             <p>
+// //                <strong>IMEI:</strong> {device.imei}
+// //             </p>
+// //             <p>
+// //                <strong>Model:</strong> {device.model}
+// //             </p>
+// //             <p>
+// //                <strong>RAM:</strong> {device.ram} GB
+// //             </p>
+// //             <p>
+// //                <strong>Storage:</strong> {device.storage} GB
+// //             </p>
+// //             <p>
+// //                <strong>Color:</strong> {device.color}
+// //             </p>
+// //             <p>
+// //                <strong>Grade:</strong> {device.grade}
+// //             </p>
+// //             <p>
+// //                <strong>Status:</strong> {device.status}
+// //             </p>
+// //             <p>
+// //                <strong>Melding:</strong> {device.melding ? "Yes" : "No"}
+// //             </p>
+// //             <p>
+// //                <strong>Catalog:</strong> {device.catalog}
+// //             </p>
+// //             <p>
+// //                <strong>Purchase Date:</strong>
+// //                {new Date(device.purchaseDate).toLocaleDateString()}
+// //             </p>
+// //             {/* Add more device details as needed */}
+// //          </div>
+// //       </div>
+// //    );
+// // };
+
+// // export default DeviceDetails;

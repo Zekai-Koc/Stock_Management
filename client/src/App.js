@@ -32,13 +32,10 @@ function App() {
                      path="/update-device-status"
                      element={<UpdateDeviceStatus />}
                   />
-                  <Route
-                     path="/update-device/:imei"
-                     element={<UpdateDevice />}
-                  />
+                  <Route path="/update-device/:id" element={<UpdateDevice />} />
                   <Route path="/view-devices" element={<ViewDevices />} />
                   <Route
-                     path="/device-details/:imei"
+                     path="/device-details/:id"
                      element={<DeviceDetails />}
                   />
 

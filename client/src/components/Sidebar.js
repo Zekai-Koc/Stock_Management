@@ -42,13 +42,6 @@ const Sidebar = () => {
             </button>
 
             <button
-               id="addDeviceBtn"
-               className={activeButton === "/add-device" ? "active" : ""}
-               onClick={() => handleNavigation("/add-device")}
-            >
-               Add Device(s)
-            </button>
-            <button
                id="updateDeviceStatusBtn"
                className={
                   activeButton === "/update-device-status" ? "active" : ""
@@ -58,11 +51,20 @@ const Sidebar = () => {
                Update Device(s) Status
             </button>
 
+            <button
+               id="addDeviceBtn"
+               className={activeButton === "/add-device" ? "active" : ""}
+               onClick={() => handleNavigation("/add-device")}
+            >
+               Add Device(s)
+            </button>
+
             {/* Management Section */}
             <button
                id="managementBtn"
                className="management-btn"
                onClick={toggleManagementMenu}
+               disabled
             >
                Management{" "}
                <span className="arrow">{isManagementOpen ? "▲" : "▼"}</span>
@@ -96,6 +98,9 @@ const Sidebar = () => {
                   Manage Colors
                </button>
             </div>
+
+            {/* Spacer */}
+            <div style={{ marginTop: "100px" }}></div>
 
             <button
                id="importDevicesBtn"

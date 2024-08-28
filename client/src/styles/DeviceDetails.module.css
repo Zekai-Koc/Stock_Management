@@ -12,7 +12,7 @@
    background-color: #f9f9f9;
 }
 
-.deviceDetail h1 {
+.deviceDetailHeader {
    font-size: 24px;
    color: #333;
    margin-bottom: 20px;
@@ -25,6 +25,21 @@
    text-align: right;
 }
 
+.deviceInfoTop {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 20px;
+}
+
+.deviceInfoTop h2 {
+   margin: 0;
+}
+
+.deviceInfoTop p {
+   margin: 0;
+}
+
 .deviceDetail p {
    margin: 10px 0;
    font-size: 16px;
@@ -35,12 +50,30 @@
 .deviceDetail strong {
    color: #333;
    display: inline-block; /* Ensures label and value align left */
-   width: 150px; /* Set a fixed width for labels */
+   width: 100px; /* Set a fixed width for labels */
 }
 
 .deviceDetail .deviceDetailValue {
    display: inline-block;
-   margin-left: 10px; /* Space between label and value */
+}
+
+.deviceDetail .deviceDetailNotes {
+   display: block; /* Ensure notes are displayed as a block */
+   margin-top: 10px;
+   font-style: italic;
+   color: #333; /* Adjust color as needed */
+   white-space: pre-wrap; /* Preserve whitespace and line breaks */
+}
+
+.deviceInfoGrid {
+   display: grid;
+   grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+   gap: 20px; /* Space between columns */
+}
+
+.deviceInfoColumn {
+   display: flex;
+   flex-direction: column;
 }
 
 .deviceDetail table {
@@ -71,4 +104,17 @@
 .deviceDetail .noLogs {
    font-style: italic;
    color: #999;
+}
+
+.deviceDetail .totalCostLabel {
+   text-align: center; /* Align label to the right */
+   color: red; /* Red color for the label */
+   font-weight: bold; /* Make text bold */
+   padding-right: 10px; /* Padding to the right */
+}
+
+.deviceDetail .totalCostValue {
+   text-align: left; /* Align value to the right */
+   color: red; /* Red color for the value */
+   font-weight: bold; /* Make text bold */
 }

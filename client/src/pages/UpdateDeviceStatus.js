@@ -1,36 +1,18 @@
 import React, { useState, useEffect } from "react";
-import DevicesTable from "../components/DevicesTable";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import config from "../utils/config";
-import "../styles/UpdateDeviceStatus.css";
+import styles from "../styles/UpdateDeviceStatus.module.css"; // Import the CSS module
+import { statusOptions, defaultState } from "../utils/states"; // Import the states
 
 const UpdateDeviceStatus = () => {
-   const [imei, setIMEI] = useState("");
-   const [statusId, setStatusId] = useState(1);
-   const [cost, setCost] = useState(""); // Added state for cost
-   const [statusArray, setStatusArray] = useState([]);
-   const [devices, setDevices] = useState([]);
-
-   useEffect(() => {
-      const fetchOptions = async () => {
-         try {
-            const response = await fetch(
-               `${config.apiUrl}/selectoptions/statuses`
-            );
-            const data = await response.json();
-            setStatusArray(data.statuses);
-         } catch (err) {
-            console.error("Failed to fetch options:", err);
-         }
-      };
-
-      fetchOptions();
-   }, []);
-
-   useEffect(() => {
-      if (imei.length === 15) {
-         handleUpdateStatus();
-      }
-   }, [imei]);
+   const [imei, setIMEI] = useState(defaultState.imei);
+   const [status, setStatus] = useState(defaultState.status);
+   const [cost, setCost] = useState(defaultState.cost);
+   const [devices, setDevices] = useState(defaultState.devices);
+   const navigate = useNavigate(); // For navigation
+   const [error, setError] = useState(null);
 
    const handleChange = (e) => {
       const { name, value } = e.target;
@@ -41,10 +23,14 @@ const UpdateDeviceStatus = () => {
          }
          setIMEI(value);
       } else if (name === "status") {
-         setStatusId(value);
+         const selectedStatus = statusOptions.find(
+            (option) => option.id === parseInt(value)
+         );
+         if (selectedStatus) {
+            setStatus(selectedStatus.name);
+         }
       } else if (name === "cost") {
-         // Validate cost input
-         if (!/^\d*\.?\d*$/.test(value)) {
+         if (!/^[-]?\d*\.?\d*$/.test(value)) {
             alert("Cost must be a valid number.");
             return;
          }
@@ -53,13 +39,25 @@ const UpdateDeviceStatus = () => {
    };
 
    const handleUpdateStatus = async () => {
+      if (!imei) {
+         alert("Invalid IMEI. Please enter a valid IMEI number.");
+         return;
+      }
+
+      if (!status) {
+         alert("Please select a status.");
+         return;
+      }
+
+      const parsedCost = cost ? parseFloat(cost) : 0;
+
       console.log(
          "Updating device status with IMEI:",
          imei,
          "status:",
-         statusId,
+         status,
          "and cost:",
-         cost
+         parsedCost
       );
 
       try {
@@ -70,7 +68,7 @@ const UpdateDeviceStatus = () => {
                headers: {
                   "Content-Type": "application/json",
                },
-               body: JSON.stringify({ statusId, cost }),
+               body: JSON.stringify({ status, cost: parsedCost }),
             }
          );
 
@@ -78,12 +76,12 @@ const UpdateDeviceStatus = () => {
             const updatedDevice = await response.json();
             console.log("Device status updated:", updatedDevice);
 
-            // Clear fields and focus
-            setIMEI("");
-            setCost("");
+            // Reset form fields
+            setIMEI(defaultState.imei);
+            setCost(defaultState.cost);
             document.querySelector('input[name="imei"]').focus();
 
-            // Optionally update the devices list if needed
+            // Update devices list
             setDevices((prevDevices) => [...prevDevices, updatedDevice]);
          } else {
             const errorMessage = await response.text();
@@ -95,11 +93,37 @@ const UpdateDeviceStatus = () => {
       }
    };
 
+   const handleDelete = async (imei) => {
+      const confirmDelete = window.confirm(
+         "Are you sure you want to delete this device?"
+      );
+      if (confirmDelete) {
+         try {
+            const response = await fetch(`${config.apiUrl}/devices/${imei}`, {
+               method: "DELETE",
+            });
+            if (!response.ok) {
+               throw new Error(`Failed to delete device with IMEI: ${imei}`);
+            }
+
+            setDevices((prevDevices) =>
+               prevDevices.filter((device) => device.imei !== imei)
+            );
+         } catch (err) {
+            setError(err);
+         }
+      }
+   };
+
+   const handleEdit = (imei) => {
+      navigate(`/update-device/${imei}`);
+   };
+
    return (
-      <div>
+      <div className={styles.container}>
          <h1>Update Device Status</h1>
 
-         <div className="three-elements">
+         <div className={styles["three-elements"]}>
             <label>
                IMEI:
                <input
@@ -112,9 +136,9 @@ const UpdateDeviceStatus = () => {
 
             <label>
                Status:
-               <select name="status" value={statusId} onChange={handleChange}>
+               <select name="status" value={status} onChange={handleChange}>
                   <option value="">Select Status</option>
-                  {statusArray.map((statusItem) => (
+                  {statusOptions.map((statusItem) => (
                      <option key={statusItem.id} value={statusItem.id}>
                         {statusItem.name}
                      </option>
@@ -133,11 +157,72 @@ const UpdateDeviceStatus = () => {
                />
             </label>
          </div>
+         <button onClick={handleUpdateStatus}>Update</button>
 
-         {/* Display updated devices in a table */}
          <section>
-            <h2 className="section-title-table">Updated Devices</h2>
-            <DevicesTable devices={devices} setDevices={setDevices} />
+            <h2 className={styles["section-title-table"]}>Updated Devices</h2>
+            <table id="devicesTable">
+               <thead>
+                  <tr>
+                     <th>IMEI</th>
+                     <th>Brand</th>
+                     <th>Model</th>
+                     <th>RAM</th>
+                     <th>Storage</th>
+                     <th>Color</th>
+                     <th>Grade</th>
+                     <th>Status</th>
+                     <th>Melding</th>
+                     <th>Catalog</th>
+                     <th>Purchase Date</th>
+                     <th>Edit</th>
+                     <th>Delete</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {devices.length > 0 ? (
+                     devices.map((device, index) => (
+                        <tr key={index}>
+                           <td>{device.imei}</td>
+                           <td>{device.brand}</td>
+                           <td>{device.model}</td>
+                           <td>{device.ram}</td>
+                           <td>{device.storage}</td>
+                           <td>{device.color}</td>
+                           <td>{device.grade}</td>
+                           <td>{device.status}</td>
+                           <td>{device.melding ? "Yes" : "No"}</td>
+                           <td>{device.catalog}</td>
+                           <td>
+                              {new Date(
+                                 device.purchaseDate
+                              ).toLocaleDateString()}
+                           </td>
+                           <td>
+                              <button
+                                 onClick={() => handleEdit(device.imei)}
+                                 className="edit-button"
+                              >
+                                 <FontAwesomeIcon icon={faEdit} />
+                              </button>
+                           </td>
+                           <td>
+                              <button
+                                 onClick={() => handleDelete(device.imei)}
+                                 className="delete-button"
+                              >
+                                 <FontAwesomeIcon icon={faTrash} />
+                              </button>
+                           </td>
+                        </tr>
+                     ))
+                  ) : (
+                     <tr>
+                        <td colSpan="13">No devices found.</td>
+                     </tr>
+                  )}
+               </tbody>
+            </table>
          </section>
       </div>
    );
@@ -148,34 +233,14 @@ export default UpdateDeviceStatus;
 // import React, { useState, useEffect } from "react";
 // import DevicesTable from "../components/DevicesTable";
 // import config from "../utils/config";
+// import styles from "../styles/UpdateDeviceStatus.module.css"; // Import the CSS module
+// import { statusOptions, defaultState } from "../utils/states"; // Import the states
 
 // const UpdateDeviceStatus = () => {
-//    const [imei, setIMEI] = useState("");
-//    const [status, setStatus] = useState(1);
-//    const [statusArray, setStatusArray] = useState([]);
-//    const [devices, setDevices] = useState([]);
-
-//    useEffect(() => {
-//       const fetchOptions = async () => {
-//          try {
-//             const response = await fetch(
-//                `${config.apiUrl}/selectoptions/statuses`
-//             );
-//             const data = await response.json();
-//             setStatusArray(data.statuses);
-//          } catch (err) {
-//             console.error("Failed to fetch options:", err);
-//          }
-//       };
-
-//       fetchOptions();
-//    }, []);
-
-//    useEffect(() => {
-//       if (imei.length === 15) {
-//          handleUpdateStatus();
-//       }
-//    }, [imei]);
+//    const [imei, setIMEI] = useState(defaultState.imei);
+//    const [status, setStatus] = useState(defaultState.status);
+//    const [cost, setCost] = useState(defaultState.cost);
+//    const [devices, setDevices] = useState(defaultState.devices);
 
 //    const handleChange = (e) => {
 //       const { name, value } = e.target;
@@ -186,16 +251,44 @@ export default UpdateDeviceStatus;
 //          }
 //          setIMEI(value);
 //       } else if (name === "status") {
-//          setStatus(value);
+//          const selectedStatus = statusOptions.find(
+//             (option) => option.id === parseInt(value)
+//          );
+//          if (selectedStatus) {
+//             setStatus(selectedStatus.name);
+//          }
+//       } else if (name === "cost") {
+//          if (!/^[-]?\d*\.?\d*$/.test(value)) {
+//             alert("Cost must be a valid number.");
+//             return;
+//          }
+//          setCost(value);
 //       }
 //    };
 
 //    const handleUpdateStatus = async () => {
+//       // Check if IMEI is provided
+//       if (!imei) {
+//          alert("Invalid IMEI. Please enter a valid IMEI number.");
+//          return;
+//       }
+
+//       // Check if status is selected
+//       if (!status) {
+//          alert("Please select a status.");
+//          return;
+//       }
+
+//       // Set cost to zero if it's not provided or invalid
+//       const parsedCost = cost ? parseFloat(cost) : 0;
+
 //       console.log(
 //          "Updating device status with IMEI:",
 //          imei,
-//          "and status:",
-//          status
+//          "status:",
+//          status,
+//          "and cost:",
+//          parsedCost
 //       );
 
 //       try {
@@ -206,7 +299,7 @@ export default UpdateDeviceStatus;
 //                headers: {
 //                   "Content-Type": "application/json",
 //                },
-//                body: JSON.stringify({ status }),
+//                body: JSON.stringify({ status, cost: parsedCost }),
 //             }
 //          );
 
@@ -214,11 +307,12 @@ export default UpdateDeviceStatus;
 //             const updatedDevice = await response.json();
 //             console.log("Device status updated:", updatedDevice);
 
-//             // Clear IMEI field and focus
-//             setIMEI("");
+//             // Reset form fields
+//             setIMEI(defaultState.imei);
+//             setCost(defaultState.cost);
 //             document.querySelector('input[name="imei"]').focus();
 
-//             // Optionally update the devices list if needed
+//             // Update devices list
 //             setDevices((prevDevices) => [...prevDevices, updatedDevice]);
 //          } else {
 //             const errorMessage = await response.text();
@@ -231,10 +325,10 @@ export default UpdateDeviceStatus;
 //    };
 
 //    return (
-//       <div>
+//       <div className={styles.container}>
 //          <h1>Update Device Status</h1>
 
-//          <div className="three-elements">
+//          <div className={styles["three-elements"]}>
 //             <label>
 //                IMEI:
 //                <input
@@ -249,18 +343,29 @@ export default UpdateDeviceStatus;
 //                Status:
 //                <select name="status" value={status} onChange={handleChange}>
 //                   <option value="">Select Status</option>
-//                   {statusArray.map((statusItem) => (
+//                   {statusOptions.map((statusItem) => (
 //                      <option key={statusItem.id} value={statusItem.id}>
 //                         {statusItem.name}
 //                      </option>
 //                   ))}
 //                </select>
 //             </label>
-//          </div>
 
-//          {/* Display updated devices in a table */}
+//             <label>
+//                Cost:
+//                <input
+//                   type="text"
+//                   name="cost"
+//                   value={cost}
+//                   onChange={handleChange}
+//                   placeholder="Enter cost"
+//                />
+//             </label>
+//          </div>
+//          <button onClick={handleUpdateStatus}>Update</button>
+
 //          <section>
-//             <h2 className="section-title-table">Updated Devices</h2>
+//             <h2 className={styles["section-title-table"]}>Updated Devices</h2>
 //             <DevicesTable devices={devices} setDevices={setDevices} />
 //          </section>
 //       </div>
@@ -270,12 +375,16 @@ export default UpdateDeviceStatus;
 // export default UpdateDeviceStatus;
 
 // // import React, { useState, useEffect } from "react";
+// // import DevicesTable from "../components/DevicesTable";
 // // import config from "../utils/config";
+// // import styles from "../styles/UpdateDeviceStatus.module.css"; // Import the CSS module
 
 // // const UpdateDeviceStatus = () => {
 // //    const [imei, setIMEI] = useState("");
 // //    const [status, setStatus] = useState(1);
+// //    const [cost, setCost] = useState("");
 // //    const [statusArray, setStatusArray] = useState([]);
+// //    const [devices, setDevices] = useState([]);
 
 // //    useEffect(() => {
 // //       const fetchOptions = async () => {
@@ -284,7 +393,6 @@ export default UpdateDeviceStatus;
 // //                `${config.apiUrl}/selectoptions/statuses`
 // //             );
 // //             const data = await response.json();
-// //             // console.log("Options data:", data);
 // //             setStatusArray(data.statuses);
 // //          } catch (err) {
 // //             console.error("Failed to fetch options:", err);
@@ -293,12 +401,6 @@ export default UpdateDeviceStatus;
 
 // //       fetchOptions();
 // //    }, []);
-
-// //    useEffect(() => {
-// //       if (imei.length === 15) {
-// //          handleUpdateStatus();
-// //       }
-// //    }, [imei]);
 
 // //    const handleChange = (e) => {
 // //       const { name, value } = e.target;
@@ -310,15 +412,28 @@ export default UpdateDeviceStatus;
 // //          setIMEI(value);
 // //       } else if (name === "status") {
 // //          setStatus(value);
+// //       } else if (name === "cost") {
+// //          if (!/^\d*\.?\d*$/.test(value)) {
+// //             alert("Cost must be a valid number.");
+// //             return;
+// //          }
+// //          setCost(value);
 // //       }
 // //    };
 
 // //    const handleUpdateStatus = async () => {
+// //       if (!imei) {
+// //          alert("Invalid IMEI. Please enter a valid IMEI number.");
+// //          return; // Exit the function early if IMEI is invalid
+// //       }
+
 // //       console.log(
 // //          "Updating device status with IMEI:",
 // //          imei,
-// //          "and status:",
-// //          status
+// //          "status:",
+// //          status,
+// //          "and cost:",
+// //          cost
 // //       );
 
 // //       try {
@@ -329,14 +444,19 @@ export default UpdateDeviceStatus;
 // //                headers: {
 // //                   "Content-Type": "application/json",
 // //                },
-// //                body: JSON.stringify({ status }),
+// //                body: JSON.stringify({ status, cost }),
 // //             }
 // //          );
 
 // //          if (response.ok) {
 // //             const updatedDevice = await response.json();
 // //             console.log("Device status updated:", updatedDevice);
-// //             // Handle successful update here, e.g., show a success message or update UI
+
+// //             setIMEI("");
+// //             setCost("");
+// //             document.querySelector('input[name="imei"]').focus();
+
+// //             setDevices((prevDevices) => [...prevDevices, updatedDevice]);
 // //          } else {
 // //             const errorMessage = await response.text();
 // //             console.error("Failed to update device status:", errorMessage);
@@ -348,10 +468,10 @@ export default UpdateDeviceStatus;
 // //    };
 
 // //    return (
-// //       <div>
+// //       <div className={styles.container}>
 // //          <h1>Update Device Status</h1>
 
-// //          <div className="three-elements">
+// //          <div className={styles["three-elements"]}>
 // //             <label>
 // //                IMEI:
 // //                <input
@@ -373,23 +493,41 @@ export default UpdateDeviceStatus;
 // //                   ))}
 // //                </select>
 // //             </label>
-// //          </div>
 
-// //          {/* Section for displaying updated devices can be added here */}
+// //             <label>
+// //                Cost:
+// //                <input
+// //                   type="text"
+// //                   name="cost"
+// //                   value={cost}
+// //                   onChange={handleChange}
+// //                   placeholder="Enter cost"
+// //                />
+// //             </label>
+// //          </div>
+// //          <button onClick={handleUpdateStatus}>Update</button>
+
+// //          <section>
+// //             <h2 className={styles["section-title-table"]}>Updated Devices</h2>
+// //             <DevicesTable devices={devices} setDevices={setDevices} />
+// //          </section>
 // //       </div>
 // //    );
 // // };
 
 // // export default UpdateDeviceStatus;
 
-// // // // UpdateDeviceStatus.js
 // // // import React, { useState, useEffect } from "react";
 // // // import DevicesTable from "../components/DevicesTable";
 // // // import config from "../utils/config";
+// // // import "../styles/UpdateDeviceStatus.css";
 
 // // // const UpdateDeviceStatus = () => {
-// // //    const [status, setStatus] = useState();
+// // //    const [imei, setIMEI] = useState("");
+// // //    const [status, setStatus] = useState(1);
+// // //    const [cost, setCost] = useState(""); // Added state for cost
 // // //    const [statusArray, setStatusArray] = useState([]);
+// // //    const [devices, setDevices] = useState([]);
 
 // // //    useEffect(() => {
 // // //       const fetchOptions = async () => {
@@ -398,8 +536,7 @@ export default UpdateDeviceStatus;
 // // //                `${config.apiUrl}/selectoptions/statuses`
 // // //             );
 // // //             const data = await response.json();
-// // //             console.log("Options data:", data);
-// // //             setStatusArray(data);
+// // //             setStatusArray(data.statuses);
 // // //          } catch (err) {
 // // //             console.error("Failed to fetch options:", err);
 // // //          }
@@ -408,9 +545,78 @@ export default UpdateDeviceStatus;
 // // //       fetchOptions();
 // // //    }, []);
 
+// // //    useEffect(() => {
+// // //       if (imei.length === 15) {
+// // //          handleUpdateStatus();
+// // //       }
+// // //    }, [imei]);
+
+// // //    const handleChange = (e) => {
+// // //       const { name, value } = e.target;
+// // //       if (name === "imei") {
+// // //          if (!/^\d*$/.test(value)) {
+// // //             alert("IMEI must contain only numeric characters.");
+// // //             return;
+// // //          }
+// // //          setIMEI(value);
+// // //       } else if (name === "status") {
+// // //          setStatus(value);
+// // //       } else if (name === "cost") {
+// // //          // Validate cost input
+// // //          if (!/^\d*\.?\d*$/.test(value)) {
+// // //             alert("Cost must be a valid number.");
+// // //             return;
+// // //          }
+// // //          setCost(value);
+// // //       }
+// // //    };
+
+// // //    const handleUpdateStatus = async () => {
+// // //       console.log(
+// // //          "Updating device status with IMEI:",
+// // //          imei,
+// // //          "status:",
+// // //          status,
+// // //          "and cost:",
+// // //          cost
+// // //       );
+
+// // //       try {
+// // //          const response = await fetch(
+// // //             `${config.apiUrl}/devices/updatedevicestatus/${imei}`,
+// // //             {
+// // //                method: "PATCH",
+// // //                headers: {
+// // //                   "Content-Type": "application/json",
+// // //                },
+// // //                body: JSON.stringify({ status, cost }),
+// // //             }
+// // //          );
+
+// // //          if (response.ok) {
+// // //             const updatedDevice = await response.json();
+// // //             console.log("Device status updated:", updatedDevice);
+
+// // //             // Clear fields and focus
+// // //             setIMEI("");
+// // //             setCost("");
+// // //             document.querySelector('input[name="imei"]').focus();
+
+// // //             // Optionally update the devices list if needed
+// // //             setDevices((prevDevices) => [...prevDevices, updatedDevice]);
+// // //          } else {
+// // //             const errorMessage = await response.text();
+// // //             console.error("Failed to update device status:", errorMessage);
+// // //             alert(`Failed to update device status: ${errorMessage}`);
+// // //          }
+// // //       } catch (err) {
+// // //          console.error("Failed to update device status:", err);
+// // //       }
+// // //    };
+
 // // //    return (
 // // //       <div>
-// // //          <h1>UpdateDeviceStatus </h1>
+// // //          <h1>Update Device Status</h1>
 
 // // //          <div className="three-elements">
 // // //             <label>
@@ -418,37 +624,350 @@ export default UpdateDeviceStatus;
 // // //                <input
 // // //                   type="text"
 // // //                   name="imei"
-// // //                   // value={formData.imei}
-// // //                   // onChange={handleChange}
+// // //                   value={imei}
+// // //                   onChange={handleChange}
 // // //                />
 // // //             </label>
 
 // // //             <label>
 // // //                Status:
-// // //                <select
-// // //                   name="status"
-// // //                   // value={formData.status}
-// // //                   // onChange={handleChange}
-// // //                >
+// // //                <select name="status" value={status} onChange={handleChange}>
 // // //                   <option value="">Select Status</option>
-// // //                   {statusArray.statuses.map((status) => (
-// // //                      <option key={status.id} value={status.id}>
-// // //                         {status.name}
+// // //                   {statusArray.map((statusItem) => (
+// // //                      <option key={statusItem.id} value={statusItem.id}>
+// // //                         {statusItem.name}
 // // //                      </option>
 // // //                   ))}
 // // //                </select>
 // // //             </label>
+
+// // //             <label>
+// // //                Cost:
+// // //                <input
+// // //                   type="text"
+// // //                   name="cost"
+// // //                   value={cost}
+// // //                   onChange={handleChange}
+// // //                   placeholder="Enter cost"
+// // //                />
+// // //             </label>
 // // //          </div>
 
+// // //          {/* Display updated devices in a table */}
 // // //          <section>
 // // //             <h2 className="section-title-table">Updated Devices</h2>
-// // //             {/* <DevicesTable
-// // //                devices={transformDevices(devices)}
-// // //                setDevices={setDevices}
-// // //             /> */}
+// // //             <DevicesTable devices={devices} setDevices={setDevices} />
 // // //          </section>
 // // //       </div>
 // // //    );
 // // // };
 
 // // // export default UpdateDeviceStatus;
+
+// // // // import React, { useState, useEffect } from "react";
+// // // // import DevicesTable from "../components/DevicesTable";
+// // // // import config from "../utils/config";
+
+// // // // const UpdateDeviceStatus = () => {
+// // // //    const [imei, setIMEI] = useState("");
+// // // //    const [status, setStatus] = useState(1);
+// // // //    const [statusArray, setStatusArray] = useState([]);
+// // // //    const [devices, setDevices] = useState([]);
+
+// // // //    useEffect(() => {
+// // // //       const fetchOptions = async () => {
+// // // //          try {
+// // // //             const response = await fetch(
+// // // //                `${config.apiUrl}/selectoptions/statuses`
+// // // //             );
+// // // //             const data = await response.json();
+// // // //             setStatusArray(data.statuses);
+// // // //          } catch (err) {
+// // // //             console.error("Failed to fetch options:", err);
+// // // //          }
+// // // //       };
+
+// // // //       fetchOptions();
+// // // //    }, []);
+
+// // // //    useEffect(() => {
+// // // //       if (imei.length === 15) {
+// // // //          handleUpdateStatus();
+// // // //       }
+// // // //    }, [imei]);
+
+// // // //    const handleChange = (e) => {
+// // // //       const { name, value } = e.target;
+// // // //       if (name === "imei") {
+// // // //          if (!/^\d*$/.test(value)) {
+// // // //             alert("IMEI must contain only numeric characters.");
+// // // //             return;
+// // // //          }
+// // // //          setIMEI(value);
+// // // //       } else if (name === "status") {
+// // // //          setStatus(value);
+// // // //       }
+// // // //    };
+
+// // // //    const handleUpdateStatus = async () => {
+// // // //       console.log(
+// // // //          "Updating device status with IMEI:",
+// // // //          imei,
+// // // //          "and status:",
+// // // //          status
+// // // //       );
+
+// // // //       try {
+// // // //          const response = await fetch(
+// // // //             `${config.apiUrl}/devices/updatedevicestatus/${imei}`,
+// // // //             {
+// // // //                method: "PATCH",
+// // // //                headers: {
+// // // //                   "Content-Type": "application/json",
+// // // //                },
+// // // //                body: JSON.stringify({ status }),
+// // // //             }
+// // // //          );
+
+// // // //          if (response.ok) {
+// // // //             const updatedDevice = await response.json();
+// // // //             console.log("Device status updated:", updatedDevice);
+
+// // // //             // Clear IMEI field and focus
+// // // //             setIMEI("");
+// // // //             document.querySelector('input[name="imei"]').focus();
+
+// // // //             // Optionally update the devices list if needed
+// // // //             setDevices((prevDevices) => [...prevDevices, updatedDevice]);
+// // // //          } else {
+// // // //             const errorMessage = await response.text();
+// // // //             console.error("Failed to update device status:", errorMessage);
+// // // //             alert(`Failed to update device status: ${errorMessage}`);
+// // // //          }
+// // // //       } catch (err) {
+// // // //          console.error("Failed to update device status:", err);
+// // // //       }
+// // // //    };
+
+// // // //    return (
+// // // //       <div>
+// // // //          <h1>Update Device Status</h1>
+
+// // // //          <div className="three-elements">
+// // // //             <label>
+// // // //                IMEI:
+// // // //                <input
+// // // //                   type="text"
+// // // //                   name="imei"
+// // // //                   value={imei}
+// // // //                   onChange={handleChange}
+// // // //                />
+// // // //             </label>
+
+// // // //             <label>
+// // // //                Status:
+// // // //                <select name="status" value={status} onChange={handleChange}>
+// // // //                   <option value="">Select Status</option>
+// // // //                   {statusArray.map((statusItem) => (
+// // // //                      <option key={statusItem.id} value={statusItem.id}>
+// // // //                         {statusItem.name}
+// // // //                      </option>
+// // // //                   ))}
+// // // //                </select>
+// // // //             </label>
+// // // //          </div>
+
+// // // //          {/* Display updated devices in a table */}
+// // // //          <section>
+// // // //             <h2 className="section-title-table">Updated Devices</h2>
+// // // //             <DevicesTable devices={devices} setDevices={setDevices} />
+// // // //          </section>
+// // // //       </div>
+// // // //    );
+// // // // };
+
+// // // // export default UpdateDeviceStatus;
+
+// // // // // import React, { useState, useEffect } from "react";
+// // // // // import config from "../utils/config";
+
+// // // // // const UpdateDeviceStatus = () => {
+// // // // //    const [imei, setIMEI] = useState("");
+// // // // //    const [status, setStatus] = useState(1);
+// // // // //    const [statusArray, setStatusArray] = useState([]);
+
+// // // // //    useEffect(() => {
+// // // // //       const fetchOptions = async () => {
+// // // // //          try {
+// // // // //             const response = await fetch(
+// // // // //                `${config.apiUrl}/selectoptions/statuses`
+// // // // //             );
+// // // // //             const data = await response.json();
+// // // // //             // console.log("Options data:", data);
+// // // // //             setStatusArray(data.statuses);
+// // // // //          } catch (err) {
+// // // // //             console.error("Failed to fetch options:", err);
+// // // // //          }
+// // // // //       };
+
+// // // // //       fetchOptions();
+// // // // //    }, []);
+
+// // // // //    useEffect(() => {
+// // // // //       if (imei.length === 15) {
+// // // // //          handleUpdateStatus();
+// // // // //       }
+// // // // //    }, [imei]);
+
+// // // // //    const handleChange = (e) => {
+// // // // //       const { name, value } = e.target;
+// // // // //       if (name === "imei") {
+// // // // //          if (!/^\d*$/.test(value)) {
+// // // // //             alert("IMEI must contain only numeric characters.");
+// // // // //             return;
+// // // // //          }
+// // // // //          setIMEI(value);
+// // // // //       } else if (name === "status") {
+// // // // //          setStatus(value);
+// // // // //       }
+// // // // //    };
+
+// // // // //    const handleUpdateStatus = async () => {
+// // // // //       console.log(
+// // // // //          "Updating device status with IMEI:",
+// // // // //          imei,
+// // // // //          "and status:",
+// // // // //          status
+// // // // //       );
+
+// // // // //       try {
+// // // // //          const response = await fetch(
+// // // // //             `${config.apiUrl}/devices/updatedevicestatus/${imei}`,
+// // // // //             {
+// // // // //                method: "PATCH",
+// // // // //                headers: {
+// // // // //                   "Content-Type": "application/json",
+// // // // //                },
+// // // // //                body: JSON.stringify({ status }),
+// // // // //             }
+// // // // //          );
+
+// // // // //          if (response.ok) {
+// // // // //             const updatedDevice = await response.json();
+// // // // //             console.log("Device status updated:", updatedDevice);
+// // // // //             // Handle successful update here, e.g., show a success message or update UI
+// // // // //          } else {
+// // // // //             const errorMessage = await response.text();
+// // // // //             console.error("Failed to update device status:", errorMessage);
+// // // // //             alert(`Failed to update device status: ${errorMessage}`);
+// // // // //          }
+// // // // //       } catch (err) {
+// // // // //          console.error("Failed to update device status:", err);
+// // // // //       }
+// // // // //    };
+
+// // // // //    return (
+// // // // //       <div>
+// // // // //          <h1>Update Device Status</h1>
+
+// // // // //          <div className="three-elements">
+// // // // //             <label>
+// // // // //                IMEI:
+// // // // //                <input
+// // // // //                   type="text"
+// // // // //                   name="imei"
+// // // // //                   value={imei}
+// // // // //                   onChange={handleChange}
+// // // // //                />
+// // // // //             </label>
+
+// // // // //             <label>
+// // // // //                Status:
+// // // // //                <select name="status" value={status} onChange={handleChange}>
+// // // // //                   <option value="">Select Status</option>
+// // // // //                   {statusArray.map((statusItem) => (
+// // // // //                      <option key={statusItem.id} value={statusItem.id}>
+// // // // //                         {statusItem.name}
+// // // // //                      </option>
+// // // // //                   ))}
+// // // // //                </select>
+// // // // //             </label>
+// // // // //          </div>
+
+// // // // //          {/* Section for displaying updated devices can be added here */}
+// // // // //       </div>
+// // // // //    );
+// // // // // };
+
+// // // // // export default UpdateDeviceStatus;
+
+// // // // // // // UpdateDeviceStatus.js
+// // // // // // import React, { useState, useEffect } from "react";
+// // // // // // import DevicesTable from "../components/DevicesTable";
+// // // // // // import config from "../utils/config";
+
+// // // // // // const UpdateDeviceStatus = () => {
+// // // // // //    const [status, setStatus] = useState();
+// // // // // //    const [statusArray, setStatusArray] = useState([]);
+
+// // // // // //    useEffect(() => {
+// // // // // //       const fetchOptions = async () => {
+// // // // // //          try {
+// // // // // //             const response = await fetch(
+// // // // // //                `${config.apiUrl}/selectoptions/statuses`
+// // // // // //             );
+// // // // // //             const data = await response.json();
+// // // // // //             console.log("Options data:", data);
+// // // // // //             setStatusArray(data);
+// // // // // //          } catch (err) {
+// // // // // //             console.error("Failed to fetch options:", err);
+// // // // // //          }
+// // // // // //       };
+
+// // // // // //       fetchOptions();
+// // // // // //    }, []);
+
+// // // // // //    return (
+// // // // // //       <div>
+// // // // // //          <h1>UpdateDeviceStatus </h1>
+
+// // // // // //          <div className="three-elements">
+// // // // // //             <label>
+// // // // // //                IMEI:
+// // // // // //                <input
+// // // // // //                   type="text"
+// // // // // //                   name="imei"
+// // // // // //                   // value={formData.imei}
+// // // // // //                   // onChange={handleChange}
+// // // // // //                />
+// // // // // //             </label>
+
+// // // // // //             <label>
+// // // // // //                Status:
+// // // // // //                <select
+// // // // // //                   name="status"
+// // // // // //                   // value={formData.status}
+// // // // // //                   // onChange={handleChange}
+// // // // // //                >
+// // // // // //                   <option value="">Select Status</option>
+// // // // // //                   {statusArray.statuses.map((status) => (
+// // // // // //                      <option key={status.id} value={status.id}>
+// // // // // //                         {status.name}
+// // // // // //                      </option>
+// // // // // //                   ))}
+// // // // // //                </select>
+// // // // // //             </label>
+// // // // // //          </div>
+
+// // // // // //          <section>
+// // // // // //             <h2 className="section-title-table">Updated Devices</h2>
+// // // // // //             {/* <DevicesTable
+// // // // // //                devices={transformDevices(devices)}
+// // // // // //                setDevices={setDevices}
+// // // // // //             /> */}
+// // // // // //          </section>
+// // // // // //       </div>
+// // // // // //    );
+// // // // // // };
+
+// // // // // // export default UpdateDeviceStatus;

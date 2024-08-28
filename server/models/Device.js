@@ -1,3 +1,5 @@
+// ./models/Device.js
+
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database");
 

@@ -1,4 +1,5 @@
-// const Sequelize = require("sequelize");
+// ./models/index.js
+
 const sequelize = require("../database/database");
 
 // Import models

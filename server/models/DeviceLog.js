@@ -1,3 +1,5 @@
+// ./models/DeviceLog.js
+
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/database");
 const Device = require("./Device"); // Ensure this path is correct

@@ -1,0 +1,60 @@
+/* UpdateDeviceStatus.module.css */
+
+.container {
+   padding: 20px;
+   background-color: #f9f9f9;
+   border-radius: 8px;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+   font-size: 24px;
+   color: #333;
+   margin-bottom: 20px;
+}
+
+.three-elements {
+   display: flex;
+   justify-content: space-between;
+   margin: 20px;
+}
+
+.three-elements label {
+   display: flex;
+   flex-direction: column;
+   font-size: 14px;
+   color: #555;
+   margin-right: 20px;
+   width: 30%;
+}
+
+.three-elements input,
+.three-elements select {
+   padding: 8px;
+   margin-top: 5px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 14px;
+}
+
+button {
+   padding: 10px 20px;
+   font-size: 16px;
+   color: white;
+   background-color: #007bff;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+   margin-left: 20px;
+}
+
+button:hover {
+   background-color: #0056b3;
+}
+
+.section-title-table {
+   margin-top: 30px;
+   font-size: 20px;
+   color: #333;
+}
