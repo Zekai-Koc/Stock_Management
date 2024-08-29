@@ -11,9 +11,9 @@ import AddDevice from "./pages/AddDevice";
 import UpdateDeviceStatus from "./pages/UpdateDeviceStatus";
 import UpdateDevice from "./pages/UpdateDevice";
 import ViewDevices from "./pages/ViewDevices";
-import ManageBrands from "./pages/ManageBrands"; // New component
-import ManageCatalogs from "./pages/ManageCatalogs"; // New component
-import ManageColors from "./pages/ManageColors"; // New component
+// import ManageBrands from "./pages/ManageBrands"; // New component
+// import ManageCatalogs from "./pages/ManageCatalogs"; // New component
+// import ManageColors from "./pages/ManageColors"; // New component
 import ImportDevicesFromExcel from "./pages/ImportDevicesFromExcel";
 import DeviceDetails from "./components/DeviceDetails";
 import "./components/Sidebar.css";
@@ -40,9 +40,9 @@ function App() {
                   />
 
                   {/* New Routes */}
-                  <Route path="/manage-brands" element={<ManageBrands />} />
+                  {/* <Route path="/manage-brands" element={<ManageBrands />} />
                   <Route path="/manage-catalogs" element={<ManageCatalogs />} />
-                  <Route path="/manage-colors" element={<ManageColors />} />
+                  <Route path="/manage-colors" element={<ManageColors />} /> */}
                   <Route path="/import" element={<ImportDevicesFromExcel />} />
                </Routes>
             </div>
