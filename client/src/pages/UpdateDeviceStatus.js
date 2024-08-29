@@ -51,14 +51,14 @@ const UpdateDeviceStatus = () => {
 
       const parsedCost = cost ? parseFloat(cost) : 0;
 
-      console.log(
-         "Updating device status with IMEI:",
-         imei,
-         "status:",
-         status,
-         "and cost:",
-         parsedCost
-      );
+      // console.log(
+      //    "Updating device status with IMEI:",
+      //    imei,
+      //    "status:",
+      //    status,
+      //    "and cost:",
+      //    parsedCost
+      // );
 
       try {
          const response = await fetch(
@@ -74,7 +74,7 @@ const UpdateDeviceStatus = () => {
 
          if (response.ok) {
             const updatedDevice = await response.json();
-            console.log("Device status updated:", updatedDevice);
+            // console.log("Device status updated:", updatedDevice);
 
             // Reset form fields
             setIMEI(defaultState.imei);

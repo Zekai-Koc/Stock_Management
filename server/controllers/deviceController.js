@@ -40,64 +40,107 @@ const createDevice = async (req, res) => {
    const {
       imei,
       model,
-      brand,
-      ram,
-      storage,
-      color,
-      grade,
-      melding,
-      status,
-      catalog,
-      purchaseDate,
-      cost,
-      notes,
-      active,
+      brand = null,
+      ram = null,
+      storage = null,
+      color = null,
+      grade = null,
+      melding = false,
+      status = null,
+      catalog = null,
+      purchaseDate = null,
+      cost = null,
+      notes = null,
+      active = true,
    } = req.body;
 
    try {
       const newDevice = await Device.create({
          imei,
          model,
-         brand,
-         ram,
-         storage,
-         color,
-         grade,
-         melding,
-         status,
-         catalog,
-         purchaseDate,
-         cost,
-         notes,
-         active,
+         brand: brand || null,
+         ram: ram !== '' ? parseInt(ram, 10) : null,
+         storage: storage !== '' ? parseInt(storage, 10) : null,
+         color: color || null,
+         grade: grade || null,
+         melding: !!melding,
+         status: status || null,
+         catalog: catalog || null,
+         purchaseDate: purchaseDate || null,
+         cost: cost !== '' ? parseFloat(cost) : null,
+         notes: notes || null,
+         active: !!active,
       });
 
       return res.status(201).json(newDevice);
    } catch (error) {
+      console.error("Error creating device:", error);
       return res.status(500).json({ message: "Error creating device", error });
    }
 };
 
-// Update an existing device by IMEI
+
+
+
+
 const updateDevice = async (req, res) => {
-   const { imei } = req.params;
+   const { id } = req.params;
    const updates = req.body; // The updated fields sent in the request
 
    try {
-      const device = await Device.findOne({ where: { imei } });
+      // Find the device by ID
+      const device = await Device.findOne({ where: { id } });
 
       if (!device) {
          return res.status(404).json({ message: "Device not found" });
       }
 
+      // Extract current values before updating
+      const { status, cost } = updates;
+      const currentStatus = device.status;
+      const currentCost = device.cost;
+
       // Update the device with the new data
       await device.update(updates);
 
+      // Debugging: Log the status and cost being used for logging
+      console.log("Updated Status:", status, "Current Status:", currentStatus);
+      console.log("Updated Cost:", cost, "Current Cost:", currentCost);
+
+      // Create a new log entry in DeviceLogs if status or cost is updated
+      if (status !== undefined || cost !== undefined) {
+         try {
+            await DeviceLog.create({
+               deviceId: device.id,
+               status: status !== undefined ? status : currentStatus, // Use updated status or current if not provided
+               cost: cost !== undefined ? cost : currentCost,         // Use updated cost or current if not provided
+               date: new Date(),                                      // Optionally set the current date
+            });
+            console.log("Log entry created successfully.");
+         } catch (logError) {
+            console.error("Error creating log entry:", logError);
+            // Optionally, handle or return an error response for the log creation
+         }
+      }
+
+      // Respond with the updated device
       return res.status(200).json(device);
    } catch (error) {
+      console.error("Error updating device:", error);
       return res.status(500).json({ message: "Error updating device", error });
    }
 };
+
+
+
+
+
+
+
+
+
+
+
 
 // Delete a device by IMEI
 const deleteDevice = async (req, res) => {
@@ -396,6 +439,75 @@ module.exports = {
    updateDeviceStatus,
    getTotalCostForCatalog,
 };
+
+
+
+// const createDevice = async (req, res) => {
+//    console.log(req.body)
+//    const {
+//       imei,
+//       model,
+//       brand,
+//       ram,
+//       storage,
+//       color,
+//       grade,
+//       melding,
+//       status,
+//       catalog,
+//       purchaseDate,
+//       cost,
+//       notes,
+//       active,
+//    } = req.body;
+
+//    try {
+//       const newDevice = await Device.create({
+//          imei,
+//          model,
+//          brand,
+//          ram,
+//          storage,
+//          color,
+//          grade,
+//          melding,
+//          status,
+//          catalog,
+//          purchaseDate,
+//          cost,
+//          notes,
+//          active,
+//       });
+
+//       return res.status(201).json(newDevice);
+//    } catch (error) {
+//       console.log(error)
+//       return res.status(500).json({ message: "Error creating device", error });
+//    }
+// };
+
+// Update an existing device by IMEI
+// const updateDevice = async (req, res) => {
+//    const { id } = req.params;
+//    const updates = req.body; // The updated fields sent in the request
+
+//    // console.log(updates)
+
+//    try {
+//       const device = await Device.findOne({ where: { id } });
+
+//       if (!device) {
+//          return res.status(404).json({ message: "Device not found" });
+//       }
+
+//       // Update the device with the new data
+//       await device.update(updates);
+
+//       return res.status(200).json(device);
+//    } catch (error) {
+//       return res.status(500).json({ message: "Error updating device", error });
+//    }
+// };
 
 // const bulkCreateDevices = async (req, res) => {
 //    try {

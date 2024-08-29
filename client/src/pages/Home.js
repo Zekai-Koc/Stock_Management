@@ -8,18 +8,18 @@ const Home = () => {
    const catalog = "dcx1";
 
    useEffect(() => {
-      console.log("useEffect triggered"); // Log to check if useEffect is triggered
+      // console.log("useEffect triggered"); // Log to check if useEffect is triggered
 
       const fetchStatsData = async () => {
          try {
-            console.log("Fetching device stats"); // Log to check if this function is called
+            // console.log("Fetching device stats"); // Log to check if this function is called
 
             const statsResponse = await fetch(`${config.apiUrl}/devices/stats`);
             if (!statsResponse.ok) {
                throw new Error(`HTTP error! Status: ${statsResponse.status}`);
             }
             const statsData = await statsResponse.json();
-            console.log("statsData: ", statsData);
+            // console.log("statsData: ", statsData);
             setDeviceStats(statsData);
          } catch (err) {
             console.error("Error fetching device stats: ", err);
@@ -28,18 +28,18 @@ const Home = () => {
 
       const fetchCostData = async () => {
          try {
-            console.log("Fetching total cost for catalog"); // Log to check if this function is called
+            // console.log("Fetching total cost for catalog"); // Log to check if this function is called
 
             const costResponse = await fetch(
                `${config.apiUrl}/devices/getTotalCostForCatalog?catalog=${catalog}`
             );
-            console.log("costResponse status: ", costResponse.status); // Log to check the status
+            // console.log("costResponse status: ", costResponse.status); // Log to check the status
 
             if (!costResponse.ok) {
                throw new Error(`HTTP error! Status: ${costResponse.status}`);
             }
             const costData = await costResponse.json();
-            console.log("costData: ", costData);
+            // console.log("costData: ", costData);
             setTotalCostForCatalog(costData.totalCost);
          } catch (err) {
             console.error("Error fetching cost data: ", err);

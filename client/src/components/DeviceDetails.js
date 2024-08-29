@@ -6,8 +6,8 @@ import styles from "../styles/DeviceDetails.module.css"; // Import CSS module
 const DeviceDetail = () => {
    const { id } = useParams();
 
-   console.log("id in device details: ", id);
-   console.log("useParams(): ", useParams());
+   // console.log("id in device details: ", id);
+   // console.log("useParams(): ", useParams());
 
    const [device, setDevice] = useState(null);
    const [logs, setLogs] = useState([]);

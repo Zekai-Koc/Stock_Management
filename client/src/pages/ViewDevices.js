@@ -28,7 +28,7 @@ const ViewDevices = () => {
                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            console.log("ViewDevices: incoming devices:", data);
+            // console.log("ViewDevices: incoming devices:", data);
             setDevices(data); // Assuming data is an array of devices
             setLoading(false);
          } catch (err) {
@@ -94,7 +94,7 @@ const ViewDevices = () => {
    };
 
    const handleRowClick = (id) => {
-      console.log("device.id: ", id)
+      // console.log("device.id: ", id)
       navigate(`/device-details/${id}`);
    };
 
