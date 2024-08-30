@@ -1,25 +1,25 @@
 /* UpdateDeviceStatus.module.css */
 
-.container {
+.update-device-status-container {
    padding: 20px;
    background-color: #f9f9f9;
    border-radius: 8px;
    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.update-device-status-title {
    font-size: 24px;
    color: #333;
    margin-bottom: 20px;
 }
 
-.three-elements {
+.update-device-status-three-elements {
    display: flex;
    justify-content: space-between;
    margin: 20px;
 }
 
-.three-elements label {
+.update-device-status-label {
    display: flex;
    flex-direction: column;
    font-size: 14px;
@@ -28,8 +28,8 @@ h1 {
    width: 30%;
 }
 
-.three-elements input,
-.three-elements select {
+.update-device-status-input,
+.update-device-status-select {
    padding: 8px;
    margin-top: 5px;
    border: 1px solid #ccc;
@@ -37,7 +37,7 @@ h1 {
    font-size: 14px;
 }
 
-button {
+.update-device-status-button {
    padding: 10px 20px;
    font-size: 16px;
    color: white;
@@ -49,12 +49,60 @@ button {
    margin-left: 20px;
 }
 
-button:hover {
+.update-device-status-button:hover {
    background-color: #0056b3;
 }
 
-.section-title-table {
+.update-device-status-section-title-table {
    margin-top: 30px;
    font-size: 20px;
    color: #333;
+}
+
+.update-device-status-table {
+   width: 100%;
+   border-collapse: collapse;
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: small;
+}
+
+.update-device-status-table th,
+.update-device-status-table td {
+   border: 1px solid #ddd;
+   padding: 8px;
+   text-align: left;
+}
+
+.update-device-status-table th {
+   background-color: #f2f2f2;
+}
+
+.update-device-status-table-row:nth-child(even) {
+   background-color: #f2f2f2;
+}
+
+.update-device-status-edit-button {
+   background-color: #3498db;
+   color: white;
+   border: none;
+   padding: 5px 10px;
+   cursor: pointer;
+   border-radius: 4px;
+}
+
+.update-device-status-edit-button:hover {
+   background-color: #2980b9;
+}
+
+.update-device-status-delete-button {
+   background-color: #e74c3c;
+   color: white;
+   border: none;
+   padding: 5px 10px;
+   cursor: pointer;
+   border-radius: 4px;
+}
+
+.update-device-status-delete-button:hover {
+   background-color: #c0392b;
 }

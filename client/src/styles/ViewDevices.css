@@ -1,39 +1,47 @@
 /* ViewDevices.css */
 
-.view-devices-container h1 {
+.view-devices-container-unique h1.view-devices-title-unique {
    text-align: center;
 }
 
-.search-bar {
+.view-devices-search-container-unique {
+   display: flex;
+   margin-top: 10px;
+}
+
+.view-devices-search-input-unique {
    width: 20%;
    margin: 10px;
    padding: 11px;
 }
 
-table {
+.view-devices-table-wrapper-unique {
+   margin-top: 20px;
+}
+
+.view-devices-table-unique {
    width: 100%;
    border-collapse: collapse;
-   margin-top: 20px;
    font-family: Arial, Helvetica, sans-serif;
    font-size: small;
 }
 
-th,
-td {
+.view-devices-table-header-unique,
+.view-devices-table-cell-unique {
    border: 1px solid #ddd;
    padding: 2px;
    text-align: left;
 }
 
-th {
+.view-devices-table-header-unique {
    background-color: #f2f2f2;
 }
 
-tr:nth-child(even) {
+.view-devices-table-row-unique:nth-child(even) {
    background-color: #f2f2f2;
 }
 
-.edit-button {
+.view-devices-edit-button-unique {
    background-color: #3498db;
    color: white;
    border: none;
@@ -42,11 +50,11 @@ tr:nth-child(even) {
    border-radius: 4px;
 }
 
-.edit-button:hover {
+.view-devices-edit-button-unique:hover {
    background-color: #2980b9;
 }
 
-.delete-button {
+.view-devices-delete-button-unique {
    background-color: #e74c3c;
    color: white;
    border: none;
@@ -55,51 +63,30 @@ tr:nth-child(even) {
    border-radius: 4px;
 }
 
-.delete-button:hover {
+.view-devices-delete-button-unique:hover {
    background-color: #c0392b;
 }
 
-button.edit-button,
-button.delete-button {
+.view-devices-pagination-unique {
+   margin-top: 20px;
+   text-align: center;
+}
+
+.view-devices-pagination-button-unique {
+   margin: 5px;
    padding: 5px 10px;
-   margin: 0;
-   line-height: 1;
-   vertical-align: middle;
+   border: none;
+   background-color: #3498db;
+   color: white;
+   border-radius: 4px;
+   cursor: pointer;
 }
 
-button.edit-button:hover,
-button.delete-button:hover {
-   transform: translateY(
-      -1px
-   ); /* Optional: slight lift on hover for better UX */
-}
-
-.search-container {
-   display: flex;
-   /* flex-direction: column; */
-   margin-top: 10px;
-}
-
-.search-section {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   margin-bottom: 10px;
-}
-
-.search-bar {
-   width: 100%;
-   padding: 8px;
-   margin-top: 4px;
-}
-
-/* Style for table rows */
-table tbody tr {
-   cursor: pointer; /* Change cursor to pointer on hover */
-   transition: background-color 0.3s ease; /* Smooth background color transition */
+.view-devices-pagination-active-unique {
+   background-color: #2980b9;
 }
 
 /* Optional: Change background color on hover */
-table tbody tr:hover {
-   background-color: #f5f5f5; /* Light grey background on hover */
+.view-devices-table-row-unique:hover {
+   background-color: #f5f5f5;
 }
