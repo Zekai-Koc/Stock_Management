@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -30,12 +29,7 @@ const UpdateDeviceStatus = () => {
          }
          setIMEI(value);
       } else if (name === "status") {
-         const selectedStatus = statusOptions.find(
-            (option) => option.id === parseInt(value)
-         );
-         if (selectedStatus) {
-            setStatus(selectedStatus.name);
-         }
+         setStatus(parseInt(value));  // Set status to the selected option ID
       } else if (name === "cost") {
          if (!/^[-]?\d*\.?\d*$/.test(value)) {
             alert("Cost must be a valid number.");
@@ -44,6 +38,30 @@ const UpdateDeviceStatus = () => {
          setCost(value);
       }
    };
+   
+   // const handleChange = (e) => {
+   //    const { name, value } = e.target;
+   //    if (name === "imei") {
+   //       if (!/^\d*$/.test(value)) {
+   //          alert("IMEI must contain only numeric characters.");
+   //          return;
+   //       }
+   //       setIMEI(value);
+   //    } else if (name === "status") {
+   //       const selectedStatus = statusOptions.find(
+   //          (option) => option.id === parseInt(value)
+   //       );
+   //       if (selectedStatus) {
+   //          setStatus(selectedStatus.name);
+   //       }
+   //    } else if (name === "cost") {
+   //       if (!/^[-]?\d*\.?\d*$/.test(value)) {
+   //          alert("Cost must be a valid number.");
+   //          return;
+   //       }
+   //       setCost(value);
+   //    }
+   // };
 
    const handleUpdateStatus = async () => {
       if (!imei) {
@@ -76,7 +94,7 @@ const UpdateDeviceStatus = () => {
 
             // Reset form fields
             setIMEI(defaultState.imei);
-            setCost(defaultState.cost);
+            // setCost(defaultState.cost);
             document.querySelector('input[name="imei"]').focus();
 
             // Update devices list
@@ -135,6 +153,23 @@ const UpdateDeviceStatus = () => {
             </label>
 
             <label className={styles["update-device-status-label"]}>
+   Status:
+   <select
+      name="status"
+      value={status}
+      onChange={handleChange}
+      className={styles["update-device-status-select"]}
+   >
+      <option value="">Select Status</option>
+      {statusOptions.map((statusItem) => (
+         <option key={statusItem.id} value={statusItem.id}>
+            {statusItem.name}
+         </option>
+      ))}
+   </select>
+</label>
+
+            {/* <label className={styles["update-device-status-label"]}>
                Status:
                <select
                   name="status"
@@ -149,7 +184,7 @@ const UpdateDeviceStatus = () => {
                      </option>
                   ))}
                </select>
-            </label>
+            </label> */}
 
             <label className={styles["update-device-status-label"]}>
                Cost:
